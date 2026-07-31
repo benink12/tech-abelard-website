@@ -1,0 +1,139 @@
+@import "tailwindcss";
+
+:root {
+  --color-ink: #1c2230;
+  --color-ink-soft: #2a3244;
+  --color-brass: #b08d57;
+  --color-brass-light: #d8bd8a;
+  /* Same brass, darkened for text/icons on cream — #b08d57 on #f7f4ee is only
+     ~2.8:1 (fails WCAG AA); this variant holds ~5:1. Use text-brass on dark
+     (ink) surfaces and text-brass-ink on light (cream) surfaces. */
+  --color-brass-ink: #82652f;
+  /* Focus ring only — this exact shade clears the 3:1 UI-component contrast
+     minimum against BOTH cream (~3.8:1) and ink (~3.8:1), since the ring can
+     land on interactive elements in either section. Don't reuse elsewhere. */
+  --color-focus-ring: #97783f;
+  --color-cream: #f7f4ee;
+  --color-cream-card: #fdfcfa;
+  --color-neutral: #8a8578;
+  --color-line: rgba(28, 34, 48, 0.1);
+  --color-line-dark: rgba(247, 244, 238, 0.12);
+}
+
+@theme inline {
+  --color-ink: var(--color-ink);
+  --color-ink-soft: var(--color-ink-soft);
+  --color-brass: var(--color-brass);
+  --color-brass-light: var(--color-brass-light);
+  --color-brass-ink: var(--color-brass-ink);
+  --color-cream: var(--color-cream);
+  --color-cream-card: var(--color-cream-card);
+  --color-neutral: var(--color-neutral);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-fraunces);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-cream);
+  color: var(--color-ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+::selection {
+  background: var(--color-brass);
+  color: var(--color-cream);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-focus-ring);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Scroll-reveal utility: fades content up on entry, respects reduced motion */
+@keyframes reveal-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal-on-scroll {
+  opacity: 0;
+}
+
+.reveal-on-scroll.is-visible {
+  animation: reveal-up 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 40s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .reveal-on-scroll,
+  .reveal-on-scroll.is-visible {
+    opacity: 1 !important;
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .animate-marquee {
+    animation: none !important;
+  }
+
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Brass accent rule used under eyebrows */
+.brass-line {
+  position: relative;
+}
+
+.brass-line::after {
+  content: "";
+  position: absolute;
+  left: 1px;
+  bottom: -10px;
+  height: 2px;
+  width: 32px;
+  background: var(--color-brass);
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.text-balance {
+  text-wrap: balance;
+}
