@@ -2,7 +2,7 @@
 
 import { useRef, useState, type FormEvent } from "react";
 import { Loader2, CheckCircle2 } from "lucide-react";
-import { submitContactForm } from "@/lib/submitContactForm";
+import { site } from "@/data/site";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -43,15 +43,22 @@ export function ContactForm() {
     }
 
     setStatus("submitting");
-    const result = await submitContactForm({
-      name,
-      email,
-      phone: String(data.get("phone") ?? ""),
-      business: String(data.get("business") ?? ""),
+    const phone = String(data.get("phone") ?? "").trim();
+    const business = String(data.get("business") ?? "").trim();
+    const subject = `Website inquiry from ${name}`;
+    const body = [
+      `Name: ${name}`,
+      `Email: ${email}`,
+      `Phone: ${phone || "Not provided"}`,
+      `Business: ${business || "Not provided"}`,
+      "",
+      "Project details:",
       message,
-    });
-    setStatus(result.success ? "success" : "error");
-    if (result.success) form.reset();
+    ].join("\n");
+
+    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setStatus("success");
+    form.reset();
   }
 
   if (status === "success") {
@@ -61,9 +68,14 @@ export function ContactForm() {
         className="flex flex-col items-center rounded-2xl border border-brass-ink/25 bg-cream-card p-12 text-center"
       >
         <CheckCircle2 className="h-10 w-10 text-brass-ink" strokeWidth={1.5} />
-        <h3 className="mt-5 font-display text-2xl font-medium text-ink">Message sent.</h3>
+        <h3 className="mt-5 font-display text-2xl font-medium text-ink">Your email draft is ready.</h3>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">
-          We reply to every discovery inquiry within one business day. Talk soon.
+          Your email app should have opened with your message filled in. Send it when you&apos;re ready. If it didn&apos;t open,
+          email us directly at {" "}
+          <a href={`mailto:${site.email}`} className="font-medium text-brass-ink underline underline-offset-2">
+            {site.email}
+          </a>
+          .
         </p>
       </div>
     );

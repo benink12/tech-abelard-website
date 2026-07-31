@@ -3,7 +3,6 @@
 import { useRef, useState, type FormEvent } from "react";
 import { Loader2, CheckCircle2 } from "lucide-react";
 import { site } from "@/data/site";
-import { submitAuditRequest } from "@/lib/submitAuditRequest";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
@@ -75,19 +74,25 @@ export function AuditForm() {
     }
 
     setStatus("submitting");
-    const result = await submitAuditRequest({
-      businessName,
-      websiteUrl,
-      industry,
-      city,
-      contactName,
-      email,
-      phone,
+    const subject = `Free website audit request — ${businessName}`;
+    const body = [
+      `Business: ${businessName}`,
+      `Website: ${websiteUrl}`,
+      `Industry: ${industry}`,
+      `City: ${city}`,
+      `Contact: ${contactName}`,
+      `Email: ${email}`,
+      `Phone: ${phone || "Not provided"}`,
+      "",
+      "Main concern:",
       mainConcern,
-      consentGiven,
-    });
-    setStatus(result.success ? "success" : "error");
-    if (result.success) form.reset();
+      "",
+      "Consent: The visitor consented to a review of their publicly available website and contact about the results.",
+    ].join("\n");
+
+    window.location.href = `mailto:${site.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    setStatus("success");
+    form.reset();
   }
 
   if (status === "success") {
@@ -97,10 +102,14 @@ export function AuditForm() {
         className="flex flex-col items-center rounded-2xl border border-brass-ink/25 bg-cream-card p-12 text-center"
       >
         <CheckCircle2 className="h-10 w-10 text-brass-ink" strokeWidth={1.5} />
-        <h3 className="mt-5 font-display text-2xl font-medium text-ink">Request received.</h3>
+        <h3 className="mt-5 font-display text-2xl font-medium text-ink">Your email draft is ready.</h3>
         <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">
-          Your free audit request has been received. A real person will review your site and prepare your audit —
-          most are ready within 2–3 business days. We&apos;ll reach out by email once it&apos;s ready.
+          Your email app should have opened with your audit request filled in. Send it when you&apos;re ready. If it didn&apos;t
+          open, email us directly at {" "}
+          <a href={`mailto:${site.email}`} className="font-medium text-brass-ink underline underline-offset-2">
+            {site.email}
+          </a>
+          .
         </p>
       </div>
     );
