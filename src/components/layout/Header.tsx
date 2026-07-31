@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { site } from "@/data/site";
@@ -12,6 +12,8 @@ import { cn } from "@/lib/utils";
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -27,6 +29,47 @@ export function Header() {
     };
   }, [menuOpen]);
 
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const menu = mobileMenuRef.current;
+    if (!menu) return;
+
+    const focusableSelector = 'a[href], button:not([disabled])';
+    const focusableElements = () => Array.from(menu.querySelectorAll<HTMLElement>(focusableSelector));
+    const firstFocusableElement = focusableElements()[0];
+    firstFocusableElement?.focus();
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        menuButtonRef.current?.focus();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const elements = focusableElements();
+      if (elements.length === 0) return;
+
+      const first = elements[0];
+      const last = elements[elements.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [menuOpen]);
+
+  const closeMenu = () => setMenuOpen(false);
+
   return (
     <header
       className={cn(
@@ -39,7 +82,7 @@ export function Header() {
           <Logo />
         </Link>
 
-        <nav className="hidden items-center gap-8 xl:flex">
+        <nav aria-label="Primary navigation" className="hidden items-center gap-8 xl:flex">
           {site.nav.map((item) => (
             <Link
               key={item.href}
@@ -61,8 +104,11 @@ export function Header() {
         </div>
 
         <button
+          ref={menuButtonRef}
           type="button"
           aria-label={menuOpen ? "Close menu" : "Open menu"}
+          aria-controls="mobile-navigation"
+          aria-expanded={menuOpen}
           className="flex h-10 w-10 items-center justify-center rounded-full text-ink xl:hidden"
           onClick={() => setMenuOpen((v) => !v)}
         >
@@ -71,13 +117,18 @@ export function Header() {
       </Container>
 
       {menuOpen && (
-        <div className="fixed inset-x-0 top-20 bottom-0 z-50 overflow-y-auto bg-cream xl:hidden">
+        <nav
+          ref={mobileMenuRef}
+          id="mobile-navigation"
+          aria-label="Mobile navigation"
+          className="fixed inset-x-0 top-20 bottom-0 z-50 overflow-y-auto bg-cream xl:hidden"
+        >
           <Container className="flex flex-col gap-1 py-8">
             {site.nav.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                onClick={() => setMenuOpen(false)}
+                onClick={closeMenu}
                 className="border-b border-ink/8 py-4 font-display text-2xl text-ink"
               >
                 {item.label}
@@ -90,16 +141,16 @@ export function Header() {
                 size="lg"
                 className="w-full"
                 data-cta="nav-free-audit-mobile"
-                onClick={() => setMenuOpen(false)}
+                onClick={closeMenu}
               >
                 Free Audit
               </Button>
-              <Button href="/contact" size="lg" className="w-full" showArrow>
+              <Button href="/contact" size="lg" className="w-full" showArrow onClick={closeMenu}>
                 {site.cta.primary}
               </Button>
             </div>
           </Container>
-        </div>
+        </nav>
       )}
     </header>
   );
