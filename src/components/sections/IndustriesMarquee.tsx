@@ -1,14 +1,18 @@
 import { site } from "@/data/site";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Container } from "@/components/ui/Container";
 
-export function IndustriesMarquee() {
+export async function IndustriesMarquee() {
+  const region = await getRegion();
+  const copy = regionCopy[region];
   const items = [...site.industries, ...site.industries];
 
   return (
     <section className="border-y border-ink/8 bg-cream py-10">
       <Container>
         <p className="mb-6 text-center text-xs font-semibold uppercase tracking-[0.18em] text-ink/40">
-          Built for Canada&apos;s home service industries
+          {copy.industriesHeading}
         </p>
       </Container>
       <div className="relative overflow-hidden">

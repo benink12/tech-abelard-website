@@ -1,10 +1,24 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import { Phone } from "lucide-react";
 import { site } from "@/data/site";
 import { Button } from "@/components/ui/Button";
 
 export function MobileCTABar() {
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const onScroll = () => setScrolled(window.scrollY > 24);
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  if (!scrolled) return null;
+
   return (
-    <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-ink/10 bg-cream/95 p-3 backdrop-blur-md xl:hidden">
+    <div className="fixed inset-x-0 bottom-0 z-40 flex items-center gap-3 border-t border-ink/10 bg-cream/95 p-3 [padding-bottom:calc(0.75rem+env(safe-area-inset-bottom))] [transform:translateZ(0)] backdrop-blur-md xl:hidden">
       <a
         href={site.phone.href}
         aria-label={`Call ${site.phone.display}`}

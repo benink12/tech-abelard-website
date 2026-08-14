@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { services } from "@/data/services";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { iconMap } from "@/lib/icons";
 import { Container } from "@/components/ui/Container";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -7,12 +9,14 @@ import { PageHero } from "@/components/sections/PageHero";
 import { AuditCallout } from "@/components/sections/AuditCallout";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
-export const metadata: Metadata = {
-  title: "Services",
-  description:
-    "Web design, local SEO, Google Business Profile management, website care, landing pages, and performance optimization for Canadian home service businesses.",
-  alternates: { canonical: "/services" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const region = await getRegion();
+  return {
+    title: "Services",
+    description: regionCopy[region].pageDescriptions.services,
+    alternates: { canonical: "/services" },
+  };
+}
 
 export default function ServicesPage() {
   return (

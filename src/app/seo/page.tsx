@@ -30,7 +30,7 @@ export default function SEOPage() {
         description="A website is the asset. SEO is what makes it keep earning — five pillars run every month, reported in numbers you can actually read."
       >
         <div className="mt-8">
-          <Button href="/free-audit" variant="cream" size="lg" data-cta="seo-free-audit-top" showArrow>
+          <Button href="/audit" variant="cream" size="lg" data-cta="seo-free-audit-top" showArrow>
             Get a Free Website Audit
           </Button>
         </div>

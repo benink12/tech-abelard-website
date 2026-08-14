@@ -36,11 +36,31 @@ const nextConfig: NextConfig = {
   turbopack: {
     root: path.join(__dirname),
   },
+  // Dev server is also reached from a phone on the LAN (different origin
+  // than localhost) for mobile testing; Next.js blocks cross-origin dev
+  // requests by default.
+  allowedDevOrigins: ["192.168.2.87"],
+  // The dev tools indicator renders bottom-left by default, directly on top
+  // of MobileCTABar's phone button, intercepting taps there. Dev-only;
+  // never present in production.
+  devIndicators: false,
   async headers() {
     return [
       {
         source: "/:path*",
         headers: securityHeaders,
+      },
+    ];
+  },
+  // /free-audit (mailto-only mock form) is retired in favor of /audit (the
+  // real instant-audit engine) — see LAUNCH_AUDIT.md B8. Permanent redirect
+  // so old bookmarks/links/search results don't 404.
+  async redirects() {
+    return [
+      {
+        source: "/free-audit",
+        destination: "/audit",
+        permanent: true,
       },
     ];
   },

@@ -1,19 +1,27 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import Link from "next/link";
 import { Menu, X } from "lucide-react";
 import { site } from "@/data/site";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { Logo } from "@/components/layout/Logo";
+import { HeaderLogo } from "@/components/layout/HeaderLogo";
 import { cn } from "@/lib/utils";
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const mobileMenuRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    // Portal target (document.body) only exists client-side.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -23,9 +31,35 @@ export function Header() {
   }, []);
 
   useEffect(() => {
-    document.body.style.overflow = menuOpen ? "hidden" : "";
+    if (!menuOpen) return;
+
+    // iOS Safari doesn't reliably block background rubber-band scroll from
+    // `overflow: hidden` alone while a `position: fixed` overlay is open —
+    // pinning the body itself (and restoring the exact scroll offset after)
+    // is the combination that actually holds on real devices.
+    const scrollY = window.scrollY;
+    const body = document.body;
+    const previous = {
+      position: body.style.position,
+      top: body.style.top,
+      left: body.style.left,
+      right: body.style.right,
+      width: body.style.width,
+    };
+
+    body.style.position = "fixed";
+    body.style.top = `-${scrollY}px`;
+    body.style.left = "0";
+    body.style.right = "0";
+    body.style.width = "100%";
+
     return () => {
-      document.body.style.overflow = "";
+      body.style.position = previous.position;
+      body.style.top = previous.top;
+      body.style.left = previous.left;
+      body.style.right = previous.right;
+      body.style.width = previous.width;
+      window.scrollTo(0, scrollY);
     };
   }, [menuOpen]);
 
@@ -73,16 +107,16 @@ export function Header() {
   return (
     <header
       className={cn(
-        "sticky top-0 z-50 w-full transition-all duration-300",
+        "pointer-events-none sticky top-0 z-50 w-full pt-[env(safe-area-inset-top)] transition-all duration-300 [transform:translateZ(0)]",
         scrolled ? "border-b border-ink/8 bg-cream/85 backdrop-blur-md" : "border-b border-transparent bg-cream/0"
       )}
     >
       <Container className="flex h-20 items-center justify-between">
-        <Link href="/" onClick={() => setMenuOpen(false)}>
-          <Logo />
+        <Link href="/" onClick={() => setMenuOpen(false)} className="pointer-events-auto flex items-center">
+          <HeaderLogo />
         </Link>
 
-        <nav aria-label="Primary navigation" className="hidden items-center gap-8 xl:flex">
+        <nav aria-label="Primary navigation" className="pointer-events-auto hidden items-center gap-8 xl:flex">
           {site.nav.map((item) => (
             <Link
               key={item.href}
@@ -94,8 +128,8 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 xl:flex">
-          <Button href="/free-audit" variant="outline" size="md" data-cta="nav-free-audit">
+        <div className="pointer-events-auto hidden items-center gap-3 xl:flex">
+          <Button href="/audit" variant="outline" size="md" data-cta="nav-free-audit">
             Free Audit
           </Button>
           <Button href="/contact" size="md" showArrow>
@@ -109,49 +143,64 @@ export function Header() {
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           aria-controls="mobile-navigation"
           aria-expanded={menuOpen}
-          className="flex h-10 w-10 items-center justify-center rounded-full text-ink xl:hidden"
+          className="pointer-events-auto flex h-10 w-10 items-center justify-center rounded-full text-ink xl:hidden"
           onClick={() => setMenuOpen((v) => !v)}
         >
           {menuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
         </button>
       </Container>
 
-      {menuOpen && (
-        <nav
-          ref={mobileMenuRef}
-          id="mobile-navigation"
-          aria-label="Mobile navigation"
-          className="fixed inset-x-0 top-20 bottom-0 z-50 overflow-y-auto bg-cream xl:hidden"
-        >
-          <Container className="flex flex-col gap-1 py-8">
-            {site.nav.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={closeMenu}
-                className="border-b border-ink/8 py-4 font-display text-2xl text-ink"
-              >
-                {item.label}
-              </Link>
-            ))}
-            <div className="mt-8 flex flex-col gap-3">
-              <Button
-                href="/free-audit"
-                variant="outline"
-                size="lg"
-                className="w-full"
-                data-cta="nav-free-audit-mobile"
-                onClick={closeMenu}
-              >
-                Free Audit
-              </Button>
-              <Button href="/contact" size="lg" className="w-full" showArrow onClick={closeMenu}>
-                {site.cta.primary}
-              </Button>
-            </div>
-          </Container>
-        </nav>
-      )}
+      {mounted &&
+        menuOpen &&
+        createPortal(
+          // Rendered via portal into document.body, not as a descendant of
+          // <header> above: that element carries `transform:translateZ(0)`
+          // unconditionally (plus `backdrop-blur-md` once scrolled), and
+          // either one makes an ancestor the containing block for a
+          // `position: fixed` descendant per spec — the fixed nav's
+          // top/bottom then resolve against the ~80px-tall header box
+          // instead of the viewport, collapsing it to an invisible sliver
+          // in every browser (not just the WebKit-only bug this was
+          // previously suspected to be). Portaling out of that subtree
+          // entirely is the fix that holds regardless of future header
+          // style changes.
+          <nav
+            ref={mobileMenuRef}
+            id="mobile-navigation"
+            aria-label="Mobile navigation"
+            className="pointer-events-auto fixed inset-x-0 bottom-0 top-[calc(5rem+env(safe-area-inset-top))] z-50 overflow-y-auto bg-cream xl:hidden"
+            style={{ WebkitTextSizeAdjust: "100%", textSizeAdjust: "100%" }}
+          >
+            <Container className="flex flex-col gap-1 py-8 pb-[calc(2rem+env(safe-area-inset-bottom))]">
+              {site.nav.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={closeMenu}
+                  className="border-b border-ink/8 py-2.5 font-display text-[20px] font-medium leading-[1.3] text-ink"
+                >
+                  {item.label}
+                </Link>
+              ))}
+              <div className="mt-8 flex flex-col gap-3">
+                <Button
+                  href="/audit"
+                  variant="outline"
+                  size="lg"
+                  className="w-full"
+                  data-cta="nav-free-audit-mobile"
+                  onClick={closeMenu}
+                >
+                  Free Audit
+                </Button>
+                <Button href="/contact" size="lg" className="w-full" showArrow onClick={closeMenu}>
+                  {site.cta.primary}
+                </Button>
+              </div>
+            </Container>
+          </nav>,
+          document.body
+        )}
     </header>
   );
 }

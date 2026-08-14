@@ -20,14 +20,13 @@ export const site = {
   shortName: "Abélard",
   tagline: "Websites that make the phone ring before the pitch does.",
   description:
-    "Tech Abélard is a Canadian web design and local SEO agency for home service businesses — plumbers, roofers, HVAC companies, electricians, and the trades around them. We build sites that convert and rankings that compound.",
+    "Tech Abélard is a web design and local SEO agency for home service businesses — plumbers, roofers, HVAC companies, electricians, and the trades around them. We build sites that convert and rankings that compound.",
   url: "https://techabelard.com",
   email: BUSINESS_EMAIL,
   phone: {
     display: "(647) 555-0119",
     href: "tel:+16475550119",
   },
-  location: "Canada",
   social: {
     instagram: "https://instagram.com/techabelard",
     linkedin: "https://linkedin.com/company/techabelard",
@@ -57,7 +56,7 @@ export const site = {
       links: [
         { label: "SEO", href: "/seo" },
         { label: "Pricing", href: "/pricing" },
-        { label: "Free Website Audit", href: "/free-audit" },
+        { label: "Free Website Audit", href: "/audit" },
         { label: "FAQ", href: "/faq" },
         { label: "Contact", href: "/contact" },
       ],
@@ -81,6 +80,9 @@ export const site = {
     "Painting",
     "Concrete",
     "Cleaning",
+    "Medspa / Aesthetic Wellness",
+    "Property Management",
+    "Veterinary / Animal Healthcare",
   ] as const,
   cta: {
     primary: "Book a Discovery Call",

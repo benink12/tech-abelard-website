@@ -1,8 +1,13 @@
 import { site } from "@/data/site";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
-export function Hero() {
+export async function Hero() {
+  const region = await getRegion();
+  const copy = regionCopy[region];
+
   return (
     <section className="relative overflow-hidden bg-ink pb-24 pt-20 text-cream sm:pb-32 sm:pt-28">
       <div
@@ -17,7 +22,7 @@ export function Hero() {
       <Container className="relative">
         <div className="mx-auto max-w-4xl text-center">
           <p className="brass-line mx-auto mb-8 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-brass">
-            Web Design &amp; Local SEO for Canadian Trades
+            {copy.heroEyebrow}
           </p>
 
           <h1 className="text-balance font-display text-4xl font-medium leading-[1.08] tracking-tight sm:text-6xl lg:text-7xl">
@@ -33,7 +38,7 @@ export function Hero() {
             <Button href="/contact" variant="cream" size="lg" showArrow>
               {site.cta.primary}
             </Button>
-            <Button href="/free-audit" variant="outline-cream" size="lg" data-cta="hero-free-audit">
+            <Button href="/audit" variant="outline-cream" size="lg" data-cta="hero-free-audit">
               Get a Free Website Audit
             </Button>
             <Button href="/portfolio" variant="outline-cream" size="lg">

@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
-import { faqItems } from "@/data/faq";
+import { faqItems, localizeFaqItems } from "@/data/faq";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/sections/PageHero";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
@@ -12,20 +14,25 @@ export const metadata: Metadata = {
   alternates: { canonical: "/faq" },
 };
 
-const faqJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqItems.map((item) => ({
-    "@type": "Question",
-    name: item.question,
-    acceptedAnswer: {
-      "@type": "Answer",
-      text: item.answer,
-    },
-  })),
-};
+export default async function FAQPage() {
+  const region = await getRegion();
+  const copy = regionCopy[region];
 
-export default function FAQPage() {
+  const items = localizeFaqItems(faqItems, copy.faqAudienceAnswer);
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
@@ -38,7 +45,7 @@ export default function FAQPage() {
       <section className="py-24 sm:py-32">
         <Container>
           <div className="mx-auto max-w-3xl">
-            <FAQAccordion items={faqItems} />
+            <FAQAccordion items={items} />
           </div>
         </Container>
       </section>

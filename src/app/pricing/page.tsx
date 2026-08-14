@@ -1,25 +1,32 @@
 import type { Metadata } from "next";
-import { gbpPricing, pricingNote } from "@/data/pricing";
+import { gbpPricing } from "@/data/pricing";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PageHero } from "@/components/sections/PageHero";
 import { PricingTabs, BundlesGrid } from "@/components/sections/PricingTabs";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
-export const metadata: Metadata = {
-  title: "Pricing",
-  description:
-    "Real pricing for premium web design, local SEO, and website care for Canadian home service businesses — Essential, Professional, and Premium tiers.",
-  alternates: { canonical: "/pricing" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const region = await getRegion();
+  return {
+    title: "Pricing",
+    description: regionCopy[region].pageDescriptions.pricing,
+    alternates: { canonical: "/pricing" },
+  };
+}
 
-export default function PricingPage() {
+export default async function PricingPage() {
+  const region = await getRegion();
+  const copy = regionCopy[region];
+
   return (
     <>
       <PageHero
         eyebrow="Pricing"
         title="Real numbers. Not a 'contact us for pricing' dodge."
-        description={pricingNote}
+        description={copy.pricingNote}
       />
 
       <section className="py-24 sm:py-32">

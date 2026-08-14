@@ -24,16 +24,30 @@ export const pricingDisclaimer = "Starting at the listed price. Final pricing de
 export type PricingTier = {
   name: string;
   price: string;
+  // Set only where the current price is a genuine reduction from what this
+  // tier used to cost. Never set previousPrice/priceLabel on a tier whose
+  // price went up or stayed flat -- that would render as a discount claim
+  // that isn't true. See websitePackages below: Premium's price increased
+  // (was $4,390, now $4,499) so it intentionally has neither field.
+  previousPrice?: string;
+  priceLabel?: string;
   cadence?: string;
   featured?: boolean;
   bestFor: string;
   features: string[];
 };
 
+// Website package prices updated 2026-08-03: Essential $1,190 -> $998,
+// Professional $2,390 -> $1,499 (both genuine reductions, shown with
+// previousPrice + priceLabel). Premium $4,390 -> $4,499 is a genuine
+// increase, so it deliberately has no previousPrice/priceLabel -- do not
+// add a "was" price there, it would misrepresent an increase as a discount.
 export const websitePackages: PricingTier[] = [
   {
     name: "Essential",
-    price: "$1,190",
+    price: "$998",
+    previousPrice: "$1,190",
+    priceLabel: "New lower pricing",
     bestFor: "Ideal for businesses launching their first premium online presence.",
     features: [
       "Up to 5 custom pages",
@@ -50,7 +64,9 @@ export const websitePackages: PricingTier[] = [
   },
   {
     name: "Professional",
-    price: "$2,390",
+    price: "$1,499",
+    previousPrice: "$2,390",
+    priceLabel: "New lower pricing",
     featured: true,
     bestFor: "Designed for growing businesses that want more leads and stronger online visibility.",
     features: [
@@ -69,7 +85,7 @@ export const websitePackages: PricingTier[] = [
   },
   {
     name: "Premium",
-    price: "$4,390",
+    price: "$4,499",
     bestFor: "Built for businesses that want a complete digital presence and long-term growth.",
     features: [
       "Everything in Professional, plus:",
@@ -182,32 +198,41 @@ export type Bundle = {
   bestFor: string;
 };
 
+// Recomputed 2026-08-08 after the websitePackages price cut above — these
+// three bundles previously derived their `price`/`standaloneValue`/`savings`
+// from Essential $1,190 / Professional $2,390 / Premium $4,390 and were
+// never recalculated when those dropped to $998/$1,499/$4,499. The Growth
+// Bundle in particular had gone stale enough that it cost MORE than buying
+// its three components separately at current prices while still claiming a
+// 16% discount. Each bundle below keeps its original target discount rate
+// (Launch ~15%, Growth ~16%, Market Leader ~17%) applied to the CURRENT
+// component prices — recompute again here if any component price changes.
 export const bundles: Bundle[] = [
   {
-    // Essential Website $1,190 + GBP Setup $597 + Essential Care x3 ($237) = $2,024 standalone
+    // Essential Website $998 + GBP Setup $597 + Essential Care x3 ($237) = $1,832 standalone
     name: "Launch Bundle",
-    price: "$1,720",
-    standaloneValue: "$2,024",
-    savings: "Save $304 (~15%)",
+    price: "$1,560",
+    standaloneValue: "$1,832",
+    savings: "Save $272 (~15%)",
     bestFor: "Businesses starting from zero — no site, no local visibility.",
     includes: ["Essential Website", "GBP One-Time Setup", "Essential Care — first 3 months"],
   },
   {
-    // Professional Website $2,390 + Growth SEO x3 ($2,070) + Growth Care x3 ($447) = $4,907 standalone
+    // Professional Website $1,499 + Growth SEO x3 ($2,070) + Growth Care x3 ($447) = $4,016 standalone
     name: "Growth Bundle",
-    price: "$4,120",
-    standaloneValue: "$4,907",
-    savings: "Save $787 (~16%)",
+    price: "$3,370",
+    standaloneValue: "$4,016",
+    savings: "Save $646 (~16%)",
     featured: true,
     bestFor: "Established businesses ready to take real market share.",
     includes: ["Professional Website", "Growth SEO — first 3 months", "Growth Care — first 3 months"],
   },
   {
-    // Premium Website $4,390 + Dominance SEO x3 ($3,570) + Premium Care x3 ($747) = $8,707 standalone
+    // Premium Website $4,499 + Dominance SEO x3 ($3,570) + Premium Care x3 ($747) = $8,816 standalone
     name: "Market Leader Bundle",
-    price: "$7,230",
-    standaloneValue: "$8,707",
-    savings: "Save $1,477 (~17%)",
+    price: "$7,320",
+    standaloneValue: "$8,816",
+    savings: "Save $1,496 (~17%)",
     bestFor: "Businesses that want to own their category outright.",
     includes: ["Premium Website", "Dominance SEO — first 3 months", "Premium Care — first 3 months"],
   },
@@ -220,5 +245,5 @@ export const gbpPricing = {
   monthlyNote: "/mo ongoing management (standalone clients — included free in every SEO retainer)",
 };
 
-export const pricingNote =
-  "All prices in CAD, starting at, one-time unless noted. Final quote is confirmed after a short scope call — the factors that shift scope (service areas, existing photography, content readiness) take five minutes to walk through.";
+// The region-aware version of this sentence (currency swapped per visitor)
+// lives in src/data/localization.ts as regionCopy[region].pricingNote.

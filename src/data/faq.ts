@@ -4,12 +4,20 @@ export type FaqItem = {
   category: "General" | "Pricing" | "Process" | "SEO";
 };
 
+const AUDIENCE_QUESTION = "What kind of businesses do you work with?";
+
+// Swaps in the region-specific answer to the audience question — the one
+// FAQ answer with country-specific wording — everywhere faqItems is rendered.
+export function localizeFaqItems(items: FaqItem[], audienceAnswer: string): FaqItem[] {
+  return items.map((item) => (item.question === AUDIENCE_QUESTION ? { ...item, answer: audienceAnswer } : item));
+}
+
 export const faqItems: FaqItem[] = [
   {
     category: "General",
     question: "What kind of businesses do you work with?",
     answer:
-      "Canadian home service businesses — plumbing, HVAC, roofing, electrical, landscaping, construction, tree services, painting, concrete, and cleaning companies. That focus means we already understand your customer's decision, not just your industry.",
+      "Home service businesses — plumbing, HVAC, roofing, electrical, landscaping, construction, tree services, painting, concrete, and cleaning companies. That focus means we already understand your customer's decision, not just your industry.",
   },
   {
     category: "Pricing",

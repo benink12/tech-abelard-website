@@ -1,43 +1,49 @@
 import type { Metadata } from "next";
 import { site } from "@/data/site";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { PageHero } from "@/components/sections/PageHero";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
-export const metadata: Metadata = {
-  title: "About",
-  description:
-    "Tech Abélard is a Canadian web design and local SEO agency built exclusively for home service businesses — plumbers, roofers, and HVAC companies.",
-  alternates: { canonical: "/about" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const region = await getRegion();
+  return {
+    title: "About",
+    description: regionCopy[region].pageDescriptions.about,
+    alternates: { canonical: "/about" },
+  };
+}
 
-const beliefs = [
-  {
-    title: "Specificity over polish-for-its-own-sake",
-    description:
-      "A beautiful site that doesn't mention your actual service areas or your actual services is just expensive wallpaper. Every page is built around real specifics — your business, not a category.",
-  },
-  {
-    title: "One industry, done properly",
-    description:
-      "We build exclusively for Canadian home service businesses. That focus means less time explaining your customer's decision to us, and more time on the parts that actually move rank and revenue.",
-  },
-  {
-    title: "Say the honest thing, even when it costs the sale",
-    description:
-      "If Essential fits your business better than Premium, we'll say so — and if your existing site's real problem is unmaintained infrastructure rather than a redesign, we'll say that too.",
-  },
-];
+export default async function AboutPage() {
+  const region = await getRegion();
+  const copy = regionCopy[region];
 
-export default function AboutPage() {
+  const beliefs = [
+    {
+      title: "Specificity over polish-for-its-own-sake",
+      description:
+        "A beautiful site that doesn't mention your actual service areas or your actual services is just expensive wallpaper. Every page is built around real specifics — your business, not a category.",
+    },
+    {
+      title: "One industry, done properly",
+      description: copy.aboutBeliefDescription,
+    },
+    {
+      title: "Say the honest thing, even when it costs the sale",
+      description:
+        "If Essential fits your business better than Premium, we'll say so — and if your existing site's real problem is unmaintained infrastructure rather than a redesign, we'll say that too.",
+    },
+  ];
+
   return (
     <>
       <PageHero
         eyebrow="About"
         title="Built for one kind of business, on purpose."
-        description={`${site.description} That's a deliberate narrowing, not a limitation.`}
+        description={`${copy.siteDescription} That's a deliberate narrowing, not a limitation.`}
       />
 
       <section className="py-24 sm:py-32">
@@ -46,7 +52,7 @@ export default function AboutPage() {
             <div className="lg:sticky lg:top-28 lg:self-start">
               <SectionHeading
                 eyebrow="Mission"
-                title="Become one of Canada's leading web design and local SEO agencies — by being the best at one thing first."
+                title={copy.regionalStatement}
                 description="We'd rather be the obvious choice for ten trades than a mediocre generalist for every industry at once."
               />
             </div>
@@ -75,7 +81,7 @@ export default function AboutPage() {
           <SectionHeading
             eyebrow="Who We Serve"
             title="Every project is a home service business."
-            description="Plumbing, HVAC, roofing, electrical, landscaping, construction, tree services, painting, concrete, and cleaning companies across Canada."
+            description={copy.aboutWhoWeServeDescription}
             align="center"
             className="mx-auto"
           />

@@ -13,16 +13,28 @@ export function RevealOnScroll({
   delay?: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  // `primed` only ever becomes true from inside a mounted effect — i.e. it is
+  // proof JS actually ran. Content stays at the CSS default (fully visible,
+  // see .reveal-on-scroll in globals.css) until then, so a hydration failure
+  // or a JS error anywhere else on the page can never leave this content
+  // stuck invisible.
+  const [primed, setPrimed] = useState(false);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
     const node = ref.current;
-    if (!node) return;
+    if (!node || typeof IntersectionObserver === "undefined") {
+      setVisible(true);
+      return;
+    }
+
+    setPrimed(true);
+    const reveal = () => setVisible(true);
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          setVisible(true);
+          reveal();
           observer.disconnect();
         }
       },
@@ -30,13 +42,22 @@ export function RevealOnScroll({
     );
 
     observer.observe(node);
-    return () => observer.disconnect();
+
+    // Some iOS Safari sessions never fire an intersection callback (fast
+    // flicks, throttled callbacks in low-power mode). Never leave content
+    // permanently invisible waiting on it.
+    const fallback = window.setTimeout(reveal, 1200);
+
+    return () => {
+      observer.disconnect();
+      window.clearTimeout(fallback);
+    };
   }, []);
 
   return (
     <div
       ref={ref}
-      className={cn("reveal-on-scroll", visible && "is-visible", className)}
+      className={cn("reveal-on-scroll", primed && !visible && "reveal-pending", visible && "is-visible", className)}
       style={visible && delay ? { animationDelay: `${delay}ms` } : undefined}
     >
       {children}

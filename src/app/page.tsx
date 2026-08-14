@@ -6,7 +6,6 @@ import { PortfolioPreview } from "@/components/sections/PortfolioPreview";
 import { FreeAuditPromo } from "@/components/sections/FreeAuditPromo";
 import { ProcessPreview } from "@/components/sections/ProcessPreview";
 import { SEOPreview } from "@/components/sections/SEOPreview";
-import { Testimonials } from "@/components/sections/Testimonials";
 import { PricingPreview } from "@/components/sections/PricingPreview";
 import { FAQPreview } from "@/components/sections/FAQPreview";
 import { FinalCTA } from "@/components/sections/FinalCTA";
@@ -22,7 +21,6 @@ export default function Home() {
       <FreeAuditPromo />
       <ProcessPreview />
       <SEOPreview />
-      <Testimonials />
       <PricingPreview />
       <FAQPreview />
       <FinalCTA />

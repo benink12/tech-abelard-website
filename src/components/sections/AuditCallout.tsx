@@ -24,7 +24,7 @@ export function AuditCallout({
             <h3 className="font-display text-xl font-medium text-ink">{title}</h3>
             <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{description}</p>
           </div>
-          <Button href="/free-audit" variant="outline" size="md" data-cta={ctaId} className="shrink-0" showArrow>
+          <Button href="/audit" variant="outline" size="md" data-cta={ctaId} className="shrink-0" showArrow>
             {ctaLabel}
           </Button>
         </div>

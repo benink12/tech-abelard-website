@@ -66,7 +66,15 @@ body {
   }
 }
 
+/* Default state is fully visible — content must never depend on JS running
+   to become visible. Only once JS has mounted and is actively managing the
+   reveal (`.reveal-pending`) does it go transparent, immediately before the
+   IntersectionObserver flips it to `.is-visible` and plays the animation. */
 .reveal-on-scroll {
+  opacity: 1;
+}
+
+.reveal-on-scroll.reveal-pending {
   opacity: 0;
 }
 

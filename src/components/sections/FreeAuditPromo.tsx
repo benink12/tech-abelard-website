@@ -36,7 +36,7 @@ export function FreeAuditPromo() {
             </ul>
 
             <div className="mt-10 flex justify-center">
-              <Button href="/free-audit" size="lg" data-cta="homepage-free-audit" showArrow>
+              <Button href="/audit" size="lg" data-cta="homepage-free-audit" showArrow>
                 Request My Free Audit
               </Button>
             </div>

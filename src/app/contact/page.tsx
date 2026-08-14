@@ -1,16 +1,21 @@
 import type { Metadata } from "next";
 import { Calendar, Mail, Phone, Clock, ScanSearch } from "lucide-react";
 import { site } from "@/data/site";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/sections/PageHero";
 import { ContactForm } from "@/components/sections/ContactForm";
 import { Button } from "@/components/ui/Button";
 
-export const metadata: Metadata = {
-  title: "Contact",
-  description: "Book a discovery call or send a message to Tech Abélard — Canada's web design and local SEO agency for home service businesses.",
-  alternates: { canonical: "/contact" },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const region = await getRegion();
+  return {
+    title: "Contact",
+    description: regionCopy[region].pageDescriptions.contact,
+    alternates: { canonical: "/contact" },
+  };
+}
 
 export default function ContactPage() {
   return (
@@ -36,16 +41,19 @@ export default function ContactPage() {
                 <p className="mt-2 text-sm leading-relaxed text-ink/60">
                   Prefer to skip the form? Grab a slot directly — 20 minutes, no obligation.
                 </p>
-                {/* Integration point: replace with a real embedded Calendly widget
-                    (inline embed script) once site.calendlyUrl is finalized. */}
-                <a
+                {/* Opens the real booking page in a new tab today. A future
+                    pass could swap this for Calendly's inline embed script
+                    once we're ready to add that third-party dependency. */}
+                <Button
                   href={site.calendlyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-5 flex items-center justify-center rounded-xl border border-dashed border-ink/20 bg-cream px-4 py-8 text-center text-sm text-ink/45 transition-colors hover:border-brass-ink/50 hover:text-brass-ink"
+                  external
+                  variant="outline"
+                  size="lg"
+                  className="mt-5 w-full"
+                  data-cta="contact-book-discovery-call"
                 >
-                  Calendly widget placeholder — opens booking page
-                </a>
+                  <Calendar className="h-4 w-4" /> Open booking calendar
+                </Button>
               </div>
 
               <div className="rounded-2xl border border-ink/8 bg-cream-card p-8">
@@ -75,7 +83,7 @@ export default function ContactPage() {
                 <p className="mt-3 text-sm leading-relaxed text-ink/60">
                   Start with a free, honest audit of your current website instead — no obligation.
                 </p>
-                <Button href="/free-audit" variant="outline" size="md" className="mt-5 w-full" data-cta="contact-free-audit" showArrow>
+                <Button href="/audit" variant="outline" size="md" className="mt-5 w-full" data-cta="contact-free-audit" showArrow>
                   Get a Free Website Audit
                 </Button>
               </div>

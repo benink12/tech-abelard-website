@@ -1,7 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces } from "next/font/google";
 import "./globals.css";
 import { site } from "@/data/site";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileCTABar } from "@/components/layout/MobileCTABar";
@@ -19,69 +21,79 @@ const fraunces = Fraunces({
   axes: ["opsz"],
 });
 
-export const metadata: Metadata = {
-  metadataBase: new URL(site.url),
-  title: {
-    default: `${site.name} | ${site.tagline}`,
-    template: `%s | ${site.name}`,
-  },
-  description: site.description,
-  keywords: [
-    "web design agency Canada",
-    "local SEO agency",
-    "home service business website design",
-    "plumber website design",
-    "HVAC website design",
-    "roofing company website design",
-    "Google Business Profile optimization",
-  ],
-  openGraph: {
-    type: "website",
-    siteName: site.name,
-    title: site.name,
-    description: site.description,
-    locale: "en_CA",
-    url: site.url,
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: site.name,
-    description: site.description,
-  },
-  robots: {
-    index: true,
-    follow: true,
-  },
-  alternates: {
-    canonical: "/",
-  },
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
 };
 
-const professionalServiceJsonLd = {
-  "@context": "https://schema.org",
-  "@type": "ProfessionalService",
-  name: site.name,
-  description: site.description,
-  email: site.email,
-  telephone: site.phone.display,
-  url: site.url,
-  areaServed: {
-    "@type": "Country",
-    name: "Canada",
-  },
-  address: {
-    "@type": "PostalAddress",
-    addressCountry: "CA",
-  },
-  sameAs: [site.social.instagram, site.social.linkedin],
-  priceRange: "$$",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const region = await getRegion();
+  const copy = regionCopy[region];
 
-export default function RootLayout({
+  return {
+    metadataBase: new URL(site.url),
+    title: {
+      default: `${site.name} | ${site.tagline}`,
+      template: `%s | ${site.name}`,
+    },
+    description: copy.siteDescription,
+    keywords: copy.metadataKeywords,
+    openGraph: {
+      type: "website",
+      siteName: site.name,
+      title: site.name,
+      description: copy.siteDescription,
+      locale: copy.ogLocale,
+      url: site.url,
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: site.name,
+      description: copy.siteDescription,
+    },
+    robots: {
+      index: true,
+      follow: true,
+    },
+    alternates: {
+      canonical: "/",
+    },
+  };
+}
+
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const region = await getRegion();
+  const copy = regionCopy[region];
+
+  const professionalServiceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ProfessionalService",
+    name: site.name,
+    description: copy.siteDescription,
+    email: site.email,
+    telephone: site.phone.display,
+    url: site.url,
+    ...(copy.jsonLd.countryName && copy.jsonLd.addressCountry
+      ? {
+          areaServed: {
+            "@type": "Country",
+            name: copy.jsonLd.countryName,
+          },
+          address: {
+            "@type": "PostalAddress",
+            addressCountry: copy.jsonLd.addressCountry,
+          },
+        }
+      : {}),
+    sameAs: [site.social.instagram, site.social.linkedin],
+    priceRange: "$$",
+  };
+
   return (
     <html lang="en" className={`${inter.variable} ${fraunces.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-cream text-ink antialiased">
@@ -96,7 +108,10 @@ export default function RootLayout({
           Skip to main content
         </a>
         <Header />
-        <main id="main-content" className="flex-1 pb-20 xl:pb-0">
+        <main
+          id="main-content"
+          className="flex-1 pb-[calc(4.8125rem+env(safe-area-inset-bottom)+1rem)] xl:pb-0"
+        >
           {children}
         </main>
         <Footer />

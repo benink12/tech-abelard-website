@@ -1,18 +1,23 @@
 import Link from "next/link";
 import { Mail, Phone } from "lucide-react";
 import { site } from "@/data/site";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/layout/Logo";
 import { InstagramIcon, LinkedinIcon } from "@/components/ui/SocialIcons";
 
-export function Footer() {
+export async function Footer() {
+  const region = await getRegion();
+  const copy = regionCopy[region];
+
   return (
     <footer className="border-t border-cream/10 bg-ink text-cream">
       <Container className="pb-32 pt-16 xl:py-20">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Logo tone="cream" />
-            <p className="mt-5 max-w-xs text-sm leading-relaxed text-cream/60">{site.description}</p>
+            <p className="mt-5 max-w-xs text-sm leading-relaxed text-cream/60">{copy.siteDescription}</p>
             <div className="mt-6 flex items-center gap-4">
               <a
                 href={site.social.instagram}
@@ -43,7 +48,7 @@ export function Footer() {
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      data-cta={link.href === "/free-audit" ? "footer-free-audit" : undefined}
+                      data-cta={link.href === "/audit" ? "footer-free-audit" : undefined}
                       className="text-sm text-cream/65 transition-colors hover:text-cream"
                     >
                       {link.label}
@@ -67,7 +72,6 @@ export function Footer() {
                   <Phone className="h-4 w-4" /> {site.phone.display}
                 </a>
               </li>
-              <li className="pt-1 text-cream/45">{site.location}</li>
             </ul>
           </div>
         </div>
@@ -76,7 +80,7 @@ export function Footer() {
           <p className="text-xs text-cream/45">
             © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
-          <p className="text-xs text-cream/35">Built for Canada&apos;s home service businesses.</p>
+          <p className="text-xs text-cream/35">{copy.footerStatement}</p>
         </div>
       </Container>
     </footer>

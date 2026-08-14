@@ -16,6 +16,11 @@ import {
   MousePointerClick,
   Phone,
   ListChecks,
+  ServerCog,
+  Accessibility,
+  Sparkles,
+  Building2,
+  PawPrint,
   type LucideIcon,
 } from "lucide-react";
 
@@ -37,4 +42,9 @@ export const iconMap: Record<string, LucideIcon> = {
   "mouse-pointer-click": MousePointerClick,
   phone: Phone,
   "list-checks": ListChecks,
+  "server-cog": ServerCog,
+  accessibility: Accessibility,
+  sparkles: Sparkles,
+  building: Building2,
+  "paw-print": PawPrint,
 };

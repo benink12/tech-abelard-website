@@ -26,15 +26,27 @@ export function PricingCard({ tier }: { tier: PricingTier }) {
         {tier.bestFor}
       </p>
 
-      <div className="mt-6 flex items-baseline gap-1.5">
-        <span className={cn("font-display text-4xl font-medium", tier.featured ? "text-brass-light" : "text-ink")}>
-          {tier.price}
-        </span>
-        {tier.cadence && (
-          <span className={cn("text-sm", tier.featured ? "text-cream/50" : "text-ink/45")}>{tier.cadence}</span>
+      <div className="mt-6">
+        {tier.previousPrice && (
+          <p className={cn("text-sm font-medium line-through", tier.featured ? "text-cream/40" : "text-ink/35")}>
+            Was {tier.previousPrice}
+          </p>
         )}
-        {!tier.cadence && (
-          <span className={cn("text-sm", tier.featured ? "text-cream/50" : "text-ink/45")}>starting</span>
+        <div className={cn("flex items-baseline gap-1.5", tier.previousPrice && "mt-1")}>
+          <span className={cn("font-display text-4xl font-medium", tier.featured ? "text-brass-light" : "text-ink")}>
+            {tier.price}
+          </span>
+          {tier.cadence && (
+            <span className={cn("text-sm", tier.featured ? "text-cream/50" : "text-ink/45")}>{tier.cadence}</span>
+          )}
+          {!tier.cadence && (
+            <span className={cn("text-sm", tier.featured ? "text-cream/50" : "text-ink/45")}>starting</span>
+          )}
+        </div>
+        {tier.priceLabel && (
+          <p className={cn("mt-2 text-xs font-semibold uppercase tracking-[0.14em]", tier.featured ? "text-brass-light" : "text-brass-ink")}>
+            {tier.priceLabel}
+          </p>
         )}
       </div>
 

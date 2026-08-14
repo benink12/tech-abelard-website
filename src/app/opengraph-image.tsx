@@ -1,10 +1,15 @@
 import { ImageResponse } from "next/og";
 import { site } from "@/data/site";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
-export default function OpengraphImage() {
+export default async function OpengraphImage() {
+  const region = await getRegion();
+  const copy = regionCopy[region];
+
   return new ImageResponse(
     (
       <div
@@ -60,7 +65,7 @@ export default function OpengraphImage() {
           {site.tagline}
         </div>
         <div style={{ display: "flex", fontSize: 24, marginTop: 26, color: "#d8bd8a" }}>
-          Web Design &amp; Local SEO for Canadian Home Service Businesses
+          {copy.ogImageSubtitle}
         </div>
       </div>
     ),

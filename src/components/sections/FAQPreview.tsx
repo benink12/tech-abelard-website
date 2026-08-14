@@ -1,11 +1,16 @@
 import Link from "next/link";
-import { faqItems } from "@/data/faq";
+import { faqItems, localizeFaqItems } from "@/data/faq";
+import { regionCopy } from "@/data/localization";
+import { getRegion } from "@/lib/region";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 
-export function FAQPreview() {
-  const preview = faqItems.slice(0, 5);
+export async function FAQPreview() {
+  const region = await getRegion();
+  const copy = regionCopy[region];
+
+  const preview = localizeFaqItems(faqItems, copy.faqAudienceAnswer).slice(0, 5);
 
   return (
     <section className="py-24 sm:py-32">
