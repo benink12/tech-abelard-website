@@ -4,7 +4,7 @@ export type Service = {
   shortDescription: string;
   description: string;
   deliverables: string[];
-  icon: "layout" | "search" | "map-pin" | "shield-check" | "panel-top" | "gauge";
+  icon: "layout" | "search" | "map-pin" | "shield-check" | "panel-top" | "gauge" | "phone";
 };
 
 export const services: Service[] = [
@@ -24,7 +24,7 @@ export const services: Service[] = [
   },
   {
     slug: "seo",
-    name: "SEO",
+    name: "Local SEO",
     shortDescription: "Local rankings that compound month over month.",
     description:
       "Local SEO is compounding proof to Google that you're the real, active, trustworthy answer to \"best [service] near me.\" We run monthly retainers built around technical fixes, content, citations, and review generation — not a one-time audit and a promise.",
@@ -35,6 +35,20 @@ export const services: Service[] = [
       "Ranking + traffic reporting you can actually read",
     ],
     icon: "search",
+  },
+  {
+    slug: "ai-receptionists",
+    name: "AI Receptionists",
+    shortDescription: "Never miss a call, even after hours.",
+    description:
+      "AI receptionists that answer calls, qualify leads, answer common questions, help book appointments, and hand callers off to a real person when needed.",
+    deliverables: [
+      "Answers calls in a natural, on-brand voice",
+      "Qualifies leads and collects the details you need",
+      "Answers common questions automatically",
+      "Books appointments and transfers to a real person when needed",
+    ],
+    icon: "phone",
   },
   {
     slug: "google-business-profile",

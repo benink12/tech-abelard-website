@@ -13,7 +13,7 @@ export function ServicesOverview() {
         <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
           <SectionHeading
             eyebrow="What We Do"
-            title="Six disciplines. One growth engine."
+            title="Seven disciplines. One growth engine."
             description="Every service is built to work alone or as a system — a site that converts, feeding an SEO campaign that keeps finding it new customers."
           />
           <Link href="/services" className="hidden shrink-0 text-sm font-medium text-ink/70 hover:text-brass-ink sm:block">

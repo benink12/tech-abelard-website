@@ -1,6 +1,7 @@
 import { Hero } from "@/components/sections/Hero";
 import { IndustriesMarquee } from "@/components/sections/IndustriesMarquee";
 import { ServicesOverview } from "@/components/sections/ServicesOverview";
+import { AIReceptionistPromo } from "@/components/sections/AIReceptionistPromo";
 import { WhyTechAbelard } from "@/components/sections/WhyTechAbelard";
 import { PortfolioPreview } from "@/components/sections/PortfolioPreview";
 import { FreeAuditPromo } from "@/components/sections/FreeAuditPromo";
@@ -16,6 +17,7 @@ export default function Home() {
       <Hero />
       <IndustriesMarquee />
       <ServicesOverview />
+      <AIReceptionistPromo />
       <WhyTechAbelard />
       <PortfolioPreview />
       <FreeAuditPromo />

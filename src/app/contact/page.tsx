@@ -68,6 +68,9 @@ export default function ContactPage() {
                     <a href={site.phone.href} className="flex items-center gap-3 text-sm text-ink/75 hover:text-brass-ink">
                       <Phone className="h-4 w-4 shrink-0" /> {site.phone.display}
                     </a>
+                    <p className="mt-1.5 pl-7 text-xs leading-relaxed text-ink/45">
+                      Want to test our AI receptionist? Call this number and speak with it yourself.
+                    </p>
                   </li>
                   <li className="flex items-center gap-3 text-sm text-ink/50">
                     <Clock className="h-4 w-4 shrink-0" /> Replies within 1 business day

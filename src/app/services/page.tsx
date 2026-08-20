@@ -23,7 +23,7 @@ export default function ServicesPage() {
     <>
       <PageHero
         eyebrow="Services"
-        title="Six disciplines. One growth engine."
+        title="Seven disciplines. One growth engine."
         description="Every service works alone, or as a system — a site engineered to convert, an SEO campaign engineered to keep finding it new customers."
       />
 

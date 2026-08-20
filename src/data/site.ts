@@ -24,8 +24,8 @@ export const site = {
   url: "https://techabelard.com",
   email: BUSINESS_EMAIL,
   phone: {
-    display: "(647) 555-0119",
-    href: "tel:+16475550119",
+    display: "(581) 499-0011",
+    href: "tel:+15814990011",
   },
   social: {
     instagram: "https://instagram.com/techabelard",
