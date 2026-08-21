@@ -251,7 +251,7 @@ export function narrateSeo(s: SiteSignals, score: number): CategoryNarrative {
   const problems: AuditCategoryIssue[] = [];
 
   if (s.title && s.titleLength >= 10 && s.titleLength <= 60) {
-    strengths.push(`The page title ("${s.title}") is a good length.`);
+    strengths.push(`The page title ("${s.title}") is a good length at ${s.titleLength} characters.`);
   } else if (!s.title) {
     problems.push(
       issue("seo-title-missing", {
@@ -284,7 +284,7 @@ export function narrateSeo(s: SiteSignals, score: number): CategoryNarrative {
   }
 
   if (s.metaDescription && s.metaDescriptionLength >= 50 && s.metaDescriptionLength <= 160) {
-    strengths.push("A meta description is set at a good length.");
+    strengths.push(`A meta description is set at a good length (${s.metaDescriptionLength} characters).`);
   } else if (!s.metaDescription) {
     problems.push(
       issue("seo-meta-description-missing", {
@@ -510,7 +510,12 @@ export function narrateTrust(s: SiteSignals, score: number): CategoryNarrative {
       })
     );
 
-  if (s.telLinkPresent || s.mailtoLinkPresent) strengths.push("Direct contact information (phone or email link) is present on the page.");
+  if (s.telLinkPresent || s.mailtoLinkPresent)
+    strengths.push("Direct contact information (phone or email link) is present on the page.");
+  else if (s.hasContactPageLink)
+    strengths.push(
+      "No direct phone or email link is on this page, but a link to a contact or booking page was found — visitors do have a way to reach out."
+    );
   else
     problems.push(
       issue("trust-contact", {
@@ -579,16 +584,27 @@ export function narrateConversion(s: SiteSignals, score: number): CategoryNarrat
   const strengths: string[] = [];
   const problems: AuditCategoryIssue[] = [];
 
-  if (s.formCount > 0) strengths.push(`${s.formCount} form${s.formCount === 1 ? "" : "s"} detected — visitors have a way to reach out without picking up the phone.`);
-  else
+  if (s.formCount > 0) {
+    strengths.push(`${s.formCount} form${s.formCount === 1 ? "" : "s"} detected — visitors have a way to reach out without picking up the phone.`);
+  } else if (s.hasEmbeddedFormWidget) {
+    strengths.push("A third-party form or scheduling widget is embedded on the page — visitors have a way to reach out without picking up the phone.");
+  } else {
+    // Evidence-based: this is a single-page scan, so it can only speak to
+    // *this* page, and it must not claim the business is unreachable when a
+    // contact/quote/booking link or a tel:/mailto: link says otherwise.
+    const hasAlternatePath = s.hasContactPageLink || s.telLinkPresent || s.mailtoLinkPresent;
     problems.push(
       issue("conversion-form", {
-        issue: "There's no way to submit a form on the page.",
-        whyItMatters: "Visitors who don't want to call — often the majority — currently have no other way to reach out.",
-        recommendedFix: "Add a short quote or contact form with just a few fields.",
-        severity: "high",
+        issue: "No inline contact or quote form was detected on this page.",
+        whyItMatters: hasAlternatePath
+          ? "Visitors who'd rather fill out a quick form than call or click through to another page currently have to leave this page to do that — a real, if smaller, drop-off point."
+          : "Visitors who don't want to call — often the majority — currently have no other way to reach out from this page.",
+        recommendedFix: "Consider adding a short contact or quote form so ready-to-buy visitors can convert without leaving the page.",
+        technicalDetail: `No <form>, submit control, or recognized form/scheduling embed was found in this page's HTML.${hasAlternatePath ? " A link to a contact/booking page or a tel:/mailto: link was found elsewhere on the page." : ""}`,
+        severity: hasAlternatePath ? "medium" : "high",
       })
     );
+  }
 
   if (s.telLinkPresent) strengths.push("A click-to-call phone link is present, which matters most on mobile.");
   else

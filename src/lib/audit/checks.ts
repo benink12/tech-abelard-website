@@ -63,6 +63,11 @@ export interface SiteSignals {
   formCount: number;
   formInputCount: number;
   formLabeledInputCount: number;
+  formSubmitControlPresent: boolean;
+  /** A link elsewhere in the site (e.g. nav/footer "Contact" button) pointing at a contact/quote/booking page — evidence of an off-page conversion path even when this page has no inline form. */
+  hasContactPageLink: boolean;
+  /** A known third-party form/scheduling embed (Typeform, HubSpot, Calendly, Google Forms, JotForm, Wufoo, Tally, Formspree action, etc.) detected via script/iframe src or form action. */
+  hasEmbeddedFormWidget: boolean;
 
   hasPrivacyPolicyLink: boolean;
   hasTermsLink: boolean;
@@ -106,6 +111,21 @@ function getMetaContent(metaTags: string[], nameOrProperty: string): string | nu
 
 function stripTags(html: string): string {
   return html.replace(/<[^>]+>/g, " ");
+}
+
+// Hostnames of common third-party form/scheduling embeds — a real
+// conversion path that a raw <form> count misses because the actual form
+// markup lives on the provider's domain (iframe) or is injected by their
+// script, not authored in this page's HTML.
+const EMBEDDED_FORM_WIDGET_HOSTS =
+  /(embed\.typeform\.com|typeform\.com\/to\/|js\.hsforms\.net|hsforms\.com|forms\.hubspot\.com|docs\.google\.com\/forms|forms\.gle|jotform\.com|wufoo\.com|tally\.so|formspree\.io|form\.jotform\.com|cognitoforms\.com|forms\.office\.com|calendly\.com)/i;
+
+/** Best-effort: a known third-party form/scheduling embed (iframe/script src, or a <form action> pointing at one) — evidence of a working submission path that a bare <form> count would miss. */
+function detectEmbeddedFormWidget(html: string): boolean {
+  const iframeSrcs = findTags(html, "iframe").map((tag) => getAttr(tag, "src") ?? "");
+  const scriptSrcs = findTags(html, "script").map((tag) => getAttr(tag, "src") ?? "");
+  const formActions = findTags(html, "form").map((tag) => getAttr(tag, "action") ?? "");
+  return [...iframeSrcs, ...scriptSrcs, ...formActions].some((src) => EMBEDDED_FORM_WIDGET_HOSTS.test(src));
 }
 
 /** Best-effort: does the page contain LocalBusiness (or a subtype) JSON-LD? Tolerant of malformed JSON — this is a signal, not a validator. */
@@ -173,6 +193,9 @@ function emptySignals(): Omit<
     formCount: 0,
     formInputCount: 0,
     formLabeledInputCount: 0,
+    formSubmitControlPresent: false,
+    hasContactPageLink: false,
+    hasEmbeddedFormWidget: false,
     hasPrivacyPolicyLink: false,
     hasTermsLink: false,
     hasTestimonialSignal: false,
@@ -254,6 +277,14 @@ export async function fetchSiteSignals(rawUrl: string): Promise<SiteSignals> {
     let mailtoLinkPresent = false;
     let hasPrivacyPolicyLink = false;
     let hasTermsLink = false;
+    // A nav/footer/CTA link to a contact, quote, or booking page elsewhere on
+    // the site — matched on the URL path, not the link text (a "Book a
+    // Discovery Call" button pointing at /contact still counts). This is
+    // evidence the *scanned page* isn't the site's only conversion path, even
+    // when it has no inline form of its own; it does not mean a form exists
+    // on the page currently being scored.
+    let hasContactPageLink = false;
+    const CONTACT_PATH_RE = /\/(contact|get-a-quote|request-a-quote|free-quote|quote|schedule|booking|book-a-call|book-now|book)(\/|$|\?|#)/i;
     for (const tag of anchorTags) {
       const href = (getAttr(tag, "href") ?? "").trim();
       if (!href) continue;
@@ -261,19 +292,31 @@ export async function fetchSiteSignals(rawUrl: string): Promise<SiteSignals> {
       else if (href.startsWith("mailto:")) mailtoLinkPresent = true;
       else if (href.startsWith("http://") || href.startsWith("https://")) {
         try {
-          const isInternal = new URL(href).host === new URL(finalUrl).host;
+          const linkUrl = new URL(href);
+          const isInternal = linkUrl.host === new URL(finalUrl).host;
           externalLinkCount += isInternal ? 0 : 1;
           internalLinkCount += isInternal ? 1 : 0;
+          if (CONTACT_PATH_RE.test(linkUrl.pathname)) hasContactPageLink = true;
         } catch {
           // malformed href — ignore
         }
       } else if (href.startsWith("/") || href.startsWith("#") || !href.includes(":")) {
         internalLinkCount += 1;
+        if (CONTACT_PATH_RE.test(href)) hasContactPageLink = true;
       }
       if (/privacy/i.test(href)) hasPrivacyPolicyLink = true;
       if (/terms/i.test(href)) hasTermsLink = true;
     }
+    if (/calendly\.com/i.test(html)) hasContactPageLink = true;
 
+    // <form> markup is picked up here regardless of whether CSS/JS currently
+    // hides it (e.g. a modal that starts `display:none` or is only toggled
+    // open on click) — this is a raw-HTML scan, so any form Next.js
+    // server-rendered into the initial payload is counted whether or not a
+    // visitor has clicked anything yet. What this cannot see is a form whose
+    // *markup itself* is only mounted client-side after an interaction
+    // (e.g. lazily rendered on first open) — that's a real client-rendered-
+    // content blind spot, not a bug in this regex.
     const formTags = findTags(html, "form");
     const inputTags = [...findTags(html, "input"), ...findTags(html, "textarea"), ...findTags(html, "select")].filter(
       (tag) => !/type\s*=\s*["'](hidden|submit|button)["']/i.test(tag)
@@ -285,6 +328,13 @@ export async function fetchSiteSignals(rawUrl: string): Promise<SiteSignals> {
       const id = getAttr(tag, "id");
       return Boolean((id && labelForTargets.has(id)) || getAttr(tag, "aria-label") || getAttr(tag, "aria-labelledby"));
     }).length;
+    const formBlocks = html.match(/<form\b[\s\S]*?<\/form>/gi) ?? [];
+    const formSubmitControlPresent =
+      /<input[^>]*type\s*=\s*["']submit["']/i.test(html) ||
+      // Any <button> inside a <form> counts unless explicitly typed away from
+      // submit — that's the HTML-spec default for a type-less <button>.
+      formBlocks.some((block) => /<button(?![^>]*type\s*=\s*["'](button|reset)["'])[^>]*>/i.test(block));
+    const hasEmbeddedFormWidget = detectEmbeddedFormWidget(html);
 
     const bodyText = stripTags(html);
     if (/privacy\s*polic/i.test(bodyText)) hasPrivacyPolicyLink = true;
@@ -343,6 +393,9 @@ export async function fetchSiteSignals(rawUrl: string): Promise<SiteSignals> {
       formCount: formTags.length,
       formInputCount: inputTags.length,
       formLabeledInputCount,
+      formSubmitControlPresent,
+      hasContactPageLink,
+      hasEmbeddedFormWidget,
       hasPrivacyPolicyLink,
       hasTermsLink,
       hasTestimonialSignal,

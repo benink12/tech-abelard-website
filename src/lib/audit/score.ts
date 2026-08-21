@@ -119,10 +119,18 @@ export function scoreTrust(s: SiteSignals): number {
 
 export function scoreConversion(s: SiteSignals): number {
   let score = 100;
-  if (s.formCount === 0) score = deduct(score, 25);
+  const hasFormPath = s.formCount > 0 || s.hasEmbeddedFormWidget;
+  if (!hasFormPath) {
+    // Evidence-based deduction: a contact/quote/booking link elsewhere on the
+    // page (or a direct tel:/mailto:) means this page isn't a dead end even
+    // without its own inline form, so the penalty is smaller than when no
+    // conversion path exists at all.
+    const hasAlternatePath = s.hasContactPageLink || s.telLinkPresent || s.mailtoLinkPresent;
+    score = deduct(score, hasAlternatePath ? 10 : 25);
+  }
   if (!s.telLinkPresent) score = deduct(score, 25);
   if (!s.hasCallToActionSignal) score = deduct(score, 25);
-  if (s.formCount === 0 && !s.telLinkPresent) score = deduct(score, 10); // no conversion path at all
+  if (!hasFormPath && !s.telLinkPresent) score = deduct(score, 10); // no conversion path at all
   return clampScore(score);
 }
 
