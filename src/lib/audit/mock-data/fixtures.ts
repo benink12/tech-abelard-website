@@ -288,10 +288,10 @@ export const MOCK_AUDIT_AVERAGE: AuditResult = buildFixture({
       ["A tap-to-call phone link is present."],
       [
         issue("conversion-form", {
-          issue: "There's no way to submit a form on the page.",
-          whyItMatters: "Visitors who don't want to call currently have no other way to reach out.",
-          recommendedFix: "Add a short quote or contact form with just a few fields.",
-          severity: "high",
+          issue: "No inline contact or quote form was detected on this page.",
+          whyItMatters: "Visitors who'd rather fill out a quick form than call currently have to pick up the phone to reach out — a real, if smaller, drop-off point.",
+          recommendedFix: "Consider adding a short contact or quote form so ready-to-buy visitors can convert without leaving the page.",
+          severity: "medium",
         }),
       ]
     ),

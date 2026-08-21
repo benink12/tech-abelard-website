@@ -2,7 +2,7 @@ export type SeoPillar = {
   name: string;
   description: string;
   points: string[];
-  icon: "map-pin" | "search-check" | "code" | "file-text" | "bar-chart";
+  icon: "map-pin" | "search-check" | "code" | "file-text" | "bar-chart" | "list-checks";
 };
 
 export const seoPillars: SeoPillar[] = [
@@ -26,6 +26,16 @@ export const seoPillars: SeoPillar[] = [
       "Photo refresh and duplicate-listing cleanup",
     ],
     icon: "search-check",
+  },
+  {
+    name: "On-Page SEO",
+    description: "The words and structure on the page itself — the part Google reads before it ever ranks you.",
+    points: [
+      "Title tags, headings, and copy targeted to real search terms",
+      "Internal linking between service and location pages",
+      "Image alt text and page structure cleanup",
+    ],
+    icon: "list-checks",
   },
   {
     name: "Technical SEO",

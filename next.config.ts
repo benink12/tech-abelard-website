@@ -62,6 +62,15 @@ const nextConfig: NextConfig = {
         destination: "/audit",
         permanent: true,
       },
+      // /seo (standalone Local SEO page) is retired in favor of the dedicated
+      // service page /services/local-seo, so its content lives alongside the
+      // other main service pages. Permanent redirect so old bookmarks/links
+      // and existing search-engine indexing don't 404.
+      {
+        source: "/seo",
+        destination: "/services/local-seo",
+        permanent: true,
+      },
     ];
   },
 };

@@ -108,7 +108,14 @@ export function Header() {
     <header
       className={cn(
         "pointer-events-none sticky top-0 z-50 w-full pt-[env(safe-area-inset-top)] transition-all duration-300 [transform:translateZ(0)]",
-        scrolled ? "border-b border-ink/8 bg-cream/85 backdrop-blur-md" : "border-b border-transparent bg-cream/0"
+        scrolled ? "border-b border-ink/8 bg-cream/85 backdrop-blur-md" : "border-b border-transparent bg-cream/0",
+        // The mobile nav overlay is portaled to <body> and only covers the
+        // viewport *below* this header (see the portal below for why), so
+        // the header itself must stay fully opaque whenever the menu is
+        // open — otherwise its normal scroll-position-based transparency
+        // lets page content bleed through behind the logo/close button,
+        // visible above the solid overlay.
+        menuOpen && "border-b border-ink/8 bg-cream backdrop-blur-none"
       )}
     >
       <Container className="flex h-20 items-center justify-between">
@@ -168,7 +175,7 @@ export function Header() {
             ref={mobileMenuRef}
             id="mobile-navigation"
             aria-label="Mobile navigation"
-            className="pointer-events-auto fixed inset-x-0 bottom-0 top-[calc(5rem+env(safe-area-inset-top))] z-50 overflow-y-auto bg-cream xl:hidden"
+            className="pointer-events-auto fixed inset-x-0 bottom-0 top-[calc(5rem+env(safe-area-inset-top))] z-[60] overflow-y-auto bg-cream xl:hidden"
             style={{ WebkitTextSizeAdjust: "100%", textSizeAdjust: "100%" }}
           >
             <Container className="flex flex-col gap-1 py-8 pb-[calc(2rem+env(safe-area-inset-bottom))]">

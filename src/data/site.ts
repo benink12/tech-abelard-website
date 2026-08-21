@@ -37,7 +37,7 @@ export const site = {
   nav: [
     { label: "Services", href: "/services" },
     { label: "Portfolio", href: "/portfolio" },
-    { label: "SEO", href: "/seo" },
+    { label: "SEO", href: "/services/local-seo" },
     { label: "Pricing", href: "/pricing" },
     { label: "Process", href: "/process" },
     { label: "About", href: "/about" },
@@ -56,7 +56,7 @@ export const site = {
     {
       title: "Growth",
       links: [
-        { label: "SEO", href: "/seo" },
+        { label: "SEO", href: "/services/local-seo" },
         { label: "Pricing", href: "/pricing" },
         { label: "Free Website Audit", href: "/audit" },
         { label: "FAQ", href: "/faq" },

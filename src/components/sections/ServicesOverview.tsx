@@ -1,10 +1,10 @@
 import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { services } from "@/data/services";
 import { iconMap } from "@/lib/icons";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
-import { Card } from "@/components/ui/Card";
 
 export function ServicesOverview() {
   return (
@@ -26,11 +26,18 @@ export function ServicesOverview() {
             const Icon = iconMap[service.icon];
             return (
               <RevealOnScroll key={service.slug} delay={i * 60}>
-                <Card className="h-full">
+                <Link
+                  href={`/services/${service.slug}`}
+                  className="group flex h-full flex-col rounded-2xl border border-ink/8 bg-cream-card p-8 transition-all duration-300 hover:-translate-y-1 hover:border-brass/30 hover:shadow-lg hover:shadow-ink/[0.06]"
+                >
                   <Icon className="h-6 w-6 text-brass-ink" strokeWidth={1.6} />
                   <h3 className="mt-5 font-display text-xl font-medium text-ink">{service.name}</h3>
                   <p className="mt-2.5 text-sm leading-relaxed text-ink/60">{service.shortDescription}</p>
-                </Card>
+                  <span className="mt-5 inline-flex items-center gap-1.5 text-sm font-medium text-brass-ink">
+                    Learn more
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </span>
+                </Link>
               </RevealOnScroll>
             );
           })}

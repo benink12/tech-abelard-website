@@ -23,7 +23,7 @@ export const services: Service[] = [
     icon: "layout",
   },
   {
-    slug: "seo",
+    slug: "local-seo",
     name: "Local SEO",
     shortDescription: "Local rankings that compound month over month.",
     description:
@@ -37,7 +37,7 @@ export const services: Service[] = [
     icon: "search",
   },
   {
-    slug: "ai-receptionists",
+    slug: "ai-receptionist",
     name: "AI Receptionists",
     shortDescription: "Never miss a call, even after hours.",
     description:

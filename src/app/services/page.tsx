@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
 import { services } from "@/data/services";
 import { regionCopy } from "@/data/localization";
 import { getRegion } from "@/lib/region";
@@ -34,7 +36,10 @@ export default function ServicesPage() {
               const Icon = iconMap[service.icon];
               return (
                 <RevealOnScroll key={service.slug} delay={i * 60}>
-                  <div className="grid grid-cols-1 gap-8 rounded-2xl border border-ink/8 bg-cream-card p-8 sm:p-10 lg:grid-cols-[auto_1fr_auto] lg:items-center">
+                  <Link
+                    href={`/services/${service.slug}`}
+                    className="group grid grid-cols-1 gap-8 rounded-2xl border border-ink/8 bg-cream-card p-8 transition-all duration-300 hover:-translate-y-1 hover:border-brass/30 hover:shadow-lg hover:shadow-ink/[0.06] sm:p-10 lg:grid-cols-[auto_1fr_auto_auto] lg:items-center"
+                  >
                     <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ink/5">
                       <Icon className="h-6 w-6 text-brass-ink" strokeWidth={1.6} />
                     </div>
@@ -52,7 +57,11 @@ export default function ServicesPage() {
                         </li>
                       ))}
                     </ul>
-                  </div>
+                    <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-medium text-brass-ink lg:justify-self-end">
+                      Explore Service
+                      <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                    </span>
+                  </Link>
                 </RevealOnScroll>
               );
             })}

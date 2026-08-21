@@ -13,7 +13,7 @@ export function SEOPreview() {
             title="A website is the asset. SEO is what makes it compound."
             description="Five pillars, run every month, so your ranking position keeps moving instead of quietly sliding backward."
           />
-          <Link href="/seo" className="hidden shrink-0 text-sm font-medium text-ink/70 hover:text-brass-ink sm:block">
+          <Link href="/services/local-seo" className="hidden shrink-0 text-sm font-medium text-ink/70 hover:text-brass-ink sm:block">
             Explore our SEO system →
           </Link>
         </div>
@@ -22,7 +22,7 @@ export function SEOPreview() {
           <SeoPillars />
         </div>
 
-        <Link href="/seo" className="mt-10 block text-sm font-medium text-ink/70 hover:text-brass-ink sm:hidden">
+        <Link href="/services/local-seo" className="mt-10 block text-sm font-medium text-ink/70 hover:text-brass-ink sm:hidden">
           Explore our SEO system →
         </Link>
       </Container>
