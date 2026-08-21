@@ -8,7 +8,16 @@ import "server-only";
 // validate) — never directly from a client component, so the shared key
 // below never reaches the browser. See OS's src/lib/portfolioAccess/
 // internalAuth.ts for the other side of this.
-
+//
+// OS's own admin UI has no user accounts yet, so — since Vercel's
+// platform-level Deployment Protection turned out not to be enforced on
+// its current plan — its whole deployment is gated by its own HTTP Basic
+// Auth middleware instead (see that repo's src/proxy.ts). This route and
+// its siblings are the deliberate exceptions, authenticated by the shared
+// key above rather than Basic Auth, so this call doesn't need credentials
+// for that gate. OS_PROTECTION_BYPASS_SECRET, sent as a header only when
+// set, is a no-op today but costs nothing to keep wired up in case
+// Deployment Protection is ever actually enabled on OS's Vercel plan.
 function osApiBaseUrl(): string {
   return process.env.OS_API_BASE_URL ?? "http://localhost:3010";
 }
@@ -21,9 +30,14 @@ function internalKey(): string {
 
 async function postToOs<T>(path: string, body: unknown): Promise<{ ok: boolean; status: number; data: T | null }> {
   try {
+    const bypassSecret = process.env.OS_PROTECTION_BYPASS_SECRET;
     const res = await fetch(`${osApiBaseUrl()}${path}`, {
       method: "POST",
-      headers: { "content-type": "application/json", "x-portfolio-access-key": internalKey() },
+      headers: {
+        "content-type": "application/json",
+        "x-portfolio-access-key": internalKey(),
+        ...(bypassSecret ? { "x-vercel-protection-bypass": bypassSecret } : {}),
+      },
       body: JSON.stringify(body),
       cache: "no-store",
     });

@@ -1,8 +1,10 @@
 // Tech Abélard's real agency identity — sourced from the vault's Brand Identity
-// and Business Overview docs. Founding date and a live production domain are
-// still open questions for the business (see Brand Identity.md "Still Open"),
-// so `site.url` below is a placeholder for local metadata plumbing only —
-// replace it the moment a real domain is registered.
+// and Business Overview docs. `site.url` is the canonical production origin
+// (live as of 2026-08-20) — every absolute URL the site emits (metadataBase,
+// canonical tags, OG/Twitter, sitemap.ts, robots.ts, the ProfessionalService
+// JSON-LD in layout.tsx) derives from this single value, so this is the only
+// place that needs to change if the canonical domain ever does. Always use
+// the www subdomain here, not the bare apex — the apex redirects to it.
 //
 // Business email — single source of truth. Verified 2026-07-23 as the Gmail
 // account actually connected via Claude's Gmail connector (see chat history
@@ -21,7 +23,7 @@ export const site = {
   tagline: "Websites that make the phone ring before the pitch does.",
   description:
     "Tech Abélard is a web design and local SEO agency for home service businesses — plumbers, roofers, HVAC companies, electricians, and the trades around them. We build sites that convert and rankings that compound.",
-  url: "https://techabelard.com",
+  url: "https://www.techabelard.com",
   email: BUSINESS_EMAIL,
   phone: {
     display: "(581) 499-0011",
