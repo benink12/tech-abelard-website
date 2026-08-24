@@ -16,7 +16,7 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 const PAGE_PATH = "/local-seo-for-contractors";
 const PAGE_TITLE = "Local SEO for Contractors & Home Service Businesses";
 const PAGE_DESCRIPTION =
-  "Local SEO built for plumbers, HVAC companies, roofers, and electricians — service-area targeting, on-page and technical SEO, citations, and Google Business Profile management. Results vary; no guaranteed rankings.";
+  "Local SEO for contractors — plumbers, HVAC, roofing, and electrical companies. Service-area targeting, technical SEO, and citations. Rankings vary; never guaranteed.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,

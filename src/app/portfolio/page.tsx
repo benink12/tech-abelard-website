@@ -32,6 +32,13 @@ export default function PortfolioPage() {
             </Link>{" "}
             specifically.
           </p>
+          <p className="mt-4 text-sm text-ink/50">
+            Running a plumbing company? See a full breakdown of{" "}
+            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              plumbing website redesign
+            </Link>{" "}
+            work.
+          </p>
         </Container>
       </section>
 

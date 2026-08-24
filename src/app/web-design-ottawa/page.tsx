@@ -255,7 +255,7 @@ export default async function WebDesignOttawaPage() {
             portfolio below also includes concept builds for clinics and professional-service brands, if that&apos;s closer
             to what you run. Running a plumbing company specifically? See our dedicated{" "}
             <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              plumbing website design
+              plumber website design
             </Link>{" "}
             page.
           </p>

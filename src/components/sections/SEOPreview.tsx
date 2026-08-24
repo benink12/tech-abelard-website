@@ -25,6 +25,14 @@ export function SEOPreview() {
         <Link href="/services/local-seo" className="mt-10 block text-sm font-medium text-ink/70 hover:text-brass-ink sm:hidden">
           Explore our SEO system →
         </Link>
+
+        <p className="mt-10 text-sm text-ink/50">
+          Running a plumbing, HVAC, or roofing company? See{" "}
+          <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            SEO for the trades
+          </Link>{" "}
+          specifically.
+        </p>
       </Container>
     </section>
   );

@@ -156,7 +156,7 @@ export default function LocalSEOPage() {
           <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
             Running SEO specifically for the trades? See{" "}
             <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              local SEO for contractors
+              local SEO for home service businesses
             </Link>
             .
           </p>

@@ -23,6 +23,14 @@ export function PortfolioPreview() {
         <Link href="/portfolio" className="mt-10 block text-sm font-medium text-ink/70 hover:text-brass-ink sm:hidden">
           View all work →
         </Link>
+
+        <p className="mt-10 text-sm text-ink/50">
+          Looking for something more trade-specific? See{" "}
+          <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            plumbing web design
+          </Link>{" "}
+          for an example built around one industry.
+        </p>
       </Container>
     </section>
   );

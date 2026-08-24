@@ -76,6 +76,13 @@ export default async function PricingPage() {
             </Link>{" "}
             page for details built around local businesses.
           </p>
+          <p className="mx-auto mt-4 max-w-3xl text-center text-sm text-ink/50">
+            Pricing for an SEO retainer specifically? See{" "}
+            <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              SEO pricing for contractors
+            </Link>{" "}
+            and trades.
+          </p>
         </Container>
       </section>
 

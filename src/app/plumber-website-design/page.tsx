@@ -17,7 +17,7 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 const PAGE_PATH = "/plumber-website-design";
 const PAGE_TITLE = "Plumber Website Design That Converts Emergency Calls";
 const PAGE_DESCRIPTION =
-  "Website design built specifically for plumbing companies — click-to-call, service pages, service-area coverage, quote forms, and a fast mobile experience for someone searching mid-emergency.";
+  "Website design for plumbing companies — click-to-call, service pages, service-area coverage, and quote forms, built for someone searching mid-emergency.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -222,7 +222,7 @@ export default function PlumberWebsiteDesignPage() {
             <p className="text-sm text-ink/60">
               Want the ongoing SEO work too? See{" "}
               <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-                local SEO for contractors
+                contractor SEO
               </Link>
               .
             </p>

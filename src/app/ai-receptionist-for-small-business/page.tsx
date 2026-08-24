@@ -318,7 +318,7 @@ export default function AIReceptionistForSmallBusinessPage() {
             </Link>{" "}
             or pair it with{" "}
             <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              local SEO for contractors
+              SEO for plumbers, HVAC, and roofing companies
             </Link>
             .
           </p>
