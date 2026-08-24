@@ -324,8 +324,12 @@ export default function LocalSEOForContractorsPage() {
             Need the website rebuilt first? See{" "}
             <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
               plumbing website design
-            </Link>{" "}
-            or the full{" "}
+            </Link>
+            , our{" "}
+            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              website redesign for Ottawa businesses
+            </Link>
+            , or the full{" "}
             <Link href="/services/local-seo" className="text-brass-ink underline underline-offset-2 hover:text-ink">
               Local SEO service
             </Link>{" "}

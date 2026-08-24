@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { PageHero } from "@/components/sections/PageHero";
 import { ProcessTimeline } from "@/components/sections/ProcessTimeline";
@@ -23,6 +24,13 @@ export default function ProcessPage() {
       <section className="py-24 sm:py-32">
         <Container>
           <ProcessTimeline full />
+          <p className="mt-10 text-sm text-ink/50">
+            This is the same process whether you&apos;re across the country or just down the street — see how it applies to{" "}
+            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              Ottawa website design
+            </Link>{" "}
+            specifically.
+          </p>
         </Container>
       </section>
 

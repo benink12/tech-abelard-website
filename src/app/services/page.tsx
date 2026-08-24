@@ -66,6 +66,13 @@ export default function ServicesPage() {
               );
             })}
           </div>
+          <p className="mt-10 text-sm text-ink/50">
+            Looking for web design specifically for Ottawa businesses? See our{" "}
+            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              website design for Ottawa businesses
+            </Link>{" "}
+            page.
+          </p>
         </Container>
       </section>
 

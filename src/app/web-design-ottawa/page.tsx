@@ -17,24 +17,28 @@ import { AuditCallout } from "@/components/sections/AuditCallout";
 import { FinalCTA } from "@/components/sections/FinalCTA";
 
 const PAGE_PATH = "/web-design-ottawa";
-const PAGE_TITLE = "Web Design in Ottawa for Service Businesses";
+const H1_TITLE = "Web Design Ottawa";
+// Page-specific portion of the <title> tag — layout.tsx's `%s | Tech Abélard`
+// template appends the site name automatically, so the resolved tag reads
+// "Web Design Ottawa | Websites for Local Businesses | Tech Abélard".
+const SEO_TITLE = "Web Design Ottawa | Websites for Local Businesses";
 const PAGE_DESCRIPTION =
-  "Mobile-first web design for Ottawa service businesses — plumbers, HVAC companies, roofers, and electricians. Conversion-focused, fast, and built with local SEO in mind.";
+  "Web design for Ottawa businesses that turns visitors into leads — mobile-friendly, fast, and built for local SEO from day one. Serving contractors and local service businesses across Ottawa.";
 
 export const metadata: Metadata = {
-  title: PAGE_TITLE,
+  title: SEO_TITLE,
   description: PAGE_DESCRIPTION,
   alternates: { canonical: PAGE_PATH },
   openGraph: {
     type: "website",
     siteName: site.name,
     url: `${site.url}${PAGE_PATH}`,
-    title: `${PAGE_TITLE} | ${site.name}`,
+    title: `${SEO_TITLE} | ${site.name}`,
     description: PAGE_DESCRIPTION,
   },
   twitter: {
     card: "summary_large_image",
-    title: `${PAGE_TITLE} | ${site.name}`,
+    title: `${SEO_TITLE} | ${site.name}`,
     description: PAGE_DESCRIPTION,
   },
 };
@@ -42,9 +46,9 @@ export const metadata: Metadata = {
 const provides = [
   {
     icon: Smartphone,
-    title: "Mobile-first, not mobile-adjusted",
+    title: "Mobile-friendly, not mobile-adjusted",
     description:
-      "Most of your searches come from a phone — someone standing in a driveway in Barrhaven or a kitchen in Orleans, comparing three companies in under a minute. We design for that screen first, then scale up to desktop, not the other way around.",
+      "Most of your searches come from a phone — someone standing in a driveway in Barrhaven or a kitchen in Orleans, comparing three companies in under a minute. We build the mobile-friendly version first, then scale up to desktop, not the other way around.",
   },
   {
     icon: MousePointerClick,
@@ -66,13 +70,13 @@ const provides = [
   },
   {
     icon: ListChecks,
-    title: "Lead capture that gets used",
+    title: "Lead generation that actually gets used",
     description:
       "Contact and quote forms that are short, mobile-friendly, and validated — wired to notify you the moment someone submits, not buried three clicks deep in a menu.",
   },
   {
     icon: LayoutTemplate,
-    title: "A real redesign, if that's what you need",
+    title: "A real website redesign, if that's what you need",
     description:
       "If your current site already ranks but doesn't convert, a rebuild isn't automatically the answer. We'll tell you honestly whether the fix is a redesign or something smaller — starting with a free audit.",
   },
@@ -81,7 +85,7 @@ const provides = [
 const faqItems = [
   {
     category: "General" as const,
-    question: "Is Tech Abélard based in Ottawa?",
+    question: "Are you an Ottawa web designer, or based somewhere else?",
     answer:
       "We work with Ottawa businesses remotely — discovery calls, email, and video meetings — the same process we use with every client, regardless of city. If an in-person conversation matters to you, say so on the call and we'll figure out what's possible.",
   },
@@ -89,7 +93,7 @@ const faqItems = [
     category: "General" as const,
     question: "Do you build websites for any Ottawa business, or just certain industries?",
     answer:
-      "We build exclusively for home service businesses — plumbing, HVAC, roofing, electrical, landscaping, construction, and the trades around them. That focus is deliberate: it means less time explaining your customer's decision to us, and more time on the parts of the site that actually move calls and bookings.",
+      "We build exclusively for home service businesses — plumbing, HVAC, roofing, electrical, landscaping, construction, and the trades around them. Most of our clients are small business owners competing hard for local search visibility, which is exactly who this page and our small business web design work is built around.",
   },
   {
     category: "Pricing" as const,
@@ -120,7 +124,7 @@ export default async function WebDesignOttawaPage() {
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: site.url },
-      { "@type": "ListItem", position: 2, name: PAGE_TITLE, item: `${site.url}${PAGE_PATH}` },
+      { "@type": "ListItem", position: 2, name: H1_TITLE, item: `${site.url}${PAGE_PATH}` },
     ],
   };
 
@@ -128,7 +132,7 @@ export default async function WebDesignOttawaPage() {
     "@context": "https://schema.org",
     "@type": "Service",
     serviceType: "Web Design",
-    name: "Web Design for Ottawa Service Businesses",
+    name: H1_TITLE,
     description: PAGE_DESCRIPTION,
     provider: {
       "@type": "ProfessionalService",
@@ -158,8 +162,8 @@ export default async function WebDesignOttawaPage() {
 
       <PageHero
         eyebrow="Web Design — Ottawa"
-        title="Web design for Ottawa service businesses that turns visitors into calls."
-        description="A custom, mobile-first site for plumbers, HVAC companies, roofers, electricians, and the trades around them — built around one job: getting an Ottawa homeowner to call, not just browse."
+        title={H1_TITLE}
+        description="A mobile-friendly, conversion-focused website for your Ottawa business — built to turn visitors into calls, not just look good on a phone. Whether you need website design from scratch or a full website redesign, every page is built around one job: lead generation."
       >
         <div className="mt-8 flex flex-col gap-3 sm:flex-row">
           <Button href="/contact" variant="cream" size="lg" data-cta="web-design-ottawa-hero-discovery-call" showArrow>
@@ -175,8 +179,8 @@ export default async function WebDesignOttawaPage() {
         <Container>
           <SectionHeading
             eyebrow="Who This Is For"
-            title="Built for the businesses that keep Ottawa running."
-            description={`${copy.aboutWhoWeServeDescription} If you serve homeowners across the National Capital Region — from Kanata to Orleans to the Greenbelt — and you're competing against other local companies for the same searches, this is the work we do.`}
+            title="Built for Ottawa's local businesses and contractors."
+            description={`${copy.aboutWhoWeServeDescription} If you serve Ottawa and the surrounding communities, and you're competing against other local businesses for the same searches, this is the work we do.`}
           />
         </Container>
       </section>
@@ -236,7 +240,7 @@ export default async function WebDesignOttawaPage() {
         <Container>
           <SectionHeading
             eyebrow="Industries"
-            title="Built for service businesses that live on the phone."
+            title="Industries we build for across Ottawa."
             description="Any Ottawa business where a missed call is a missed job benefits from a faster, clearer site — these are the industries we build for most."
           />
           <div className="mt-10 flex flex-wrap gap-2">
@@ -246,27 +250,47 @@ export default async function WebDesignOttawaPage() {
               </Badge>
             ))}
           </div>
+          <p className="mt-8 max-w-2xl text-sm leading-relaxed text-ink/55">
+            Most of our work is for home service trades — plumbers, HVAC companies, roofers, electricians — though the
+            portfolio below also includes concept builds for clinics and professional-service brands, if that&apos;s closer
+            to what you run. Running a plumbing company specifically? See our dedicated{" "}
+            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              plumbing website design
+            </Link>{" "}
+            page.
+          </p>
         </Container>
       </section>
 
       <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
         <Container>
-          <SectionHeading
-            eyebrow="Examples"
-            title="Concept work from the portfolio."
-            description="Every project below is a concept build created to demonstrate our own design and SEO capabilities across different home-service niches — not a completed client project."
-          />
+          <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
+            <SectionHeading
+              eyebrow="Examples"
+              title="Concept work from the portfolio."
+              description="Every project below is a concept build created to demonstrate our own design and SEO capabilities across different home-service niches — not a completed client project."
+            />
+            <Link
+              href="/portfolio"
+              className="hidden shrink-0 text-sm font-medium text-ink/70 hover:text-brass-ink sm:block"
+            >
+              See the full portfolio →
+            </Link>
+          </div>
           <PortfolioShowcase
             className="mt-14"
             featuredSlugs={["northline-plumbing", "northpeak-roofing", "northclimate-hvac"]}
           />
+          <Link href="/portfolio" className="mt-8 block text-sm font-medium text-ink/70 hover:text-brass-ink sm:hidden">
+            See the full portfolio →
+          </Link>
         </Container>
       </section>
 
       <AuditCallout
         ctaId="web-design-ottawa-free-audit"
-        title="Not sure if you need a full rebuild?"
-        description="Get a free, honest audit of your current site — we'll tell you exactly what's actually holding it back first."
+        title="Already have a website that isn't converting?"
+        description="Get a free, honest audit — we'll tell you whether a full redesign or a smaller fix is what your Ottawa site actually needs."
       />
 
       <section className="border-t border-ink/8 py-24 sm:py-32">
@@ -279,12 +303,27 @@ export default async function WebDesignOttawaPage() {
             Ready to see local rankings move too? Read how we approach{" "}
             <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
               local SEO for contractors
+            </Link>{" "}
+            or explore our{" "}
+            <Link href="/services/local-seo" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              local SEO service
+            </Link>{" "}
+            directly.
+          </p>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-ink/50">
+            Want to see the work first? Browse the{" "}
+            <Link href="/portfolio" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              full portfolio
             </Link>
-            , or explore the full{" "}
+            , check{" "}
+            <Link href="/pricing" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              pricing
+            </Link>
+            , or explore the{" "}
             <Link href="/services/web-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
               Web Design service
-            </Link>
-            .
+            </Link>{" "}
+            in more detail.
           </p>
         </Container>
       </section>

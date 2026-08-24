@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { PortfolioShowcase } from "@/components/sections/PortfolioShowcase";
 import { PageHero } from "@/components/sections/PageHero";
@@ -24,6 +25,13 @@ export default function PortfolioPage() {
       <section className="py-24 sm:py-32">
         <Container>
           <PortfolioShowcase />
+          <p className="mt-10 text-sm text-ink/50">
+            Based in the National Capital Region? See how this translates into{" "}
+            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              web design in Ottawa
+            </Link>{" "}
+            specifically.
+          </p>
         </Container>
       </section>
 

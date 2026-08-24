@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { gbpPricing } from "@/data/pricing";
 import { regionCopy } from "@/data/localization";
 import { getRegion } from "@/lib/region";
@@ -68,6 +69,13 @@ export default async function PricingPage() {
               </div>
             </div>
           </div>
+          <p className="mx-auto mt-10 max-w-3xl text-center text-sm text-ink/50">
+            Pricing questions specific to an Ottawa project? Visit our{" "}
+            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              Ottawa web design
+            </Link>{" "}
+            page for details built around local businesses.
+          </p>
         </Container>
       </section>
 

@@ -46,6 +46,14 @@ export function ServicesOverview() {
         <Link href="/services" className="mt-10 block text-sm font-medium text-ink/70 hover:text-brass-ink sm:hidden">
           View all services →
         </Link>
+
+        <p className="mt-10 text-sm text-ink/50">
+          Serving Ottawa? See our dedicated{" "}
+          <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            Ottawa web design services
+          </Link>{" "}
+          page.
+        </p>
       </Container>
     </section>
   );
