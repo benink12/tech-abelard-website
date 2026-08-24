@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Phone, ArrowRight } from "lucide-react";
 import { site } from "@/data/site";
 import { Container } from "@/components/ui/Container";
@@ -35,6 +36,14 @@ export function AIReceptionistPromo() {
                 Build One For My Business <ArrowRight className="h-4 w-4" />
               </Button>
             </div>
+
+            <p className="mt-8 text-sm text-ink/50">
+              Read more about the{" "}
+              <Link href="/ai-receptionist-for-small-business" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+                AI phone receptionist for small business
+              </Link>
+              .
+            </p>
           </div>
         </RevealOnScroll>
       </Container>

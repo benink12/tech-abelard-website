@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Calendar, Mail, Phone, Clock, ScanSearch } from "lucide-react";
 import { site } from "@/data/site";
 import { regionCopy } from "@/data/localization";
@@ -69,7 +70,11 @@ export default function ContactPage() {
                       <Phone className="h-4 w-4 shrink-0" /> {site.phone.display}
                     </a>
                     <p className="mt-1.5 pl-7 text-xs leading-relaxed text-ink/45">
-                      Want to test our AI receptionist? Call this number and speak with it yourself.
+                      Want to test our{" "}
+                      <Link href="/ai-receptionist-for-small-business" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+                        AI receptionist for small business
+                      </Link>
+                      ? Call this number and speak with it yourself.
                     </p>
                   </li>
                   <li className="flex items-center gap-3 text-sm text-ink/50">

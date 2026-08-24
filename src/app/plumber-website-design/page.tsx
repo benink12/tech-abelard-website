@@ -286,6 +286,13 @@ export default function PlumberWebsiteDesignPage() {
             </Link>
             .
           </p>
+          <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-ink/50">
+            Missing after-hours emergency calls too? See our{" "}
+            <Link href="/ai-receptionist-for-small-business" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              AI receptionist for contractors
+            </Link>
+            .
+          </p>
         </Container>
       </section>
 

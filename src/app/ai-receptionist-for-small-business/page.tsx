@@ -24,7 +24,7 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 const PAGE_PATH = "/ai-receptionist-for-small-business";
 const PAGE_TITLE = "AI Receptionist for Small Business";
 const PAGE_DESCRIPTION =
-  "An AI phone receptionist for small businesses that answers calls, qualifies leads, and handles common questions day or night. Call the live demo at (581) 499-0011.";
+  "An AI phone receptionist for small businesses — answers calls, qualifies leads, and handles common questions day or night. Call the live demo: (581) 499-0011.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -319,6 +319,10 @@ export default function AIReceptionistForSmallBusinessPage() {
             or pair it with{" "}
             <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
               SEO for plumbers, HVAC, and roofing companies
+            </Link>{" "}
+            or{" "}
+            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              plumbing-specific web design
             </Link>
             .
           </p>

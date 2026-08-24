@@ -73,6 +73,13 @@ export default function ServicesPage() {
             </Link>{" "}
             page.
           </p>
+          <p className="mt-4 text-sm text-ink/50">
+            Never miss another call? Read more about our{" "}
+            <Link href="/ai-receptionist-for-small-business" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              AI receptionist for service businesses
+            </Link>
+            .
+          </p>
         </Container>
       </section>
 
