@@ -16,6 +16,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact",
     "/privacy-policy",
     "/terms",
+    // Non-branded SEO landing pages — bespoke routes targeting search intent
+    // that doesn't already know Tech Abélard by name, not part of the main
+    // service catalog above.
+    "/web-design-ottawa",
+    "/local-seo-for-contractors",
+    "/plumber-website-design",
+    "/ai-receptionist-for-small-business",
   ];
 
   // Individual service pages — the three main ones (web-design, local-seo,

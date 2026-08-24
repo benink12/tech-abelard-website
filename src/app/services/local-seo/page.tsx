@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -152,6 +153,13 @@ export default function LocalSEOPage() {
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
+          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
+            Running SEO specifically for the trades? See{" "}
+            <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              local SEO for contractors
+            </Link>
+            .
+          </p>
         </Container>
       </section>
 

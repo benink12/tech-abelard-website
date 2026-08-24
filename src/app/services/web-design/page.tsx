@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { LayoutTemplate, MousePointerClick, Smartphone, Gauge, SearchCheck, ListChecks } from "lucide-react";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -169,6 +170,17 @@ export default function WebDesignPage() {
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
+          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
+            Building for a specific niche? See{" "}
+            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              web design for Ottawa businesses
+            </Link>{" "}
+            or{" "}
+            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              website design for plumbing companies
+            </Link>
+            .
+          </p>
         </Container>
       </section>
 

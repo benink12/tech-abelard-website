@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import {
   Phone,
   ListChecks,
@@ -238,6 +239,13 @@ export default function AIReceptionistPage() {
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
+          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
+            Not in the trades?{" "}
+            <Link href="/ai-receptionist-for-small-business" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              See how it works for small businesses generally
+            </Link>
+            .
+          </p>
         </Container>
       </section>
 

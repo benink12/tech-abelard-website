@@ -7,6 +7,17 @@ import { Container } from "@/components/ui/Container";
 import { Logo } from "@/components/layout/Logo";
 import { InstagramIcon, LinkedinIcon } from "@/components/ui/SocialIcons";
 
+// Non-branded SEO landing pages — deliberately kept out of site.nav (see
+// Header.tsx) to avoid cluttering the primary nav with long-tail search
+// intent that isn't a top-level site section. Surfaced here instead, as a
+// restrained text row rather than a full footer column.
+const seoLandingLinks = [
+  { label: "Web Design Ottawa", href: "/web-design-ottawa" },
+  { label: "Local SEO for Contractors", href: "/local-seo-for-contractors" },
+  { label: "Plumber Website Design", href: "/plumber-website-design" },
+  { label: "AI Receptionist for Small Business", href: "/ai-receptionist-for-small-business" },
+];
+
 export async function Footer() {
   const region = await getRegion();
   const copy = regionCopy[region];
@@ -76,7 +87,18 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="mt-16 flex flex-col items-center justify-between gap-6 border-t border-cream/10 pt-8 sm:flex-row">
+        <div className="mt-16 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-cream/10 pt-8">
+          {seoLandingLinks.map((link, i) => (
+            <span key={link.href} className="flex items-center gap-x-5">
+              <Link href={link.href} className="text-xs text-cream/40 transition-colors hover:text-cream/70">
+                {link.label}
+              </Link>
+              {i < seoLandingLinks.length - 1 && <span className="text-cream/15" aria-hidden>·</span>}
+            </span>
+          ))}
+        </div>
+
+        <div className="mt-8 flex flex-col items-center justify-between gap-6 border-t border-cream/10 pt-8 sm:flex-row">
           <p className="text-xs text-cream/45">
             © {new Date().getFullYear()} {site.name}. All rights reserved.
           </p>
