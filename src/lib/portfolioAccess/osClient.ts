@@ -62,10 +62,17 @@ export interface SubmitAccessRequestInput {
 
 export async function submitPortfolioAccessRequest(
   input: SubmitAccessRequestInput
-): Promise<{ ok: boolean; id?: string; error?: string }> {
-  const result = await postToOs<{ id?: string; error?: string }>("/api/portfolio-access/requests", input);
+): Promise<{ ok: boolean; id?: string; error?: string; fieldErrors?: Record<string, string> }> {
+  const result = await postToOs<{ id?: string; error?: string; fieldErrors?: Record<string, string> }>(
+    "/api/portfolio-access/requests",
+    input
+  );
   if (!result.ok || !result.data?.id) {
-    return { ok: false, error: result.data?.error ?? "Could not submit your request — please try again shortly." };
+    return {
+      ok: false,
+      error: result.data?.error ?? "Could not submit your request — please try again shortly.",
+      fieldErrors: result.data?.fieldErrors,
+    };
   }
   return { ok: true, id: result.data.id };
 }

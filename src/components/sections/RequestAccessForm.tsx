@@ -5,9 +5,10 @@ import { Loader2, CheckCircle2 } from "lucide-react";
 import { site } from "@/data/site";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
+import { validateRequestAccessForm } from "@/lib/portfolioAccess/requestValidation";
 
 type Status = "idle" | "submitting" | "success" | "error";
-type RequiredField = "fullName" | "businessName" | "email" | "industry" | "reason" | "consent";
+type RequiredField = "fullName" | "businessName" | "email" | "phone" | "industry" | "websiteUrl" | "reason" | "consent";
 
 const inputClasses =
   "w-full rounded-xl border border-ink/12 bg-cream px-4 py-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-brass-ink focus:outline-none";
@@ -22,7 +23,9 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
     fullName: null,
     businessName: null,
     email: null,
+    phone: null,
     industry: null,
+    websiteUrl: null,
     reason: null,
     consent: null,
   });
@@ -46,17 +49,11 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
     const reason = String(data.get("reason") ?? "").trim();
     const consent = data.get("consent") === "on";
 
-    const nextErrors: Record<string, string> = {};
-    if (!fullName) nextErrors.fullName = "Your name is required.";
-    if (!businessName) nextErrors.businessName = "Business name is required.";
-    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) nextErrors.email = "A valid business email is required.";
-    if (!industry) nextErrors.industry = "Select an industry.";
-    if (!reason) nextErrors.reason = "Tell us a little about why you'd like access.";
-    if (!consent) nextErrors.consent = "Please confirm consent to continue.";
+    const nextErrors = validateRequestAccessForm({ fullName, businessName, email, phone, industry, websiteUrl, reason, consent });
 
     setErrors(nextErrors);
     if (Object.keys(nextErrors).length > 0) {
-      const order: RequiredField[] = ["fullName", "businessName", "email", "industry", "reason", "consent"];
+      const order: RequiredField[] = ["fullName", "businessName", "email", "phone", "industry", "websiteUrl", "reason", "consent"];
       const firstInvalid = order.find((field) => nextErrors[field]);
       if (firstInvalid) fieldRefs.current[firstInvalid]?.focus();
       return;
@@ -81,8 +78,29 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
         }),
       });
       if (!res.ok) {
-        const body = await res.json().catch(() => null);
-        setServerError(body?.error ?? "Something went wrong — please try again shortly.");
+        const body = (await res.json().catch(() => null)) as { error?: string; fieldErrors?: Record<string, string> } | null;
+        if (body?.fieldErrors && Object.keys(body.fieldErrors).length > 0) {
+          // The server (either this route's own re-validation, or Tech
+          // Abélard OS's) rejected something the client-side check here
+          // missed or didn't cover — e.g. a project slug the OS doesn't
+          // recognize. Show the same per-field messages instead of the
+          // generic banner, and focus the first one exactly like a
+          // client-side failure.
+          setErrors(body.fieldErrors);
+          const order: RequiredField[] = ["fullName", "businessName", "email", "phone", "industry", "websiteUrl", "reason", "consent"];
+          const firstInvalid = order.find((field) => body.fieldErrors?.[field]);
+          if (firstInvalid) {
+            fieldRefs.current[firstInvalid]?.focus();
+          } else {
+            // The only field error with no matching visible input is
+            // requestedProjectSlug (hidden field, set from this page's own
+            // slug — never user-entered). Surface its specific message as
+            // the banner instead of a blank "Invalid submission."
+            setServerError(body.fieldErrors.requestedProjectSlug ?? body?.error ?? "Something went wrong — please try again shortly.");
+          }
+        } else {
+          setServerError(body?.error ?? "Something went wrong — please try again shortly.");
+        }
         setStatus("error");
         submittingRef.current = false;
         return;
@@ -176,7 +194,18 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
           <label htmlFor="phone" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
             Phone <span className="normal-case text-ink/35">(optional)</span>
           </label>
-          <input id="phone" name="phone" type="tel" autoComplete="tel" className={inputClasses} />
+          <input
+            ref={(el) => {
+              fieldRefs.current.phone = el;
+            }}
+            id="phone"
+            name="phone"
+            type="tel"
+            autoComplete="tel"
+            className={inputClasses}
+            aria-invalid={Boolean(errors.phone)}
+          />
+          {errors.phone && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.phone}</p>}
         </div>
 
         <div>
@@ -211,7 +240,19 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
           <label htmlFor="websiteUrl" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
             Your website <span className="normal-case text-ink/35">(optional)</span>
           </label>
-          <input id="websiteUrl" name="websiteUrl" type="text" placeholder="yourbusiness.com" autoComplete="url" className={inputClasses} />
+          <input
+            ref={(el) => {
+              fieldRefs.current.websiteUrl = el;
+            }}
+            id="websiteUrl"
+            name="websiteUrl"
+            type="text"
+            placeholder="https://yourbusiness.com"
+            autoComplete="url"
+            className={inputClasses}
+            aria-invalid={Boolean(errors.websiteUrl)}
+          />
+          {errors.websiteUrl && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.websiteUrl}</p>}
         </div>
       </div>
 
