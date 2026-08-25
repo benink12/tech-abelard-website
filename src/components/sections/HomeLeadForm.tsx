@@ -19,13 +19,13 @@ const inputClasses =
 
 // Compact homepage lead form — sends through the same /api/contact backend
 // as the full Contact page form (src/components/sections/ContactForm.tsx),
-// just with a smaller field set. The extra context this form collects
-// (service interest, current website) has no dedicated column on the OS
-// side (src/app/api/contact-messages in the OS repo only stores name/email/
-// phone/businessName/message), so rather than a cross-repo schema change
-// against a service that isn't even on Supabase yet, it's folded into the
-// `message` string the same endpoint already stores and the OS admin
-// inbox already renders.
+// just with a smaller field set. `service` still has no dedicated column on
+// the OS side (src/app/api/contact-messages in the OS repo only stores
+// name/email/phone/businessName/message), so it's folded into the
+// `message` string too — same as always, so the OS admin inbox keeps
+// rendering it inline. It's also sent as its own `service` field so the
+// lead-notification email (OS's notify.ts) can put it in the subject line
+// without parsing it back out of the message text.
 export function HomeLeadForm() {
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -81,7 +81,7 @@ export function HomeLeadForm() {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ name, email, business, message }),
+        body: JSON.stringify({ name, email, business, message, service }),
       });
 
       if (!res.ok) {

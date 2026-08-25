@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { checkRateLimit, getClientKey } from "@/lib/audit/rateLimit";
+import { sendLeadNotificationEmail } from "@/lib/notifyLead";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -10,10 +11,13 @@ interface RequestBody {
   phone?: string;
   business?: string;
   message?: string;
+  // Only HomeLeadForm collects this today — optional here so ContactForm's
+  // submissions (which have no service field) keep working unchanged.
+  service?: string;
 }
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-const MAX_LEN = { name: 200, email: 254, phone: 40, business: 200, message: 5000 };
+const MAX_LEN = { name: 200, email: 254, phone: 40, business: 200, message: 5000, service: 100 };
 
 function osApiBaseUrl(): string {
   return process.env.OS_API_BASE_URL ?? "http://localhost:3010";
@@ -25,7 +29,7 @@ function internalKey(): string {
   return key;
 }
 
-// Real backend for the Contact form (src/components/sections/ContactForm.tsx)
+// Real backend for both lead-capture forms (ContactForm and HomeLeadForm)
 // — previously mailto-only (LAUNCH_AUDIT.md A3). This repo has no database
 // of its own; the message is forwarded server-side to Tech Abélard OS's
 // internal API (POST /api/contact-messages there), the same pattern
@@ -33,6 +37,9 @@ function internalKey(): string {
 // unauthenticated by design, so it shares the same per-IP rate limiter as
 // /api/audit (namespaced with a "contact:" prefix so the two never share a
 // bucket) and the same server-side validation shape as the client form.
+// Once the lead is saved, a best-effort notification email goes out via
+// Resend (src/lib/notifyLead.ts) — see the try/catch below for why a
+// failure there can never fail this response.
 export async function POST(request: Request) {
   const clientKey = getClientKey(request);
   const { allowed, retryAfterMs } = checkRateLimit(`contact:${clientKey}`);
@@ -55,6 +62,7 @@ export async function POST(request: Request) {
   const phone = (body.phone ?? "").trim().slice(0, MAX_LEN.phone);
   const business = (body.business ?? "").trim().slice(0, MAX_LEN.business);
   const message = (body.message ?? "").trim().slice(0, MAX_LEN.message);
+  const service = (body.service ?? "").trim().slice(0, MAX_LEN.service);
 
   const fieldErrors: Record<string, string> = {};
   if (!name) fieldErrors.name = "Name is required.";
@@ -69,7 +77,14 @@ export async function POST(request: Request) {
     const res = await fetch(`${osApiBaseUrl()}/api/contact-messages`, {
       method: "POST",
       headers: { "content-type": "application/json", "x-portfolio-access-key": internalKey() },
-      body: JSON.stringify({ name, email, phone: phone || undefined, businessName: business || undefined, message }),
+      body: JSON.stringify({
+        name,
+        email,
+        phone: phone || undefined,
+        businessName: business || undefined,
+        message,
+        service: service || undefined,
+      }),
       cache: "no-store",
     });
 
@@ -78,6 +93,24 @@ export async function POST(request: Request) {
     }
   } catch {
     return NextResponse.json({ error: "Could not send your message — please try again shortly." }, { status: 502 });
+  }
+
+  // Best-effort notification — the lead is already durably saved above, so
+  // a Resend failure (bad key, transient API error) must never turn a
+  // successful submission into an error response for the visitor. Logged
+  // for operator visibility instead.
+  try {
+    const { id } = await sendLeadNotificationEmail({
+      name,
+      email,
+      phone: phone || undefined,
+      business: business || undefined,
+      service: service || undefined,
+      message,
+    });
+    console.log(`[contact] Lead notification email sent — Resend message id: ${id}`);
+  } catch (err) {
+    console.error("[contact] Lead saved, but the email notification failed to send:", err);
   }
 
   return NextResponse.json({ ok: true }, { status: 201 });

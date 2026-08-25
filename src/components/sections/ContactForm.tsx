@@ -1,18 +1,19 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { Loader2, CheckCircle2, AlertTriangle } from "lucide-react";
-import { site } from "@/data/site";
+import { useRouter } from "next/navigation";
+import { Loader2, AlertTriangle } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { cn } from "@/lib/utils";
 
-type Status = "idle" | "submitting" | "success" | "error";
+type Status = "idle" | "submitting" | "error";
 type FieldName = "name" | "email" | "message";
 
 const inputClasses =
   "w-full rounded-xl border border-ink/12 bg-cream px-4 py-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-brass-ink focus:outline-none";
 
 export function ContactForm() {
+  const router = useRouter();
   const [status, setStatus] = useState<Status>("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -71,33 +72,19 @@ export function ContactForm() {
         return;
       }
 
-      setStatus("success");
       form.reset();
+      // Redirect only on a confirmed backend success (res.ok above, after
+      // the OS's /api/contact-messages write succeeded) — this is a Google
+      // Ads conversion destination (see src/app/contact/thank-you/page.tsx),
+      // so it must only ever be reached from here, never rendered as an
+      // inline state a user could land on some other way.
+      router.push("/contact/thank-you");
     } catch {
       setErrorMessage("Something went wrong sending your message. Please check your connection and try again.");
       setStatus("error");
     } finally {
       submittingRef.current = false;
     }
-  }
-
-  if (status === "success") {
-    return (
-      <div
-        role="status"
-        className="flex flex-col items-center rounded-2xl border border-brass-ink/25 bg-cream-card p-12 text-center"
-      >
-        <CheckCircle2 className="h-10 w-10 text-brass-ink" strokeWidth={1.5} />
-        <h3 className="mt-5 font-display text-2xl font-medium text-ink">Message sent.</h3>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">
-          We&apos;ve received your message and reply within one business day. If it&apos;s urgent, email us directly at{" "}
-          <a href={`mailto:${site.email}`} className="font-medium text-brass-ink underline underline-offset-2">
-            {site.email}
-          </a>
-          .
-        </p>
-      </div>
-    );
   }
 
   return (
