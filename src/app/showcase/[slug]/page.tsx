@@ -7,6 +7,7 @@ import { portfolioProjects } from "@/data/portfolio";
 import { getShowcaseSession, clearShowcaseSessionCookie } from "@/lib/showcase/session";
 import { checkPortfolioAccessSessionWithOs } from "@/lib/portfolioAccess/osClient";
 import { getPrivateDemoUrl } from "@/lib/showcase/demoUrls";
+import { signDemoAccessToken } from "@/lib/showcase/demoAccessToken";
 
 function formatDate(iso: string): string {
   return new Intl.DateTimeFormat("en-CA", { year: "numeric", month: "long", day: "numeric" }).format(new Date(iso));
@@ -51,6 +52,16 @@ export default async function PrivateShowcasePage({ params }: { params: Promise<
   }
 
   const demoUrl = getPrivateDemoUrl(slug);
+  // The raw demoUrl points at a separate, independently-deployed Vercel
+  // project (one per niche — see that project's own src/proxy.ts) that
+  // has no auth of its own beyond this token: it verifies the signature,
+  // expiry, and that the embedded slug matches its own deployment before
+  // granting its own short first-party cookie. Minted fresh on every
+  // load, after the OS session-check above has already confirmed this
+  // visitor's access — never cached, never handed out any earlier.
+  const demoUrlWithToken = demoUrl
+    ? `${demoUrl}${demoUrl.includes("?") ? "&" : "?"}access=${signDemoAccessToken(slug)}`
+    : null;
 
   return (
     <section className="flex min-h-[85vh] items-center py-20 sm:py-28">
@@ -73,8 +84,8 @@ export default async function PrivateShowcasePage({ params }: { params: Promise<
           )}
 
           <div className="mt-7">
-            {demoUrl ? (
-              <Button href={demoUrl} external variant="ink" size="lg" showArrow>
+            {demoUrlWithToken ? (
+              <Button href={demoUrlWithToken} external variant="ink" size="lg" showArrow>
                 Open Live Demo
               </Button>
             ) : (

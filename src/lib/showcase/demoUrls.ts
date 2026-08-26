@@ -13,6 +13,9 @@ const DEMO_URLS: Record<string, string | undefined> = {
   "northline-plumbing": process.env.DEMO_URL_NORTHLINE_PLUMBING,
   "northclimate-hvac": process.env.DEMO_URL_NORTHCLIMATE_HVAC,
   "northpeak-roofing": process.env.DEMO_URL_NORTHPEAK_ROOFING,
+  "aurelle-medspa": process.env.DEMO_URL_AURELLE_MEDSPA,
+  "northhaven-property-management": process.env.DEMO_URL_NORTHHAVEN_PM,
+  "northpaw-veterinary-hospital": process.env.DEMO_URL_NORTHPAW_VET,
 };
 
 export function getPrivateDemoUrl(slug: string): string | null {
