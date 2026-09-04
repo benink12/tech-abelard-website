@@ -12,7 +12,7 @@ type Phase = "form" | "analyzing" | "error";
 type RequiredField = "businessName" | "websiteUrl" | "industry" | "name" | "email";
 
 const inputClasses =
-  "w-full rounded-xl border border-cream/15 bg-cream/5 px-4 py-3 text-sm text-cream placeholder:text-cream/35 transition-colors focus:border-brass-light focus:outline-none";
+  "w-full rounded-xl border border-cream/15 bg-cream/5 px-4 py-3 text-sm text-cream placeholder:text-cream/35 transition-colors focus:border-cream focus:outline-none";
 
 const selectClasses = cn(inputClasses, "appearance-none bg-none");
 
@@ -256,15 +256,15 @@ function AnalyzingPanel({
     >
       <div className="relative flex h-20 w-20 items-center justify-center">
         <span
-          className="absolute inset-0 animate-ping rounded-full bg-brass/20 motion-reduce:hidden"
+          className="absolute inset-0 animate-ping rounded-full bg-cream/20 motion-reduce:hidden"
           style={{ animationDuration: "2.2s" }}
         />
-        <span className="absolute inset-0 rounded-full border-2 border-brass/25" />
+        <span className="absolute inset-0 rounded-full border-2 border-cream/25" />
         <span
-          className="absolute inset-0 rounded-full border-2 border-transparent border-t-brass border-r-brass motion-reduce:hidden"
+          className="absolute inset-0 rounded-full border-2 border-transparent border-t-cream border-r-cream motion-reduce:hidden"
           style={{ animation: "spin 1.1s linear infinite" }}
         />
-        <Loader2 className="h-7 w-7 animate-spin text-brass-light motion-reduce:animate-none" strokeWidth={1.75} />
+        <Loader2 className="h-7 w-7 animate-spin text-cream motion-reduce:animate-none" strokeWidth={1.75} />
       </div>
 
       <h3 className="mt-6 font-display text-2xl font-medium text-cream">
@@ -288,7 +288,7 @@ function AnalyzingPanel({
           aria-label={`Audit progress: ${currentStage.label}`}
         >
           <div
-            className="h-full rounded-full bg-brass transition-[width] duration-500 ease-out motion-reduce:transition-none"
+            className="h-full rounded-full bg-cream transition-[width] duration-500 ease-out motion-reduce:transition-none"
             style={{ width: `${percent}%` }}
           />
         </div>
@@ -307,9 +307,9 @@ function AnalyzingPanel({
               )}
             >
               {done ? (
-                <CheckCircle2 className="h-4 w-4 shrink-0 text-brass-light" />
+                <CheckCircle2 className="h-4 w-4 shrink-0 text-cream" />
               ) : active ? (
-                <Loader2 className="h-4 w-4 shrink-0 animate-spin text-brass-light motion-reduce:animate-none" />
+                <Loader2 className="h-4 w-4 shrink-0 animate-spin text-cream motion-reduce:animate-none" />
               ) : (
                 <Circle className="h-4 w-4 shrink-0 text-cream/25" />
               )}

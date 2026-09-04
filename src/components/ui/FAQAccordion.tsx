@@ -1,22 +1,28 @@
 "use client";
 
 import { useId, useState } from "react";
-import { ChevronDown } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { FaqItem } from "@/data/faq";
 import { cn } from "@/lib/utils";
 
+// Shared across the homepage FAQ section, the standalone /faq page, and
+// every service/SEO-landing page's FAQ block — one accordion, one visual
+// language. Only one row open at a time (single `openIndex`, not a Set),
+// which is also what keeps the section compact. The + icon rotating 45deg
+// into an × is the actual mechanism, not a swapped icon — Plus and X are
+// the same glyph 45deg apart, so there's nothing to cross-fade or swap.
 export function FAQAccordion({ items }: { items: FaqItem[] }) {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
   const idPrefix = useId();
 
   return (
-    <div className="flex flex-col divide-y divide-ink/8 border-y border-ink/8">
+    <div style={{ borderBottom: "1px solid var(--rule)" }}>
       {items.map((item, i) => {
         const isOpen = openIndex === i;
         const buttonId = `${idPrefix}-question-${i}`;
         const panelId = `${idPrefix}-answer-${i}`;
         return (
-          <div key={item.question}>
+          <div key={item.question} className={cn("hc-faqacc-row", isOpen && "is-open")}>
             <h3>
               <button
                 id={buttonId}
@@ -24,29 +30,17 @@ export function FAQAccordion({ items }: { items: FaqItem[] }) {
                 onClick={() => setOpenIndex(isOpen ? null : i)}
                 aria-controls={panelId}
                 aria-expanded={isOpen}
-                className="flex w-full items-center justify-between gap-6 py-6 text-left"
+                className="hc-faqacc-q"
               >
-                <span className="font-display text-lg font-medium text-ink sm:text-xl">{item.question}</span>
-                <ChevronDown
-                  className={cn(
-                    "h-5 w-5 shrink-0 text-brass-ink transition-transform duration-300",
-                    isOpen && "rotate-180"
-                  )}
-                />
+                <span className="hc-faqacc-q__text">{item.question}</span>
+                <span className="hc-faqacc-q__icon" aria-hidden="true">
+                  <Plus className="h-4 w-4" strokeWidth={1.75} />
+                </span>
               </button>
             </h3>
-            <div
-              id={panelId}
-              role="region"
-              aria-labelledby={buttonId}
-              aria-hidden={!isOpen}
-              className={cn(
-                "grid transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]",
-                isOpen ? "grid-rows-[1fr] pb-6 opacity-100" : "grid-rows-[0fr] opacity-0"
-              )}
-            >
-              <div className="overflow-hidden">
-                <p className="max-w-2xl text-sm leading-relaxed text-ink/60 sm:text-base">{item.answer}</p>
+            <div id={panelId} role="region" aria-labelledby={buttonId} aria-hidden={!isOpen} className="hc-faqacc-panel">
+              <div className="hc-faqacc-panel__inner">
+                <p className="hc-faqacc-answer">{item.answer}</p>
               </div>
             </div>
           </div>

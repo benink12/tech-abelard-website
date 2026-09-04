@@ -28,12 +28,12 @@ export function DeviceMockup({ project }: { project: PortfolioProject }) {
   return (
     <div
       className="relative flex h-64 items-center justify-center overflow-hidden p-4 sm:h-72 sm:p-5"
-      style={{ background: `linear-gradient(140deg, ${project.accent} 0%, #1c2230 130%)` }}
+      style={{ background: `linear-gradient(140deg, ${project.accent} 0%, #16181a 130%)` }}
     >
       <div
         aria-hidden
         className="absolute -right-8 -top-8 h-40 w-40 rounded-full opacity-20 transition-transform duration-500 group-hover:scale-110"
-        style={{ background: "radial-gradient(circle, #b08d57, transparent 70%)" }}
+        style={{ background: "radial-gradient(circle, #e6e7e2, transparent 70%)" }}
       />
 
       {/* Desktop frame — sized close to captured screenshots' real aspect ratio (~2:1) so "cover" rarely has much to crop */}
@@ -93,18 +93,24 @@ export function DeviceMockup({ project }: { project: PortfolioProject }) {
 
 export function PortfolioCard({ project }: { project: PortfolioProject }) {
   return (
-    <div className="group flex h-full flex-col overflow-hidden rounded-2xl border border-ink/8 bg-cream-card transition-all duration-300 hover:-translate-y-1 hover:border-brass/30 hover:shadow-lg hover:shadow-ink/[0.08]">
+    <div className="group flex h-full flex-col" style={{ borderTop: "1px solid var(--rule)" }}>
       <DeviceMockup project={project} />
 
-      <div className="flex flex-1 flex-col p-7">
-        <h3 className="font-display text-xl font-medium text-ink">{project.name}</h3>
-        <p className="mt-1.5 text-sm font-medium text-brass-ink">{project.tagline}</p>
-        <p className="mt-3.5 text-sm leading-relaxed text-ink/60">{project.description}</p>
+      <div className="flex flex-1 flex-col" style={{ paddingTop: 22 }}>
+        <h3 className="hc-heading__title" style={{ fontSize: 22 }}>
+          {project.name}
+        </h3>
+        <p className="hc-eyebrow" style={{ marginTop: 6, color: "var(--slate)" }}>
+          {project.tagline}
+        </p>
+        <p className="mt-3.5 text-sm leading-relaxed" style={{ color: "var(--slate)" }}>
+          {project.description}
+        </p>
 
         <ul className="mt-5 flex flex-col gap-1.5">
           {project.highlights.slice(0, 4).map((point) => (
-            <li key={point} className="flex items-start gap-2 text-xs text-ink/55">
-              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brass" />
+            <li key={point} className="flex items-start gap-2 text-xs" style={{ color: "var(--slate)" }}>
+              <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full" style={{ background: "var(--slate)" }} />
               {point}
             </li>
           ))}
@@ -118,22 +124,16 @@ export function PortfolioCard({ project }: { project: PortfolioProject }) {
           ))}
         </div>
 
-        <p className="mt-5 hidden rounded-lg border border-ink/8 bg-cream px-3 py-2.5 text-[11px] leading-relaxed text-ink/50 lg:block">
-          <span className="font-semibold text-ink/65">Concept Project</span> — Created to demonstrate Tech Abélard&apos;s
-          capabilities for {nicheInProse(project.niche)} businesses.
+        <p className="hc-worknote mt-5 hidden lg:block" style={{ marginTop: 20 }}>
+          Concept project — created to demonstrate Tech Abélard&apos;s capabilities for {nicheInProse(project.niche)}{" "}
+          businesses.
         </p>
 
-        <div className="mt-auto flex flex-wrap gap-2 border-t border-ink/8 pt-5">
-          <Link
-            href={`/portfolio/${project.slug}`}
-            className="rounded-full border border-ink/12 px-3.5 py-1.5 text-xs font-medium text-ink transition-colors hover:border-brass-ink/50 hover:text-brass-ink"
-          >
+        <div className="mt-auto flex flex-wrap gap-3 pt-5" style={{ borderTop: "1px solid var(--rule)", marginTop: 20 }}>
+          <Link href={`/portfolio/${project.slug}`} className="hc-btnbase hc-btnbase--outline hc-btnbase--sm">
             View Case Study
           </Link>
-          <Link
-            href={`/portfolio/${project.slug}#request-access`}
-            className="rounded-full bg-ink px-3.5 py-1.5 text-xs font-medium text-cream transition-colors hover:bg-ink/85"
-          >
+          <Link href={`/portfolio/${project.slug}#request-access`} className="hc-btnbase hc-btnbase--ink hc-btnbase--sm">
             Request Live Access
           </Link>
         </div>

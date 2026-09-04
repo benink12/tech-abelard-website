@@ -3,7 +3,7 @@ import Link from "next/link";
 import { gbpPricing } from "@/data/pricing";
 import { regionCopy } from "@/data/localization";
 import { getRegion } from "@/lib/region";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { PageHero } from "@/components/sections/PageHero";
 import { PricingTabs, BundlesGrid } from "@/components/sections/PricingTabs";
@@ -23,70 +23,73 @@ export default async function PricingPage() {
   const copy = regionCopy[region];
 
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <PageHero
         eyebrow="Pricing"
         title="Real numbers. Not a 'contact us for pricing' dodge."
         description={copy.pricingNote}
       />
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <PricingTabs />
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Bundles"
             title="Website + SEO + Care, priced to reward doing it right from day one."
             description="Every bundle locks in the recurring-service rate for its bundled term at 15–17% below buying each piece separately."
             align="center"
+            tone="cream"
             className="mx-auto"
           />
           <div className="mt-14">
             <BundlesGrid />
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
-          <div className="mx-auto max-w-3xl rounded-2xl border border-ink/8 bg-cream-card p-8 text-center sm:p-12">
-            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brass-ink">Google Business Profile</p>
-            <h3 className="mt-3 font-display text-2xl font-medium text-ink sm:text-3xl">
+      <section className="hc-section">
+        <div className="hc-wrap">
+          <div className="mx-auto max-w-3xl hc-gbp" style={{ justifyContent: "center", textAlign: "center", flexDirection: "column", borderTop: "none" }}>
+            <p className="hc-eyebrow">Google Business Profile</p>
+            <h3 className="hc-heading__title" style={{ marginTop: 10 }}>
               Standalone, or free inside every SEO retainer.
             </h3>
-            <div className="mt-6 flex flex-col justify-center gap-8 sm:flex-row">
+            <div className="mt-8 flex flex-col justify-center gap-10 sm:flex-row">
               <div>
-                <p className="font-display text-3xl font-medium text-ink">{gbpPricing.setup}</p>
-                <p className="mt-1 text-sm text-ink/55">{gbpPricing.setupNote}</p>
+                <p className="hc-heading__title" style={{ fontSize: 28 }}>
+                  {gbpPricing.setup}
+                </p>
+                <p className="hc-lede" style={{ marginTop: 4, maxWidth: "none" }}>
+                  {gbpPricing.setupNote}
+                </p>
               </div>
               <div>
-                <p className="font-display text-3xl font-medium text-ink">{gbpPricing.monthly}</p>
-                <p className="mt-1 text-sm text-ink/55">{gbpPricing.monthlyNote}</p>
+                <p className="hc-heading__title" style={{ fontSize: 28 }}>
+                  {gbpPricing.monthly}
+                </p>
+                <p className="hc-lede" style={{ marginTop: 4, maxWidth: "none" }}>
+                  {gbpPricing.monthlyNote}
+                </p>
               </div>
             </div>
           </div>
-          <p className="mx-auto mt-10 max-w-3xl text-center text-sm text-ink/50">
-            Pricing questions specific to an Ottawa project? Visit our{" "}
-            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              Ottawa web design
-            </Link>{" "}
-            page for details built around local businesses.
+          <p className="hc-worknote" style={{ marginTop: 40, textAlign: "center" }}>
+            Pricing questions specific to an Ottawa project? Visit our <Link href="/web-design-ottawa">Ottawa web design</Link> page for
+            details built around local businesses.
           </p>
-          <p className="mx-auto mt-4 max-w-3xl text-center text-sm text-ink/50">
-            Pricing for an SEO retainer specifically? See{" "}
-            <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              SEO pricing for contractors
-            </Link>{" "}
-            and trades.
+          <p className="hc-worknote" style={{ marginTop: 10, textAlign: "center" }}>
+            Pricing for an SEO retainer specifically? See <Link href="/local-seo-for-contractors">SEO pricing for contractors</Link> and
+            trades.
           </p>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

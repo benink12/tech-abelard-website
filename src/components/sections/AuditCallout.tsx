@@ -1,5 +1,4 @@
 import { ScanSearch } from "lucide-react";
-import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 
 export function AuditCallout({
@@ -14,21 +13,24 @@ export function AuditCallout({
   ctaLabel?: string;
 }) {
   return (
-    <section className="py-16 sm:py-20">
-      <Container>
-        <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-2xl border border-brass/25 bg-cream-card p-8 text-center sm:flex-row sm:items-center sm:text-left">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-ink/5">
-            <ScanSearch className="h-5 w-5 text-brass-ink" strokeWidth={1.7} />
+    <section style={{ padding: "clamp(40px,5vw,64px) 0" }}>
+      <div className="hc-wrap">
+        <div
+          className="hc-flatcard"
+          style={{ display: "flex", flexWrap: "wrap", alignItems: "center", gap: 24, justifyContent: "space-between" }}
+        >
+          <div style={{ display: "flex", alignItems: "flex-start", gap: 16, flex: "1 1 320px" }}>
+            <ScanSearch className="h-5 w-5" strokeWidth={1.5} style={{ marginTop: 4, color: "var(--hc-ink)", flexShrink: 0 }} />
+            <div>
+              <h3 style={{ margin: 0 }}>{title}</h3>
+              <p style={{ marginTop: 6 }}>{description}</p>
+            </div>
           </div>
-          <div className="flex-1">
-            <h3 className="font-display text-xl font-medium text-ink">{title}</h3>
-            <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{description}</p>
-          </div>
-          <Button href="/audit" variant="outline" size="md" data-cta={ctaId} className="shrink-0" showArrow>
+          <Button href="/audit" variant="outline" size="md" data-cta={ctaId} showArrow>
             {ctaLabel}
           </Button>
         </div>
-      </Container>
+      </div>
     </section>
   );
 }

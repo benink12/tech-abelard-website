@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { LogOut } from "lucide-react";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { Button } from "@/components/ui/Button";
 import { portfolioProjects } from "@/data/portfolio";
 import { getShowcaseSession, clearShowcaseSessionCookie } from "@/lib/showcase/session";
@@ -60,56 +60,64 @@ export default async function PrivateShowcasePage({ params }: { params: Promise<
   // load, after the OS session-check above has already confirmed this
   // visitor's access — never cached, never handed out any earlier.
   const demoUrlWithToken = demoUrl
-    ? `${demoUrl}${demoUrl.includes("?") ? "&" : "?"}access=${signDemoAccessToken(slug)}`
+    ? `${demoUrl}${demoUrl.includes("?") ? "&" : "?"}access=${signDemoAccessToken(slug, session.requestId)}`
     : null;
 
   return (
-    <section className="flex min-h-[85vh] items-center py-20 sm:py-28">
-      <Container className="max-w-2xl">
-        <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.18em] text-brass-ink">Private Preview</p>
-        <h1 className="text-balance text-center font-display text-3xl font-medium text-ink">Tech Abélard Private Showcase</h1>
-        <p className="mt-3 text-center text-sm text-ink/60">
-          Welcome, {check.request.fullName || check.request.businessName}
-        </p>
-
-        <div className="mt-10 rounded-2xl border border-ink/8 bg-cream-card p-8 text-center sm:p-10">
-          <p className="text-xs font-semibold uppercase tracking-wide text-ink/45">Approved project</p>
-          <h2 className="mt-2 font-display text-2xl font-medium text-ink">{project.name}</h2>
-          <p className="mt-1 text-sm text-ink/55">{project.tagline}</p>
-
-          {check.expiresAt && (
-            <p className="mt-4 text-xs text-ink/45">
-              Access expires <span className="font-medium text-ink/65">{formatDate(check.expiresAt)}</span>
-            </p>
-          )}
-
-          <div className="mt-7">
-            {demoUrlWithToken ? (
-              <Button href={demoUrlWithToken} external variant="ink" size="lg" showArrow>
-                Open Live Demo
-              </Button>
-            ) : (
-              <span className="inline-block rounded-full border border-ink/12 px-5 py-3 text-sm font-medium text-ink/40">
-                Live demo opening soon
-              </span>
-            )}
-          </div>
-        </div>
-
-        <div className="mt-6 rounded-xl border border-ink/8 bg-ink p-5 text-cream">
-          <p className="text-xs font-semibold uppercase tracking-wide text-brass-light">Please note</p>
-          <p className="mt-2 text-sm leading-relaxed text-cream/70">
-            This is a concept project created to demonstrate Tech Abélard&apos;s design, SEO, and conversion capabilities.
-            It is not presented as a completed client project.
+    <div className={`home-concept ${homeFontClassName}`}>
+      <section className="flex min-h-[85vh] items-center hc-section">
+        <div className="hc-wrap" style={{ maxWidth: 620 }}>
+          <p className="hc-eyebrow" style={{ textAlign: "center" }}>
+            Private Preview
           </p>
-        </div>
+          <h1 className="hc-h2" style={{ textAlign: "center", marginTop: 12 }}>
+            Tech Abélard Private Showcase
+          </h1>
+          <p className="hc-lede" style={{ textAlign: "center", margin: "12px auto 0" }}>
+            Welcome, {check.request.fullName || check.request.businessName}
+          </p>
 
-        <form action={exitPreviewAction} className="mt-6 flex justify-center">
-          <button type="submit" className="inline-flex items-center gap-1.5 text-xs font-medium text-ink/50 hover:text-ink/80">
-            <LogOut className="h-3.5 w-3.5" /> Exit private preview
-          </button>
-        </form>
-      </Container>
-    </section>
+          <div className="hc-flatcard" style={{ marginTop: 40, textAlign: "center" }}>
+            <p className="hc-eyebrow">Approved project</p>
+            <h2 className="hc-heading__title" style={{ marginTop: 8 }}>
+              {project.name}
+            </h2>
+            <p style={{ marginTop: 4 }}>{project.tagline}</p>
+
+            {check.expiresAt && (
+              <p className="hc-worknote" style={{ marginTop: 16, textTransform: "none", letterSpacing: 0 }}>
+                Access expires <strong style={{ color: "var(--hc-ink)" }}>{formatDate(check.expiresAt)}</strong>
+              </p>
+            )}
+
+            <div style={{ marginTop: 24 }}>
+              {demoUrlWithToken ? (
+                <Button href={demoUrlWithToken} external variant="ink" size="lg" showArrow>
+                  Open Live Demo
+                </Button>
+              ) : (
+                <span className="hc-badge">Live demo opening soon</span>
+              )}
+            </div>
+          </div>
+
+          <div className="hc-flatcard" style={{ marginTop: 24, borderTopColor: "var(--hc-ink)" }}>
+            <p className="hc-eyebrow" style={{ color: "var(--slate)" }}>
+              Please note
+            </p>
+            <p style={{ marginTop: 8 }}>
+              This is a concept project created to demonstrate Tech Abélard&apos;s design, SEO, and conversion
+              capabilities. It is not presented as a completed client project.
+            </p>
+          </div>
+
+          <form action={exitPreviewAction} className="mt-8 flex justify-center">
+            <button type="submit" className="hc-worknote" style={{ display: "inline-flex", alignItems: "center", gap: 6, cursor: "pointer" }}>
+              <LogOut className="h-3.5 w-3.5" /> Exit private preview
+            </button>
+          </form>
+        </div>
+      </section>
+    </div>
   );
 }

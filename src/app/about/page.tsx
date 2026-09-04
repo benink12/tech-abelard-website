@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { site } from "@/data/site";
 import { regionCopy } from "@/data/localization";
 import { getRegion } from "@/lib/region";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
 import { PageHero } from "@/components/sections/PageHero";
@@ -39,15 +39,15 @@ export default async function AboutPage() {
   ];
 
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <PageHero
         eyebrow="About"
         title="Built for one kind of business, on purpose."
         description={`${copy.siteDescription} That's a deliberate narrowing, not a limitation.`}
       />
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <div className="grid grid-cols-1 gap-16 lg:grid-cols-[0.9fr_1.1fr]">
             <div className="lg:sticky lg:top-28 lg:self-start">
               <SectionHeading
@@ -57,48 +57,48 @@ export default async function AboutPage() {
               />
             </div>
 
-            <div className="flex flex-col divide-y divide-ink/8 border-t border-ink/8">
+            <div className="hc-steps" style={{ marginTop: 0 }}>
               {beliefs.map((item, i) => (
                 <RevealOnScroll key={item.title} delay={i * 80}>
-                  <div className="grid grid-cols-[auto_1fr] gap-6 py-8">
-                    <span className="font-display text-2xl font-medium text-brass-ink">
-                      {String(i + 1).padStart(2, "0")}
-                    </span>
+                  <div className="hc-step" style={{ gridTemplateColumns: "48px 1fr" }}>
+                    <span className="hc-step__n">{String(i + 1).padStart(2, "0")}</span>
                     <div>
-                      <h3 className="font-display text-xl font-medium text-ink">{item.title}</h3>
-                      <p className="mt-2.5 text-sm leading-relaxed text-ink/60">{item.description}</p>
+                      <h3 className="hc-heading__title" style={{ fontSize: 21 }}>
+                        {item.title}
+                      </h3>
+                      <p className="hc-step__d" style={{ marginTop: 8 }}>
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 </RevealOnScroll>
               ))}
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Who We Serve"
             title="Every project is a home service business."
             description={copy.aboutWhoWeServeDescription}
             align="center"
+            tone="cream"
             className="mx-auto"
           />
           <div className="mx-auto mt-12 flex max-w-3xl flex-wrap justify-center gap-3">
             {site.industries.map((industry) => (
-              <span
-                key={industry}
-                className="rounded-full border border-ink/10 bg-cream-card px-5 py-2.5 text-sm font-medium text-ink/70"
-              >
+              <span key={industry} className="hc-badge hc-badge--cream">
                 {industry}
               </span>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

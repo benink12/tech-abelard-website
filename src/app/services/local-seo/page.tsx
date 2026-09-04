@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
@@ -61,21 +61,21 @@ const faqItems = [
 
 export default function LocalSEOPage() {
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <PageHero
         eyebrow="Local SEO"
         title="Local SEO for service businesses."
         description="Local SEO is compounding proof to Google that you're the real, active, trustworthy answer to “best [service] near me.” We run monthly retainers built around technical fixes, content, citations, and review generation — not a one-time audit and a promise."
       >
-        <div className="mt-8">
+        <div className="hc-hero__ctas">
           <Button href="/audit" variant="cream" size="lg" data-cta="local-seo-hero-free-audit" showArrow>
             Get a Free Website Audit
           </Button>
         </div>
       </PageHero>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Google Visibility"
             title="Six pillars, run every month."
@@ -84,61 +84,63 @@ export default function LocalSEOPage() {
           <div className="mt-14">
             <SeoPillars full />
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Every Month"
             title="What actually happens on a retainer."
             description="Only the volume changes by tier — the rhythm is the same for every client."
             align="center"
+            tone="cream"
             className="mx-auto"
           />
-          <div className="mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2">
             {monthlyRhythm.map((item) => (
-              <div key={item.week} className="rounded-2xl border border-ink/8 bg-cream-card p-7">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brass-ink">{item.week}</p>
-                <h3 className="mt-2 font-display text-xl font-medium text-ink">{item.title}</h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-ink/60">{item.detail}</p>
+              <div key={item.week} className="hc-flatcard" style={{ borderTopColor: "var(--rule-inv)" }}>
+                <p className="hc-eyebrow">{item.week}</p>
+                <h3 style={{ color: "var(--bone)" }}>{item.title}</h3>
+                <p style={{ color: "rgba(230,231,226,0.62)" }}>{item.detail}</p>
               </div>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
-          <div className="mx-auto max-w-3xl rounded-2xl border border-ink/8 bg-cream-card p-8 sm:p-10">
-            <div className="flex items-center gap-3">
-              <ShieldAlert className="h-5 w-5 shrink-0 text-brass-ink" strokeWidth={1.7} />
-              <h2 className="font-display text-xl font-medium text-ink sm:text-2xl">What we do not guarantee</h2>
+      <section className="hc-section">
+        <div className="hc-wrap">
+          <div className="mx-auto max-w-3xl hc-flatcard">
+            <div className="hc-flatcard__kicker">
+              <ShieldAlert className="h-4 w-4" strokeWidth={1.5} />
+              What we do not guarantee
             </div>
-            <ul className="mt-6 flex flex-col gap-3.5">
+            <ul style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 12, padding: 0, listStyle: "none" }}>
               {doNotGuarantee.map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink/65">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brass" />
+                <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed" style={{ color: "var(--slate)" }}>
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full" style={{ background: "var(--slate)" }} />
                   {item}
                 </li>
               ))}
             </ul>
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Capability, Not Case Studies"
             title="SEO structure, demonstrated on real builds."
             description="These concept projects aren't running client campaigns — there's no fabricated ranking or traffic data here. What you can see is the actual SEO architecture (schema, page structure, local-intent content) built into each one."
+            tone="cream"
           />
           <PortfolioShowcase
             className="mt-14"
             featuredSlugs={["northpeak-roofing", "northclimate-hvac", "northline-plumbing"]}
           />
-        </Container>
+        </div>
       </section>
 
       <AuditCallout
@@ -147,23 +149,20 @@ export default function LocalSEOPage() {
         description="Get a free, honest audit of your current site before you commit to a retainer."
       />
 
-      <section className="border-t border-ink/8 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section" style={{ borderTop: "1px solid var(--rule)" }}>
+        <div className="hc-wrap">
           <SectionHeading eyebrow="FAQ" title="Common questions about local SEO." />
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
-          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
+          <p className="hc-worknote" style={{ marginTop: 32, textAlign: "center" }}>
             Running SEO specifically for the trades? See{" "}
-            <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              local SEO for home service businesses
-            </Link>
-            .
+            <Link href="/local-seo-for-contractors">local SEO for home service businesses</Link>.
           </p>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

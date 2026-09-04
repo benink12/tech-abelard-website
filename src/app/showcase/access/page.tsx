@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { AccessGateForm } from "./AccessGateForm";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 
 // Never indexed — see src/app/robots.ts's disallow for the whole /showcase
 // tree. This page itself is reachable (the "enter your code" step has to
@@ -12,17 +12,24 @@ export const metadata: Metadata = {
 
 export default function ShowcaseAccessPage() {
   return (
-    <section className="flex min-h-[80vh] items-center py-20 sm:py-28">
-      <Container className="max-w-md">
-        <p className="mb-3 text-center text-xs font-semibold uppercase tracking-[0.18em] text-brass-ink">Private Preview</p>
-        <h1 className="text-balance text-center font-display text-3xl font-medium text-ink">Tech Abélard Private Showcase</h1>
-        <p className="mt-3 text-center text-sm leading-relaxed text-ink/60">
-          Enter the business email and access code from your approval email to view the interactive demo you requested.
-        </p>
-        <div className="mt-10">
-          <AccessGateForm />
+    <div className={`home-concept ${homeFontClassName}`}>
+      <section className="flex min-h-[80vh] items-center hc-section">
+        <div className="hc-wrap" style={{ maxWidth: 460 }}>
+          <p className="hc-eyebrow" style={{ textAlign: "center" }}>
+            Private Preview
+          </p>
+          <h1 className="hc-h2" style={{ textAlign: "center", marginTop: 12 }}>
+            Tech Abélard Private Showcase
+          </h1>
+          <p className="hc-lede" style={{ textAlign: "center", margin: "12px auto 0" }}>
+            Enter the business email and access code from your approval email to view the interactive demo you
+            requested.
+          </p>
+          <div className="mt-10">
+            <AccessGateForm />
+          </div>
         </div>
-      </Container>
-    </section>
+      </section>
+    </div>
   );
 }

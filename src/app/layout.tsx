@@ -1,24 +1,49 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces } from "next/font/google";
+import { Inter } from "next/font/google";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import "./globals.css";
+import "@/styles/home.css";
 import { site } from "@/data/site";
 import { regionCopy } from "@/data/localization";
 import { getRegion } from "@/lib/region";
-import { Header } from "@/components/layout/Header";
-import { Footer } from "@/components/layout/Footer";
-import { MobileCTABar } from "@/components/layout/MobileCTABar";
+import { homeFontClassName } from "@/lib/fonts/home";
+import { HomeHeader } from "@/components/home/HomeHeader";
+import { HomeFooter } from "@/components/home/HomeFooter";
 
-const inter = Inter({
+// Google tag (gtag.js) — GA4 measurement ID. Loaded site-wide via
+// @next/third-parties/google's GoogleAnalytics component, the Next.js-
+// recommended way to add gtag.js (see node_modules/next/dist/docs/01-app/
+// 02-guides/third-party-libraries.md): it injects the script after
+// hydration with the correct loading strategy, rather than a raw <script>
+// tag pasted into the layout.
+const GA_MEASUREMENT_ID = "G-CW6ZC7PJ4W";
+
+// Site-wide type system. Reference: tinywins.com, inspected via computed
+// styles — every weight of their body copy and display type is a single
+// commercial/licensed family ("suisseIntl", Swiss Typefaces), which we
+// can't ship. Inter is the closest fully free (SIL OFL, Google Fonts)
+// neo-grotesque with comparable metrics, used here as one family for both
+// body and display — matching the one-typeface-multiple-weights structure
+// their site actually uses, not our previous two-family (Instrument Sans +
+// Bricolage Grotesque) pairing. Variable names kept as --font-body/
+// --font-display-face since nothing outside this file and globals.css's
+// `--font-sans`/`--font-display` mapping ever references the font-loader
+// variable names directly.
+const bodyFont = Inter({
   subsets: ["latin"],
-  variable: "--font-inter",
+  variable: "--font-body",
   display: "swap",
+  weight: ["400", "500"],
 });
 
-const fraunces = Fraunces({
+const displayFont = Inter({
   subsets: ["latin"],
-  variable: "--font-fraunces",
+  variable: "--font-display-face",
   display: "swap",
-  axes: ["opsz"],
+  // 400 added for the hero statement — see .hc-h1 in home.css, which now
+  // renders at genuinely regular weight rather than a browser-synthesized
+  // "fake bold" fallback.
+  weight: ["400", "600", "700", "800"],
 });
 
 export const viewport: Viewport = {
@@ -95,7 +120,7 @@ export default async function RootLayout({
   };
 
   return (
-    <html lang="en" className={`${inter.variable} ${fraunces.variable} h-full`}>
+    <html lang="en" className={`${bodyFont.variable} ${displayFont.variable} h-full`}>
       <body className="flex min-h-full flex-col bg-cream text-ink antialiased">
         <script
           type="application/ld+json"
@@ -107,16 +132,24 @@ export default async function RootLayout({
         >
           Skip to main content
         </a>
-        <Header />
-        <main
-          id="main-content"
-          className="flex-1 pb-[calc(4.8125rem+env(safe-area-inset-bottom)+1rem)] xl:pb-0"
-        >
+        {/* HomeHeader/HomeFooter are each wrapped in their own small
+            .home-concept-scoped div — deliberately NOT wrapping <main> — so
+            their hc-* variables/reset apply only to the chrome. Wrapping the
+            whole body would leak `.home-concept :where(a){color:inherit}`
+            onto every other page's Tailwind-styled buttons/links, the same
+            invisible-button-text bug already fixed twice on the homepage
+            itself (see HomeFinalCTA/HomeFooter history). */}
+        <div className={`home-concept ${homeFontClassName}`}>
+          <HomeHeader />
+        </div>
+        <main id="main-content" className="flex-1">
           {children}
         </main>
-        <Footer />
-        <MobileCTABar />
+        <div className={`home-concept ${homeFontClassName}`}>
+          <HomeFooter />
+        </div>
       </body>
+      <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
     </html>
   );
 }

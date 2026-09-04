@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 import { CheckCircle2 } from "lucide-react";
 import { services } from "@/data/services";
 import { iconMap } from "@/lib/icons";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { PageHero } from "@/components/sections/PageHero";
@@ -40,34 +40,34 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
   const Icon = iconMap[service.icon];
 
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <PageHero eyebrow="Services" title={service.name} description={service.description}>
-        <div className="mt-8">
+        <div className="hc-hero__ctas">
           <Button href="/contact" variant="cream" size="lg" data-cta={`${service.slug}-hero-discovery-call`} showArrow>
             Book a Discovery Call
           </Button>
         </div>
       </PageHero>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <div className="grid grid-cols-1 gap-12 lg:grid-cols-[auto_1fr] lg:items-start">
-            <div className="flex h-14 w-14 items-center justify-center rounded-full bg-ink/5">
-              <Icon className="h-6 w-6 text-brass-ink" strokeWidth={1.6} />
+            <div className="flex h-14 w-14 items-center justify-center rounded-full" style={{ border: "1px solid var(--rule)" }}>
+              <Icon className="h-6 w-6" strokeWidth={1.5} style={{ color: "var(--hc-ink)" }} />
             </div>
             <div>
               <SectionHeading eyebrow="What's Included" title="What you get." />
               <ul className="mt-8 flex flex-col gap-3.5">
                 {service.deliverables.map((item) => (
-                  <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink/65 sm:text-base">
-                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-brass-ink" strokeWidth={1.5} />
+                  <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed sm:text-base" style={{ color: "var(--slate)" }}>
+                    <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.5} style={{ color: "var(--hc-ink)" }} />
                     {item}
                   </li>
                 ))}
               </ul>
             </div>
           </div>
-        </Container>
+        </div>
       </section>
 
       <AuditCallout
@@ -77,6 +77,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       />
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

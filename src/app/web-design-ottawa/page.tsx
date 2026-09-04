@@ -4,7 +4,7 @@ import { LayoutTemplate, Smartphone, MousePointerClick, Gauge, MapPin, ListCheck
 import { site } from "@/data/site";
 import { regionCopy } from "@/data/localization";
 import { getRegion } from "@/lib/region";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -155,7 +155,7 @@ export default async function WebDesignOttawaPage() {
   };
 
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
@@ -165,79 +165,91 @@ export default async function WebDesignOttawaPage() {
         title={H1_TITLE}
         description="A mobile-friendly, conversion-focused website for your Ottawa business — built to turn visitors into calls, not just look good on a phone. Whether you need website design from scratch or a full website redesign, every page is built around one job: lead generation."
       >
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button href="/contact" variant="cream" size="lg" data-cta="web-design-ottawa-hero-discovery-call" showArrow>
+        <div className="hc-hero__ctas">
+          <Button href="/contact" variant="ink" size="lg" data-cta="web-design-ottawa-hero-discovery-call" showArrow>
             Book a Discovery Call
           </Button>
-          <Button href="/audit" variant="outline-cream" size="lg" data-cta="web-design-ottawa-hero-audit">
+          <Button href="/audit" variant="outline" size="lg" data-cta="web-design-ottawa-hero-audit">
             Get a Free Website Audit
           </Button>
         </div>
       </PageHero>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Who This Is For"
             title="Built for Ottawa's local businesses and contractors."
             description={`${copy.aboutWhoWeServeDescription} If you serve Ottawa and the surrounding communities, and you're competing against other local businesses for the same searches, this is the work we do.`}
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="The Real Problem"
             title="A lot of Ottawa service businesses are losing jobs to a worse company with a better website."
             description="Search traffic in Ottawa's trades market skews mobile and impatient — someone with a leaking pipe or a dead furnace isn't reading three paragraphs before they call. If your site is slow, hard to navigate on a phone, or doesn't make the phone number obvious in the first five seconds, the visitor calls the next name on the list instead. That's not a marketing problem. It's a design problem, and it's fixable."
+            tone="cream"
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="What We Build"
             title="Six things every Ottawa site gets, no exceptions."
             description="Whichever tier you start on, these aren't upsells — they're the baseline every project is built around."
           />
-          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 border-t border-ink/8 pt-10 sm:grid-cols-2">
+          <div
+            className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2"
+            style={{ borderTop: "1px solid var(--rule)", paddingTop: 40 }}
+          >
             {provides.map((item, i) => {
               const Icon = item.icon;
               return (
                 <RevealOnScroll key={item.title} delay={i * 60}>
                   <div className="flex gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink/5">
-                      <Icon className="h-5 w-5 text-brass-ink" strokeWidth={1.6} />
+                    <div
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+                      style={{ border: "1px solid var(--rule)" }}
+                    >
+                      <Icon className="h-5 w-5" strokeWidth={1.6} style={{ color: "var(--hc-ink)" }} />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg font-medium text-ink">{item.title}</h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{item.description}</p>
+                      <h3 className="hc-heading__title" style={{ fontSize: 18 }}>
+                        {item.title}
+                      </h3>
+                      <p className="hc-lede" style={{ marginTop: 6, fontSize: 14.5 }}>
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 </RevealOnScroll>
               );
             })}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Process"
             title="What actually happens, week by week."
             description="The same rhythm for every project, Ottawa-based or not — only the volume of work changes by tier."
+            tone="cream"
           />
           <div className="mt-14">
             <ProcessTimeline />
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Industries"
             title="Industries we build for across Ottawa."
@@ -250,30 +262,28 @@ export default async function WebDesignOttawaPage() {
               </Badge>
             ))}
           </div>
-          <p className="mt-8 max-w-2xl text-sm leading-relaxed text-ink/55">
+          <p className="hc-lede" style={{ marginTop: 32, maxWidth: "42rem" }}>
             Most of our work is for home service trades — plumbers, HVAC companies, roofers, electricians — though the
-            portfolio below also includes concept builds for clinics and professional-service brands, if that&apos;s closer
-            to what you run. Running a plumbing company specifically? See our dedicated{" "}
-            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            portfolio below also includes concept builds for clinics and professional-service brands, if that&apos;s
+            closer to what you run. Running a plumbing company specifically? See our dedicated{" "}
+            <Link href="/plumber-website-design" className="hc-inline-link">
               plumber website design
             </Link>{" "}
             page.
           </p>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
             <SectionHeading
               eyebrow="Examples"
               title="Concept work from the portfolio."
               description="Every project below is a concept build created to demonstrate our own design and SEO capabilities across different home-service niches — not a completed client project."
+              tone="cream"
             />
-            <Link
-              href="/portfolio"
-              className="hidden shrink-0 text-sm font-medium text-ink/70 hover:text-brass-ink sm:block"
-            >
+            <Link href="/portfolio" className="hc-inline-link hidden shrink-0 text-sm sm:block">
               See the full portfolio →
             </Link>
           </div>
@@ -281,10 +291,10 @@ export default async function WebDesignOttawaPage() {
             className="mt-14"
             featuredSlugs={["northline-plumbing", "northpeak-roofing", "northclimate-hvac"]}
           />
-          <Link href="/portfolio" className="mt-8 block text-sm font-medium text-ink/70 hover:text-brass-ink sm:hidden">
+          <Link href="/portfolio" className="hc-inline-link mt-8 block text-sm sm:hidden">
             See the full portfolio →
           </Link>
-        </Container>
+        </div>
       </section>
 
       <AuditCallout
@@ -293,42 +303,45 @@ export default async function WebDesignOttawaPage() {
         description="Get a free, honest audit — we'll tell you whether a full redesign or a smaller fix is what your Ottawa site actually needs."
       />
 
-      <section className="border-t border-ink/8 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section" style={{ borderTop: "1px solid var(--rule)" }}>
+        <div className="hc-wrap">
           <SectionHeading eyebrow="FAQ" title="Common questions from Ottawa business owners." />
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
-          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
+          <p className="hc-lede" style={{ marginTop: 32, textAlign: "center", maxWidth: "42rem", marginLeft: "auto", marginRight: "auto" }}>
             Ready to see local rankings move too? Read how we approach{" "}
-            <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/local-seo-for-contractors" className="hc-inline-link">
               local SEO for contractors
             </Link>{" "}
             or explore our{" "}
-            <Link href="/services/local-seo" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/services/local-seo" className="hc-inline-link">
               local SEO service
             </Link>{" "}
             directly.
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-ink/50">
+          <p
+            className="hc-lede"
+            style={{ marginTop: 16, textAlign: "center", maxWidth: "42rem", marginLeft: "auto", marginRight: "auto" }}
+          >
             Want to see the work first? Browse the{" "}
-            <Link href="/portfolio" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/portfolio" className="hc-inline-link">
               full portfolio
             </Link>
             , check{" "}
-            <Link href="/pricing" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/pricing" className="hc-inline-link">
               pricing
             </Link>
             , or explore the{" "}
-            <Link href="/services/web-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/services/web-design" className="hc-inline-link">
               Web Design service
             </Link>{" "}
             in more detail.
           </p>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

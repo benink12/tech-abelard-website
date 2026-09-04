@@ -7,8 +7,7 @@ import { Button } from "@/components/ui/Button";
 
 type Status = "idle" | "submitting" | "error";
 
-const inputClasses =
-  "w-full rounded-xl border border-ink/12 bg-cream px-4 py-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-brass-ink focus:outline-none";
+const inputClasses = "hc-input";
 
 const REASON_MESSAGES: Record<string, string> = {
   expired: "This access code has expired. Reply to your approval email and we'll send a new one.",
@@ -59,58 +58,46 @@ export function AccessGateForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="rounded-2xl border border-ink/8 bg-cream-card p-8">
-      <div className="flex flex-col gap-5">
-        <div>
-          <label htmlFor="email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Business email
-          </label>
-          <input
-            ref={emailRef}
-            id="email"
-            name="email"
-            type="email"
-            autoComplete="email"
-            inputMode="email"
-            className={inputClasses}
-          />
-        </div>
-        <div>
-          <label htmlFor="code" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Access code
-          </label>
-          <input
-            ref={codeRef}
-            id="code"
-            name="code"
-            type="text"
-            autoCapitalize="characters"
-            autoCorrect="off"
-            spellCheck={false}
-            placeholder="XXXXX-XXXXX"
-            className={inputClasses}
-          />
-        </div>
+    <form onSubmit={handleSubmit} noValidate>
+      <div className="hc-field">
+        <label htmlFor="email">Business email</label>
+        <input ref={emailRef} id="email" name="email" type="email" autoComplete="email" inputMode="email" className={inputClasses} />
+      </div>
+      <div className="hc-field" style={{ marginTop: 20 }}>
+        <label htmlFor="code">Access code</label>
+        <input
+          ref={codeRef}
+          id="code"
+          name="code"
+          type="text"
+          autoCapitalize="characters"
+          autoCorrect="off"
+          spellCheck={false}
+          placeholder="XXXXX-XXXXX"
+          className={inputClasses}
+        />
       </div>
 
       {error && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">
+        <p role="alert" className="hc-form-error" style={{ marginTop: 16 }}>
           {error}
         </p>
       )}
 
-      <Button type="submit" variant="ink" size="lg" className="mt-6 w-full" disabled={status === "submitting"}>
-        {status === "submitting" ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" /> Checking
-          </>
-        ) : (
-          "Enter Showcase"
-        )}
-      </Button>
-      <p className="mt-4 text-center text-xs text-ink/40">
-        Don&apos;t have access yet? Request it from any project&apos;s case study page.
-      </p>
+      <div style={{ marginTop: 28 }}>
+        <Button type="submit" variant="ink" size="lg" className="w-full" disabled={status === "submitting"}>
+          {status === "submitting" ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> Checking
+            </>
+          ) : (
+            "Enter Showcase"
+          )}
+        </Button>
+        <p className="hc-form-note" style={{ textAlign: "center" }}>
+          Don&apos;t have access yet? Request it from any project&apos;s case study page.
+        </p>
+      </div>
     </form>
   );
 }

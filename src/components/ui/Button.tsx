@@ -7,20 +7,19 @@ type Variant = "ink" | "cream" | "outline" | "outline-cream" | "ghost";
 type Size = "md" | "lg";
 
 const variantClasses: Record<Variant, string> = {
-  ink: "bg-ink text-cream hover:bg-ink-soft",
-  cream: "bg-cream text-ink hover:bg-white",
-  outline: "border border-ink/15 text-ink hover:border-ink/40 hover:bg-ink/5",
-  "outline-cream": "border border-cream/30 text-cream hover:border-cream/60 hover:bg-cream/10",
-  ghost: "text-ink hover:text-brass-ink",
+  ink: "hc-btnbase--ink",
+  cream: "hc-btnbase--cream",
+  outline: "hc-btnbase--outline",
+  "outline-cream": "hc-btnbase--outline-cream",
+  ghost: "hc-btnbase--ghost",
 };
 
 const sizeClasses: Record<Size, string> = {
-  md: "h-11 px-6 text-sm gap-2",
-  lg: "h-13 px-8 text-[0.95rem] gap-2.5",
+  md: "hc-btnbase--sm",
+  lg: "",
 };
 
-const baseClasses =
-  "group inline-flex items-center justify-center rounded-full font-medium tracking-tight transition-all duration-300 whitespace-nowrap active:scale-[0.98]";
+const baseClasses = "group hc-btnbase";
 
 interface SharedProps {
   variant?: Variant;

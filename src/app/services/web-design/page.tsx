@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LayoutTemplate, MousePointerClick, Smartphone, Gauge, SearchCheck, ListChecks } from "lucide-react";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -87,66 +87,72 @@ const faqItems = [
 
 export default function WebDesignPage() {
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <PageHero
         eyebrow="Web Design"
         title="Custom sites built to convert, not just exist."
         description="A fully custom site for your business — not a template with your logo dropped in. Every page is designed around one job: turning a visitor who found you on their phone into a call, a form fill, or a booked estimate."
       >
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+        <div className="hc-hero__ctas">
           <Button href="/contact" variant="cream" size="lg" data-cta="web-design-hero-discovery-call" showArrow>
             Book a Discovery Call
           </Button>
         </div>
       </PageHero>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="What We Build"
             title="Six things every Tech Abélard site gets, no exceptions."
             description="Whichever tier you start on, these aren't upsells — they're the baseline every site is built around."
           />
 
-          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 border-t border-ink/8 pt-10 sm:grid-cols-2">
+          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2" style={{ borderTop: "1px solid var(--rule)", paddingTop: 40 }}>
             {buildPillars.map((pillar, i) => {
               const Icon = pillar.icon;
               return (
                 <RevealOnScroll key={pillar.title} delay={i * 60}>
                   <div className="flex gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink/5">
-                      <Icon className="h-5 w-5 text-brass-ink" strokeWidth={1.6} />
+                    <div
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+                      style={{ border: "1px solid var(--rule)" }}
+                    >
+                      <Icon className="h-5 w-5" strokeWidth={1.5} style={{ color: "var(--hc-ink)" }} />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg font-medium text-ink">{pillar.title}</h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{pillar.description}</p>
+                      <h3 className="hc-heading__title" style={{ fontSize: 18 }}>
+                        {pillar.title}
+                      </h3>
+                      <p className="hc-lede" style={{ marginTop: 6, fontSize: 14.5 }}>
+                        {pillar.description}
+                      </p>
                     </div>
                   </div>
                 </RevealOnScroll>
               );
             })}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
-          <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
-            <SectionHeading
-              eyebrow="Examples"
-              title="Concept work from the portfolio."
-              description="Every project below is a concept build created to demonstrate our own capabilities across different home-service and specialty niches."
-            />
-          </div>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
+          <SectionHeading
+            eyebrow="Examples"
+            title="Concept work from the portfolio."
+            description="Every project below is a concept build created to demonstrate our own capabilities across different home-service and specialty niches."
+            tone="cream"
+          />
           <PortfolioShowcase
             className="mt-14"
             featuredSlugs={["aurelle-medspa", "northpeak-roofing", "northline-plumbing"]}
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Process"
             title="What actually happens, week by week."
@@ -155,7 +161,7 @@ export default function WebDesignPage() {
           <div className="mt-14">
             <ProcessTimeline />
           </div>
-        </Container>
+        </div>
       </section>
 
       <AuditCallout
@@ -164,27 +170,20 @@ export default function WebDesignPage() {
         description="Get a free, honest audit of your current site — we'll tell you exactly what's actually holding it back first."
       />
 
-      <section className="border-t border-ink/8 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section" style={{ borderTop: "1px solid var(--rule)" }}>
+        <div className="hc-wrap">
           <SectionHeading eyebrow="FAQ" title="Common questions about the build." />
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
-          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
-            Building for a specific niche? See{" "}
-            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              web design for Ottawa businesses
-            </Link>{" "}
-            or{" "}
-            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              website design for plumbing companies
-            </Link>
-            .
+          <p className="hc-worknote" style={{ marginTop: 32, textAlign: "center" }}>
+            Building for a specific niche? See <Link href="/web-design-ottawa">web design for Ottawa businesses</Link>{" "}
+            or <Link href="/plumber-website-design">website design for plumbing companies</Link>.
           </p>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

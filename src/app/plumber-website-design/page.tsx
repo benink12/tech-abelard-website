@@ -3,7 +3,7 @@ import Link from "next/link";
 import { PhoneCall, Wrench, MapPinned, FileCheck2, ShieldCheck, Smartphone, SearchCheck } from "lucide-react";
 import { site } from "@/data/site";
 import { portfolioProjects } from "@/data/portfolio";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { RevealOnScroll } from "@/components/ui/RevealOnScroll";
@@ -43,12 +43,14 @@ const conversionUX = [
   {
     icon: PhoneCall,
     title: "Click-to-call, above the fold",
-    description: "The phone number isn't hiding in a header menu — it's tappable the instant the page loads, plus a sticky mobile call bar that follows the scroll.",
+    description:
+      "The phone number isn't hiding in a header menu — it's tappable the instant the page loads, plus a sticky mobile call bar that follows the scroll.",
   },
   {
     icon: Wrench,
     title: "Dedicated service pages",
-    description: "Drain cleaning, water heater repair, leak detection, sewer line work — each gets its own page instead of one paragraph on a generic services list, so you can actually rank for each one.",
+    description:
+      "Drain cleaning, water heater repair, leak detection, sewer line work — each gets its own page instead of one paragraph on a generic services list, so you can actually rank for each one.",
   },
   {
     icon: MapPinned,
@@ -58,12 +60,14 @@ const conversionUX = [
   {
     icon: FileCheck2,
     title: "Quote and contact forms that get filled out",
-    description: "Short, validated, mobile-friendly — and wired to notify you the moment a request comes in, not sitting in a form plugin's dashboard nobody checks.",
+    description:
+      "Short, validated, mobile-friendly — and wired to notify you the moment a request comes in, not sitting in a form plugin's dashboard nobody checks.",
   },
   {
     icon: ShieldCheck,
     title: "Trust signals where they belong",
-    description: "Space built in for your actual licensing, insurance, years in business, and reviews — real information, positioned before the ask, not buried on an About page nobody visits.",
+    description:
+      "Space built in for your actual licensing, insurance, years in business, and reviews — real information, positioned before the ask, not buried on an About page nobody visits.",
   },
   {
     icon: Smartphone,
@@ -145,7 +149,7 @@ export default function PlumberWebsiteDesignPage() {
   };
 
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
@@ -155,83 +159,95 @@ export default function PlumberWebsiteDesignPage() {
         title="Website design for plumbing companies, built for the call, not the scroll."
         description="A plumbing customer is usually mid-emergency when they search — a burst pipe, no hot water, a backed-up drain. The site's only job is getting them to call before they call the next name on the list."
       >
-        <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-          <Button href="/contact" variant="cream" size="lg" data-cta="plumber-web-design-hero-discovery-call" showArrow>
+        <div className="hc-hero__ctas">
+          <Button href="/contact" variant="ink" size="lg" data-cta="plumber-web-design-hero-discovery-call" showArrow>
             Book a Discovery Call
           </Button>
         </div>
       </PageHero>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Who This Is For"
             title="Residential, commercial, and emergency plumbing companies."
             description="Drain and sewer specialists, water heater installers, general residential plumbers, and commercial plumbing contractors — any business where a missed call from a phone-in-hand searcher is a missed job."
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="The Real Problem"
             title="A plumbing site loses the job in the first five seconds."
             description="If a visitor can't find the phone number instantly, can't confirm you cover their area, or the page takes too long to load on their phone, they're calling the next search result — not scrolling further to find out more about you. Most plumbing sites also lump every service onto one page, which means they can't rank for “water heater repair” or “drain cleaning” as their own searches, only for “plumber” in general, where the competition is worst."
+            tone="cream"
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="What We Build"
             title="Conversion UX built specifically for plumbing."
             description="Not generic service-business template features — the specific patterns that get a plumbing visitor to actually call."
           />
-          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 border-t border-ink/8 pt-10 sm:grid-cols-2">
+          <div
+            className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2"
+            style={{ borderTop: "1px solid var(--rule)", paddingTop: 40 }}
+          >
             {conversionUX.map((item, i) => {
               const Icon = item.icon;
               return (
                 <RevealOnScroll key={item.title} delay={i * 60}>
                   <div className="flex gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink/5">
-                      <Icon className="h-5 w-5 text-brass-ink" strokeWidth={1.6} />
+                    <div
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+                      style={{ border: "1px solid var(--rule)" }}
+                    >
+                      <Icon className="h-5 w-5" strokeWidth={1.6} style={{ color: "var(--hc-ink)" }} />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg font-medium text-ink">{item.title}</h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{item.description}</p>
+                      <h3 className="hc-heading__title" style={{ fontSize: 18 }}>
+                        {item.title}
+                      </h3>
+                      <p className="hc-lede" style={{ marginTop: 6, fontSize: 14.5 }}>
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 </RevealOnScroll>
               );
             })}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Local SEO Structure"
             title="Built to rank, not just to look good."
             description="LocalBusiness and Service schema, semantic heading structure, and dedicated service pages are part of the build itself — so if a local SEO campaign starts on day one or two years from now, the site isn't the thing holding it back."
+            tone="cream"
           />
           <div className="mt-10 flex items-center gap-3">
-            <SearchCheck className="h-5 w-5 shrink-0 text-brass-ink" strokeWidth={1.7} />
-            <p className="text-sm text-ink/60">
+            <SearchCheck className="h-5 w-5 shrink-0" strokeWidth={1.7} style={{ color: "var(--bone)" }} />
+            <p className="hc-lede" style={{ color: "rgba(255,255,255,0.62)" }}>
               Want the ongoing SEO work too? See{" "}
-              <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+              <Link href="/local-seo-for-contractors" className="hc-inline-link" style={{ color: "var(--bone)" }}>
                 contractor SEO
               </Link>
               .
             </p>
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Process"
             title="What actually happens, week by week."
@@ -240,27 +256,26 @@ export default function PlumberWebsiteDesignPage() {
           <div className="mt-14">
             <ProcessTimeline />
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
-          <div className="flex flex-col items-start justify-between gap-8 sm:flex-row sm:items-end">
-            <SectionHeading
-              eyebrow="Concept Example"
-              title={northline ? northline.name : "NorthLine Plumbing & Drain"}
-              description={
-                northline
-                  ? `${northline.description} A concept project built to demonstrate this exact approach — not a real client.`
-                  : "A concept project built to demonstrate this exact approach — not a real client."
-              }
-            />
-          </div>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
+          <SectionHeading
+            eyebrow="Concept Example"
+            title={northline ? northline.name : "NorthLine Plumbing & Drain"}
+            description={
+              northline
+                ? `${northline.description} A concept project built to demonstrate this exact approach — not a real client.`
+                : "A concept project built to demonstrate this exact approach — not a real client."
+            }
+            tone="cream"
+          />
           <PortfolioShowcase
             className="mt-14"
             featuredSlugs={["northline-plumbing", "northpeak-roofing", "northclimate-hvac"]}
           />
-        </Container>
+        </div>
       </section>
 
       <AuditCallout
@@ -269,34 +284,34 @@ export default function PlumberWebsiteDesignPage() {
         description="Get a free, honest audit — we'll tell you exactly what's costing you calls before you commit to anything."
       />
 
-      <section className="border-t border-ink/8 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section" style={{ borderTop: "1px solid var(--rule)" }}>
+        <div className="hc-wrap">
           <SectionHeading eyebrow="FAQ" title="Common questions from plumbing companies." />
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
-          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
+          <p className="hc-lede" style={{ marginTop: 40, textAlign: "center", maxWidth: "42rem", marginLeft: "auto", marginRight: "auto" }}>
             Building for a service business outside Ottawa or plumbing specifically? See the full{" "}
-            <Link href="/services/web-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/services/web-design" className="hc-inline-link">
               Web Design service
             </Link>{" "}
             or our{" "}
-            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/web-design-ottawa" className="hc-inline-link">
               Ottawa web design page
             </Link>
             .
           </p>
-          <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-ink/50">
+          <p className="hc-lede" style={{ marginTop: 16, textAlign: "center", maxWidth: "42rem", marginLeft: "auto", marginRight: "auto" }}>
             Missing after-hours emergency calls too? See our{" "}
-            <Link href="/ai-receptionist-for-small-business" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/ai-receptionist-for-small-business" className="hc-inline-link">
               AI receptionist for contractors
             </Link>
             .
           </p>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

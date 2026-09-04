@@ -20,8 +20,8 @@ export default function OpengraphImage() {
           flexDirection: "column",
           justifyContent: "center",
           padding: "80px",
-          background: "linear-gradient(135deg, #1c2230 0%, #232b3c 55%, #2a3244 100%)",
-          color: "#f7f4ee",
+          background: "linear-gradient(135deg, #16181a 0%, #1e1a1c 55%, #22262a 100%)",
+          color: "#e6e7e2",
           fontFamily: "sans-serif",
         }}
       >
@@ -31,18 +31,18 @@ export default function OpengraphImage() {
               width: 60,
               height: 60,
               borderRadius: 16,
-              background: "rgba(176,141,87,0.12)",
+              background: "rgba(122,31,43,0.12)",
               display: "flex",
               alignItems: "center",
               justifyContent: "center",
-              border: "1px solid rgba(176,141,87,0.4)",
+              border: "1px solid rgba(122,31,43,0.4)",
             }}
           >
             <svg width="30" height="30" viewBox="0 0 32 32" fill="none">
-              <path d="M4 7h13M10.5 7v18" stroke="#d8bd8a" strokeWidth="2" strokeLinecap="round" />
+              <path d="M4 7h13M10.5 7v18" stroke="#a63745" strokeWidth="2" strokeLinecap="round" />
               <path
                 d="M15 25 22 7l7 18M17.2 19h9.6"
-                stroke="#d8bd8a"
+                stroke="#a63745"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -64,7 +64,7 @@ export default function OpengraphImage() {
         >
           Plumber Website Design
         </div>
-        <div style={{ display: "flex", fontSize: 24, marginTop: 26, color: "#d8bd8a" }}>
+        <div style={{ display: "flex", fontSize: 24, marginTop: 26, color: "#a63745" }}>
           Built to Convert Emergency Calls
         </div>
       </div>

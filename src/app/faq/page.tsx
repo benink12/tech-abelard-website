@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { faqItems, localizeFaqItems } from "@/data/faq";
 import { regionCopy } from "@/data/localization";
 import { getRegion } from "@/lib/region";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { PageHero } from "@/components/sections/PageHero";
 import { FAQAccordion } from "@/components/ui/FAQAccordion";
 import { FinalCTA } from "@/components/sections/FinalCTA";
@@ -34,7 +34,7 @@ export default async function FAQPage() {
   };
 
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
       <PageHero
         eyebrow="FAQ"
@@ -42,15 +42,15 @@ export default async function FAQPage() {
         description="The questions that come up on nearly every discovery call — pricing, timelines, SEO, and process."
       />
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <div className="mx-auto max-w-3xl">
             <FAQAccordion items={items} />
           </div>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

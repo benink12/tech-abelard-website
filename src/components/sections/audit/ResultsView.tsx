@@ -22,13 +22,13 @@ export function ResultsView({ result }: { result: AuditResult }) {
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
-            background: "radial-gradient(ellipse 60% 50% at 50% -10%, rgba(176,141,87,0.16), transparent)",
+            background: "radial-gradient(ellipse 60% 50% at 50% -10%, rgba(230,231,226,0.14), transparent)",
           }}
         />
         <Container className="relative">
           <RevealOnScroll>
             <div className="mx-auto max-w-2xl text-center">
-              <p className="brass-line mx-auto mb-6 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-brass">
+              <p className="brass-line mx-auto mb-6 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-cream/70">
                 Audit Results
               </p>
               <h1 className="text-balance font-display text-3xl font-medium tracking-tight sm:text-5xl">
@@ -38,8 +38,8 @@ export function ResultsView({ result }: { result: AuditResult }) {
             </div>
 
             {result.scanIncomplete ? (
-              <div className="mx-auto mt-12 flex max-w-lg flex-col items-center gap-4 rounded-2xl border border-brass/25 bg-cream/5 p-8 text-center">
-                <AlertTriangle className="h-8 w-8 text-brass-light" strokeWidth={1.5} />
+              <div className="mx-auto mt-12 flex max-w-lg flex-col items-center gap-4 rounded-2xl border border-cream/25 bg-cream/5 p-8 text-center">
+                <AlertTriangle className="h-8 w-8 text-cream/70" strokeWidth={1.5} />
                 <h2 className="font-display text-xl font-medium text-cream">We couldn&apos;t fully scan this site automatically</h2>
                 <p className="text-sm leading-relaxed text-cream/60">
                   {result.siteMeta.fetchError ?? "The site didn't respond to our automated scan."} That happens — some
@@ -48,7 +48,7 @@ export function ResultsView({ result }: { result: AuditResult }) {
               </div>
             ) : (
               <div className="mx-auto mt-12 flex flex-col items-center">
-                <div className="relative flex items-center justify-center text-ink">
+                <div className="relative flex items-center justify-center text-cream">
                   <ScoreRing score={result.overallScore} />
                   <div className="absolute flex flex-col items-center">
                     <span className="font-display text-4xl font-medium text-cream">{result.overallScore}</span>
@@ -79,11 +79,11 @@ export function ResultsView({ result }: { result: AuditResult }) {
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
-            background: "radial-gradient(ellipse 50% 60% at 50% 100%, rgba(176,141,87,0.14), transparent)",
+            background: "radial-gradient(ellipse 50% 60% at 50% 100%, rgba(230,231,226,0.12), transparent)",
           }}
         />
         <Container className="relative">
-          <p className="brass-line mx-auto mb-7 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-brass">
+          <p className="brass-line mx-auto mb-7 inline-block text-xs font-semibold uppercase tracking-[0.2em] text-cream/70">
             What&apos;s Next
           </p>
           <h2 className="text-balance mx-auto max-w-2xl font-display text-3xl font-medium tracking-tight sm:text-5xl">

@@ -12,7 +12,7 @@ import {
   MoonStar,
 } from "lucide-react";
 import { site } from "@/data/site";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -165,7 +165,7 @@ export default function AIReceptionistForSmallBusinessPage() {
   };
 
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
@@ -175,99 +175,124 @@ export default function AIReceptionistForSmallBusinessPage() {
         title="An AI receptionist that answers every call your small business misses."
         description="Built for small teams without a full-time front desk — a phone answered by voicemail is a phone call that just went to your competitor instead."
       >
-        <div className="mt-10 max-w-xl rounded-2xl border border-cream/15 bg-cream/[0.06] p-6 sm:p-7">
-          <p className="text-xs font-semibold uppercase tracking-[0.16em] text-brass-light">Hear it for yourself, right now</p>
-          <p className="mt-2 font-display text-2xl font-medium text-cream sm:text-3xl">{site.phone.display}</p>
-          <p className="mt-2 text-sm leading-relaxed text-cream/65">
-            Call the live demo any time, day or night. If you like how it sounds, we&apos;ll build a version configured for your business.
+        <div className="hc-flatcard" style={{ maxWidth: 480, marginTop: 40, borderTopColor: "var(--rule)" }}>
+          <p className="hc-eyebrow">Hear it for yourself, right now</p>
+          <p className="hc-heading__title" style={{ fontSize: 28, marginTop: 8 }}>
+            {site.phone.display}
           </p>
-          <div className="mt-6">
-            <Button href={site.phone.href} variant="cream" size="lg" data-cta="ai-receptionist-smb-hero-call">
+          <p style={{ marginTop: 8 }}>
+            Call the live demo any time, day or night. If you like how it sounds, we&apos;ll build a version
+            configured for your business.
+          </p>
+          <div className="hc-hero__ctas">
+            <Button href={site.phone.href} variant="ink" size="lg" data-cta="ai-receptionist-smb-hero-call">
               <Phone className="h-4 w-4" /> Call The AI Receptionist
             </Button>
           </div>
         </div>
       </PageHero>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Who This Is For"
             title="Any small business where a missed call is a missed customer."
             description="Plumbers and electricians on a job site, a medspa or clinic with one person at the front desk, a property manager fielding calls between showings, a vet practice mid-appointment — small teams that can't have someone glued to the phone all day."
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="The Real Problem"
             title="Small businesses lose customers to voicemail, constantly."
             description="You're on another call, mid-appointment, or it's 9pm on a Saturday — and the customer calling right now doesn't wait. Most callers who hit voicemail simply hang up and call the next business instead of leaving a message. That's not a staffing failure; it's a structural gap most small businesses never solve, because hiring a full-time receptionist for exactly that gap rarely pencils out."
+            tone="cream"
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="The Honest Comparison"
             title="Voicemail, an answering service, or an AI receptionist."
             description="None of these are perfect. Here's how they actually compare, without the sales pitch."
           />
-          <div className="mt-14 grid grid-cols-1 gap-6 border-t border-ink/8 pt-10 sm:grid-cols-3">
+          <div
+            className="mt-14 grid grid-cols-1 gap-6 sm:grid-cols-3"
+            style={{ borderTop: "1px solid var(--rule)", paddingTop: 40 }}
+          >
             {comparison.map((item, i) => (
               <RevealOnScroll key={item.option} delay={i * 70}>
-                <div className="flex h-full flex-col rounded-2xl border border-ink/8 bg-cream-card p-6">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-ink/5">
-                    <Bot className="h-4.5 w-4.5 text-brass-ink" strokeWidth={1.7} />
+                <div className="hc-flatcard" style={{ height: "100%" }}>
+                  <div
+                    className="flex h-10 w-10 items-center justify-center rounded-full"
+                    style={{ border: "1px solid var(--rule)" }}
+                  >
+                    <Bot className="h-4 w-4" strokeWidth={1.7} style={{ color: "var(--hc-ink)" }} />
                   </div>
-                  <h3 className="mt-4 font-display text-lg font-medium text-ink">{item.option}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-ink/60">{item.reality}</p>
+                  <h3>{item.option}</h3>
+                  <p>{item.reality}</p>
                 </div>
               </RevealOnScroll>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="What It Does"
             title="One receptionist, the jobs that actually matter."
             description="Not a phone tree, and not a dead-end voicemail box — a live conversation that gets your caller what they need."
+            tone="cream"
           />
-          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 border-t border-ink/8 pt-10 sm:grid-cols-2">
+          <div
+            className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 sm:grid-cols-2"
+            style={{ borderTop: "1px solid var(--rule-inv)", paddingTop: 40 }}
+          >
             {whatItDoes.map((item, i) => {
               const Icon = item.icon;
               return (
                 <RevealOnScroll key={item.title} delay={i * 50}>
                   <div className="flex gap-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-ink/5">
-                      <Icon className="h-5 w-5 text-brass-ink" strokeWidth={1.6} />
+                    <div
+                      className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full"
+                      style={{ border: "1px solid var(--rule-inv)" }}
+                    >
+                      <Icon className="h-5 w-5" strokeWidth={1.6} style={{ color: "var(--bone)" }} />
                     </div>
                     <div>
-                      <h3 className="font-display text-lg font-medium text-ink">{item.title}</h3>
-                      <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{item.description}</p>
+                      <h3 className="hc-heading__title" style={{ fontSize: 18, color: "var(--bone)" }}>
+                        {item.title}
+                      </h3>
+                      <p className="hc-lede" style={{ marginTop: 6, fontSize: 14.5, color: "rgba(230,231,226,0.62)" }}>
+                        {item.description}
+                      </p>
                     </div>
                   </div>
                 </RevealOnScroll>
               );
             })}
           </div>
-          <div className="mt-10 flex items-center gap-3 rounded-2xl border border-ink/8 bg-cream-card p-5">
-            <MoonStar className="h-5 w-5 shrink-0 text-brass-ink" strokeWidth={1.7} />
-            <p className="text-sm text-ink/60">
-              After-hours and weekend calls get the same treatment as a call at 2pm on a Tuesday — coverage doesn&apos;t stop when your team goes home.
+          <div
+            className="mt-10 flex items-center gap-3 hc-flatcard"
+            style={{ borderTopColor: "var(--rule-inv)" }}
+          >
+            <MoonStar className="h-5 w-5 shrink-0" strokeWidth={1.7} style={{ color: "var(--bone)" }} />
+            <p style={{ margin: 0, color: "rgba(230,231,226,0.62)" }}>
+              After-hours and weekend calls get the same treatment as a call at 2pm on a Tuesday — coverage
+              doesn&apos;t stop when your team goes home.
             </p>
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Industries"
             title="Built for small teams that live on the phone."
@@ -280,56 +305,55 @@ export default function AIReceptionistForSmallBusinessPage() {
               </Badge>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
-          <div className="mx-auto flex max-w-3xl flex-col items-center gap-6 rounded-2xl border border-brass/25 bg-cream-card p-8 text-center sm:p-10">
-            <SectionHeading
-              eyebrow="Custom Setup"
-              title="Configured around how your business actually runs."
-              description="Call flows, the questions it asks, what it's allowed to promise, and its tone of voice are all set up around your specific services, hours, and team — not a generic script."
-              align="center"
-              className="mx-auto"
-            />
-            <div className="flex flex-col gap-3 sm:flex-row">
-              <Button href={site.phone.href} variant="outline" size="lg" data-cta="ai-receptionist-smb-mid-call">
-                <Phone className="h-4 w-4" /> Call The AI Receptionist
-              </Button>
-              <Button href="/contact" size="lg" data-cta="ai-receptionist-smb-custom-setup" showArrow>
-                Build One For My Business
-              </Button>
-            </div>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap" style={{ textAlign: "center" }}>
+          <SectionHeading
+            eyebrow="Custom Setup"
+            title="Configured around how your business actually runs."
+            description="Call flows, the questions it asks, what it's allowed to promise, and its tone of voice are all set up around your specific services, hours, and team — not a generic script."
+            align="center"
+            tone="cream"
+            className="mx-auto"
+          />
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-center" style={{ marginTop: 28 }}>
+            <Button href={site.phone.href} variant="outline-cream" size="lg" data-cta="ai-receptionist-smb-mid-call">
+              <Phone className="h-4 w-4" /> Call The AI Receptionist
+            </Button>
+            <Button href="/contact" variant="cream" size="lg" data-cta="ai-receptionist-smb-custom-setup" showArrow>
+              Build One For My Business
+            </Button>
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section" style={{ borderTop: "1px solid var(--rule)" }}>
+        <div className="hc-wrap">
           <SectionHeading eyebrow="FAQ" title="Common questions, answered honestly." />
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
-          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
+          <p className="hc-lede" style={{ marginTop: 40, textAlign: "center", maxWidth: "42rem", marginLeft: "auto", marginRight: "auto" }}>
             Serving home service trades specifically? See the full{" "}
-            <Link href="/services/ai-receptionist" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/services/ai-receptionist" className="hc-inline-link">
               AI Receptionist service
             </Link>{" "}
             or pair it with{" "}
-            <Link href="/local-seo-for-contractors" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/local-seo-for-contractors" className="hc-inline-link">
               SEO for plumbers, HVAC, and roofing companies
             </Link>{" "}
             or{" "}
-            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/plumber-website-design" className="hc-inline-link">
               plumbing-specific web design
             </Link>
             .
           </p>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

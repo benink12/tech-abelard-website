@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { PortfolioShowcase } from "@/components/sections/PortfolioShowcase";
 import { PageHero } from "@/components/sections/PageHero";
 import { AuditCallout } from "@/components/sections/AuditCallout";
@@ -15,31 +15,25 @@ export const metadata: Metadata = {
 
 export default function PortfolioPage() {
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <PageHero
         eyebrow="Portfolio"
         title="Six industries. One design standard."
         description="Every showcase build below is a real, working Next.js application — not a mockup. Read the full case study on each, or request live access to explore the interactive demo yourself."
       />
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <PortfolioShowcase />
-          <p className="mt-10 text-sm text-ink/50">
+          <p className="hc-worknote" style={{ marginTop: 40 }}>
             Based in the National Capital Region? See how this translates into{" "}
-            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              web design in Ottawa
-            </Link>{" "}
-            specifically.
+            <Link href="/web-design-ottawa">web design in Ottawa</Link> specifically.
           </p>
-          <p className="mt-4 text-sm text-ink/50">
+          <p className="hc-worknote" style={{ marginTop: 10 }}>
             Running a plumbing company? See a full breakdown of{" "}
-            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
-              plumbing website redesign
-            </Link>{" "}
-            work.
+            <Link href="/plumber-website-design">plumbing website redesign</Link> work.
           </p>
-        </Container>
+        </div>
       </section>
 
       <AuditCallout
@@ -50,6 +44,6 @@ export default function PortfolioPage() {
       />
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

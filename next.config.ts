@@ -38,8 +38,11 @@ const nextConfig: NextConfig = {
   },
   // Dev server is also reached from a phone on the LAN (different origin
   // than localhost) for mobile testing; Next.js blocks cross-origin dev
-  // requests by default.
-  allowedDevOrigins: ["192.168.2.87"],
+  // requests by default. The Mac's LAN IP changes on DHCP renewal — keep
+  // both the current and previous known addresses listed rather than a
+  // single value, so this doesn't silently start blocking phone requests
+  // again the next time it changes.
+  allowedDevOrigins: ["192.168.10.176", "192.168.135.25", "192.168.10.158", "192.168.2.88", "192.168.2.87"],
   // The dev tools indicator renders bottom-left by default, directly on top
   // of MobileCTABar's phone button, intercepting taps there. Dev-only;
   // never present in production.

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
 import { site } from "@/data/site";
-import { Container } from "@/components/ui/Container";
+import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { Badge } from "@/components/ui/Badge";
@@ -171,7 +171,7 @@ export default function LocalSEOForContractorsPage() {
   };
 
   return (
-    <>
+    <div className={`home-concept ${homeFontClassName}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
@@ -181,68 +181,77 @@ export default function LocalSEOForContractorsPage() {
         title="Local SEO for contractors who want the phone ringing, not just traffic."
         description="Built for plumbers, HVAC companies, roofers, electricians, and the trades around them — SEO that targets the searches that actually turn into jobs, with monthly reporting you can read yourself."
       >
-        <div className="mt-8">
-          <Button href="/audit" variant="cream" size="lg" data-cta="contractor-seo-hero-free-audit" showArrow>
+        <div className="hc-hero__ctas">
+          <Button href="/audit" variant="ink" size="lg" data-cta="contractor-seo-hero-free-audit" showArrow>
             Get a Free Website Audit
           </Button>
         </div>
       </PageHero>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Who This Is For"
             title="Service-area businesses competing for “near me” searches."
             description="Plumbing, HVAC, roofing, electrical, landscaping, construction, and the trades around them — businesses that live or die by local and service-area search, not national brand awareness."
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="The Real Problem"
             title="Good contractors lose jobs to worse companies with better SEO, constantly."
             description="Great work doesn't show up in the map pack by itself. A thin site, an unmanaged Google Business Profile, no citations, and no service-area pages mean you're invisible for the exact searches your next customer is typing — while a mediocre competitor with a well-optimized profile gets the call instead."
+            tone="cream"
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="What's Included"
             title="Eight things every contractor SEO retainer covers."
             description="No upsell tiers hidden behind the pitch — this is the actual monthly scope."
           />
-          <div className="mt-14 grid grid-cols-1 gap-x-10 gap-y-8 border-t border-ink/8 pt-10 sm:grid-cols-2">
+          <div
+            className="mt-14 grid grid-cols-1 gap-x-10 gap-y-8 sm:grid-cols-2"
+            style={{ borderTop: "1px solid var(--rule)", paddingTop: 40 }}
+          >
             {checklist.map((item, i) => (
               <RevealOnScroll key={item.title} delay={i * 50}>
                 <div className="flex gap-3">
-                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-brass" />
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full" style={{ background: "var(--hc-ink)" }} />
                   <div>
-                    <h3 className="font-display text-lg font-medium text-ink">{item.title}</h3>
-                    <p className="mt-1.5 text-sm leading-relaxed text-ink/60">{item.description}</p>
+                    <h3 className="hc-heading__title" style={{ fontSize: 18 }}>
+                      {item.title}
+                    </h3>
+                    <p className="hc-lede" style={{ marginTop: 6, fontSize: 14.5 }}>
+                      {item.description}
+                    </p>
                   </div>
                 </div>
               </RevealOnScroll>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Service-Area Targeting"
             title="One real page per city, never a city-name find-and-replace."
             description="A service-area page only works if it says something a generic “areas we serve” list doesn't — the specific neighborhoods, the response time in that market, the jobs you've actually done there. Swap the city name across twenty identical pages and you've built a doorway page: exactly what search engines are built to detect and demote, and it reads as thin to a real visitor too. We only build pages for cities you genuinely service, each with distinct, useful content and clear internal links back to your core service pages."
+            tone="cream"
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Every Month"
             title="What actually happens on a retainer."
@@ -250,33 +259,33 @@ export default function LocalSEOForContractorsPage() {
             align="center"
             className="mx-auto"
           />
-          <div className="mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
+          <div className="mx-auto mt-14 grid max-w-4xl grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2">
             {monthlyRhythm.map((item) => (
-              <div key={item.week} className="rounded-2xl border border-ink/8 bg-cream-card p-7">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-brass-ink">{item.week}</p>
-                <h3 className="mt-2 font-display text-xl font-medium text-ink">{item.title}</h3>
-                <p className="mt-2.5 text-sm leading-relaxed text-ink/60">{item.detail}</p>
+              <div key={item.week} className="hc-flatcard">
+                <p className="hc-eyebrow">{item.week}</p>
+                <h3>{item.title}</h3>
+                <p>{item.detail}</p>
               </div>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
-          <SectionHeading eyebrow="Industries" title="Built for the trades that live on local search." />
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
+          <SectionHeading eyebrow="Industries" title="Built for the trades that live on local search." tone="cream" />
           <div className="mt-10 flex flex-wrap gap-2">
             {contractorIndustries.map((industry) => (
-              <Badge key={industry} tone="neutral">
+              <Badge key={industry} tone="cream">
                 {industry}
               </Badge>
             ))}
           </div>
-        </Container>
+        </div>
       </section>
 
-      <section className="py-24 sm:py-32">
-        <Container>
+      <section className="hc-section">
+        <div className="hc-wrap">
           <SectionHeading
             eyebrow="Capability, Not Case Studies"
             title="SEO structure, demonstrated on real builds."
@@ -286,26 +295,30 @@ export default function LocalSEOForContractorsPage() {
             className="mt-14"
             featuredSlugs={["northline-plumbing", "northpeak-roofing", "northclimate-hvac"]}
           />
-        </Container>
+        </div>
       </section>
 
-      <section className="border-t border-ink/8 bg-ink-soft/5 py-24 sm:py-32">
-        <Container>
-          <div className="mx-auto max-w-3xl rounded-2xl border border-ink/8 bg-cream-card p-8 sm:p-10">
-            <div className="flex items-center gap-3">
-              <ShieldAlert className="h-5 w-5 shrink-0 text-brass-ink" strokeWidth={1.7} />
-              <h2 className="font-display text-xl font-medium text-ink sm:text-2xl">What we do not guarantee</h2>
+      <section className="hc-section hc-section--dark">
+        <div className="hc-wrap">
+          <div className="mx-auto max-w-3xl hc-flatcard" style={{ borderTopColor: "var(--rule-inv)" }}>
+            <div className="hc-flatcard__kicker">
+              <ShieldAlert className="h-4 w-4" strokeWidth={1.5} />
+              What we do not guarantee
             </div>
-            <ul className="mt-6 flex flex-col gap-3.5">
+            <ul style={{ marginTop: 18, display: "flex", flexDirection: "column", gap: 12, padding: 0, listStyle: "none" }}>
               {doNotGuarantee.map((item) => (
-                <li key={item} className="flex items-start gap-2.5 text-sm leading-relaxed text-ink/65">
-                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-brass" />
+                <li
+                  key={item}
+                  className="flex items-start gap-2.5 text-sm leading-relaxed"
+                  style={{ color: "rgba(230,231,226,0.62)" }}
+                >
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full" style={{ background: "rgba(230,231,226,0.62)" }} />
                   {item}
                 </li>
               ))}
             </ul>
           </div>
-        </Container>
+        </div>
       </section>
 
       <AuditCallout
@@ -314,31 +327,31 @@ export default function LocalSEOForContractorsPage() {
         description="Get a free, honest audit of your current site before you commit to a retainer."
       />
 
-      <section className="border-t border-ink/8 py-24 sm:py-32">
-        <Container>
+      <section className="hc-section" style={{ borderTop: "1px solid var(--rule)" }}>
+        <div className="hc-wrap">
           <SectionHeading eyebrow="FAQ" title="Common questions from contractors." />
           <div className="mt-12">
             <FAQAccordion items={faqItems} />
           </div>
-          <p className="mx-auto mt-10 max-w-2xl text-center text-sm text-ink/50">
+          <p className="hc-lede" style={{ marginTop: 40, textAlign: "center", maxWidth: "42rem", marginLeft: "auto", marginRight: "auto" }}>
             Need the website rebuilt first? See{" "}
-            <Link href="/plumber-website-design" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/plumber-website-design" className="hc-inline-link">
               plumbing website design
             </Link>
             , our{" "}
-            <Link href="/web-design-ottawa" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/web-design-ottawa" className="hc-inline-link">
               website redesign for Ottawa businesses
             </Link>
             , or the full{" "}
-            <Link href="/services/local-seo" className="text-brass-ink underline underline-offset-2 hover:text-ink">
+            <Link href="/services/local-seo" className="hc-inline-link">
               Local SEO service
             </Link>{" "}
             overview.
           </p>
-        </Container>
+        </div>
       </section>
 
       <FinalCTA />
-    </>
+    </div>
   );
 }

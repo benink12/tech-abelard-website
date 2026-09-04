@@ -10,8 +10,7 @@ import { validateRequestAccessForm } from "@/lib/portfolioAccess/requestValidati
 type Status = "idle" | "submitting" | "success" | "error";
 type RequiredField = "fullName" | "businessName" | "email" | "phone" | "industry" | "websiteUrl" | "reason" | "consent";
 
-const inputClasses =
-  "w-full rounded-xl border border-ink/12 bg-cream px-4 py-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-brass-ink focus:outline-none";
+const inputClasses = "hc-input";
 
 export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: string; projectName: string }) {
   const [status, setStatus] = useState<Status>("idle");
@@ -117,10 +116,12 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
 
   if (status === "success") {
     return (
-      <div role="status" className="flex flex-col items-center rounded-2xl border border-brass-ink/25 bg-cream-card p-12 text-center">
-        <CheckCircle2 className="h-10 w-10 text-brass-ink" strokeWidth={1.5} />
-        <h3 className="mt-5 font-display text-2xl font-medium text-ink">Thanks. Your request has been received.</h3>
-        <p className="mt-2 max-w-sm text-sm leading-relaxed text-ink/60">
+      <div role="status" className="hc-form-success">
+        <CheckCircle2 className="h-9 w-9" strokeWidth={1.5} style={{ color: "var(--oxblood)", margin: "0 auto" }} />
+        <h3 className="hc-heading__title" style={{ fontSize: 24, marginTop: 18 }}>
+          Thanks. Your request has been received.
+        </h3>
+        <p style={{ marginTop: 10, color: "var(--slate)", maxWidth: "40ch", marginLeft: "auto", marginRight: "auto" }}>
           We&apos;ll review it and send access details if approved.
         </p>
       </div>
@@ -128,15 +129,15 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="rounded-2xl border border-ink/8 bg-cream-card p-8 sm:p-10">
+    <form onSubmit={handleSubmit} noValidate>
       <input type="hidden" name="requestedProjectSlug" value={projectSlug} />
-      <p className="mb-6 text-xs font-semibold uppercase tracking-wide text-brass-ink">Requesting access to: {projectName}</p>
+      <p className="hc-eyebrow" style={{ marginBottom: 22 }}>
+        Requesting access to: {projectName}
+      </p>
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label htmlFor="fullName" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Full name
-          </label>
+      <div className="hc-form-grid">
+        <div className="hc-field">
+          <label htmlFor="fullName">Full name</label>
           <input
             ref={(el) => {
               fieldRefs.current.fullName = el;
@@ -149,13 +150,11 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
             aria-invalid={Boolean(errors.fullName)}
             aria-required="true"
           />
-          {errors.fullName && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.fullName}</p>}
+          {errors.fullName && <p role="alert" className="hc-form-error">{errors.fullName}</p>}
         </div>
 
-        <div>
-          <label htmlFor="businessName" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Business name
-          </label>
+        <div className="hc-field">
+          <label htmlFor="businessName">Business name</label>
           <input
             ref={(el) => {
               fieldRefs.current.businessName = el;
@@ -168,13 +167,11 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
             aria-invalid={Boolean(errors.businessName)}
             aria-required="true"
           />
-          {errors.businessName && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.businessName}</p>}
+          {errors.businessName && <p role="alert" className="hc-form-error">{errors.businessName}</p>}
         </div>
 
-        <div>
-          <label htmlFor="email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Business email
-          </label>
+        <div className="hc-field">
+          <label htmlFor="email">Business email</label>
           <input
             ref={(el) => {
               fieldRefs.current.email = el;
@@ -187,12 +184,12 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
             aria-invalid={Boolean(errors.email)}
             aria-required="true"
           />
-          {errors.email && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.email}</p>}
+          {errors.email && <p role="alert" className="hc-form-error">{errors.email}</p>}
         </div>
 
-        <div>
-          <label htmlFor="phone" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Phone <span className="normal-case text-ink/35">(optional)</span>
+        <div className="hc-field">
+          <label htmlFor="phone">
+            Phone <em>(optional)</em>
           </label>
           <input
             ref={(el) => {
@@ -205,13 +202,11 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
             className={inputClasses}
             aria-invalid={Boolean(errors.phone)}
           />
-          {errors.phone && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.phone}</p>}
+          {errors.phone && <p role="alert" className="hc-form-error">{errors.phone}</p>}
         </div>
 
-        <div>
-          <label htmlFor="industry" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Industry
-          </label>
+        <div className="hc-field">
+          <label htmlFor="industry">Industry</label>
           <select
             ref={(el) => {
               fieldRefs.current.industry = el;
@@ -233,12 +228,12 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
             ))}
             <option value="Other">Other</option>
           </select>
-          {errors.industry && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.industry}</p>}
+          {errors.industry && <p role="alert" className="hc-form-error">{errors.industry}</p>}
         </div>
 
-        <div>
-          <label htmlFor="websiteUrl" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Your website <span className="normal-case text-ink/35">(optional)</span>
+        <div className="hc-field">
+          <label htmlFor="websiteUrl">
+            Your website <em>(optional)</em>
           </label>
           <input
             ref={(el) => {
@@ -252,14 +247,12 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
             className={inputClasses}
             aria-invalid={Boolean(errors.websiteUrl)}
           />
-          {errors.websiteUrl && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.websiteUrl}</p>}
+          {errors.websiteUrl && <p role="alert" className="hc-form-error">{errors.websiteUrl}</p>}
         </div>
       </div>
 
-      <div className="mt-5">
-        <label htmlFor="reason" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-          Why would you like access?
-        </label>
+      <div className="hc-field" style={{ marginTop: 20 }}>
+        <label htmlFor="reason">Why would you like access?</label>
         <textarea
           ref={(el) => {
             fieldRefs.current.reason = el;
@@ -271,43 +264,45 @@ export function RequestAccessForm({ projectSlug, projectName }: { projectSlug: s
           aria-invalid={Boolean(errors.reason)}
           aria-required="true"
         />
-        {errors.reason && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.reason}</p>}
+        {errors.reason && <p role="alert" className="hc-form-error">{errors.reason}</p>}
       </div>
 
-      <div className="mt-5">
-        <label className="flex items-start gap-2.5 text-xs leading-relaxed text-ink/60">
-          <input
-            ref={(el) => {
-              fieldRefs.current.consent = el;
-            }}
-            type="checkbox"
-            name="consent"
-            className="mt-0.5 h-4 w-4 shrink-0 rounded border-ink/25 text-brass-ink focus:ring-brass-ink"
-            aria-invalid={Boolean(errors.consent)}
-            aria-required="true"
-          />
-          I consent to Tech Abélard reviewing this request and contacting me about it. This is a concept project, not a
-          completed client project.
+      <div className="hc-checkline" style={{ marginTop: 20 }}>
+        <input
+          ref={(el) => {
+            fieldRefs.current.consent = el;
+          }}
+          type="checkbox"
+          name="consent"
+          id="consent"
+          aria-invalid={Boolean(errors.consent)}
+          aria-required="true"
+        />
+        <label htmlFor="consent" style={{ fontFamily: "var(--body)", textTransform: "none", letterSpacing: 0, fontSize: 13 }}>
+          I consent to Tech Abélard reviewing this request and contacting me about it. This is a concept project, not
+          a completed client project.
         </label>
-        {errors.consent && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.consent}</p>}
       </div>
+      {errors.consent && <p role="alert" className="hc-form-error" style={{ marginTop: 6 }}>{errors.consent}</p>}
 
       {serverError && (
-        <p role="alert" className="mt-4 rounded-lg bg-red-50 px-3 py-2 text-xs text-red-600">
+        <p role="alert" className="hc-form-error" style={{ marginTop: 16 }}>
           {serverError}
         </p>
       )}
 
-      <Button type="submit" variant="ink" size="lg" className="mt-7 w-full sm:w-auto" disabled={status === "submitting"}>
-        {status === "submitting" ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" /> Sending
-          </>
-        ) : (
-          "Request Live Access"
-        )}
-      </Button>
-      <p className="mt-3 text-xs text-ink/40">We review every request personally — no automated approvals.</p>
+      <div style={{ marginTop: 28 }}>
+        <Button type="submit" variant="ink" size="lg" className="w-full sm:w-auto" disabled={status === "submitting"}>
+          {status === "submitting" ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> Sending
+            </>
+          ) : (
+            "Request Live Access"
+          )}
+        </Button>
+        <p className="hc-form-note">We review every request personally — no automated approvals.</p>
+      </div>
     </form>
   );
 }

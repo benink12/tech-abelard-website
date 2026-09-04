@@ -12,13 +12,8 @@ export function Card({
 }) {
   return (
     <div
-      className={cn(
-        "rounded-2xl border p-8 transition-all duration-300 hover:-translate-y-1",
-        tone === "cream"
-          ? "border-ink/8 bg-cream-card hover:border-brass/30 hover:shadow-lg hover:shadow-ink/[0.06]"
-          : "border-cream/10 bg-ink-soft hover:border-brass/30 hover:shadow-lg hover:shadow-black/20",
-        className
-      )}
+      className={cn("hc-flatcard", className)}
+      style={tone === "ink" ? { borderTopColor: "var(--rule-inv)" } : undefined}
     >
       {children}
     </div>

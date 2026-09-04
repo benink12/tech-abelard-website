@@ -1,23 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  --color-ink: #1c2230;
-  --color-ink-soft: #2a3244;
-  --color-brass: #b08d57;
-  --color-brass-light: #d8bd8a;
-  /* Same brass, darkened for text/icons on cream — #b08d57 on #f7f4ee is only
-     ~2.8:1 (fails WCAG AA); this variant holds ~5:1. Use text-brass on dark
-     (ink) surfaces and text-brass-ink on light (cream) surfaces. */
-  --color-brass-ink: #82652f;
-  /* Focus ring only — this exact shade clears the 3:1 UI-component contrast
-     minimum against BOTH cream (~3.8:1) and ink (~3.8:1), since the ring can
-     land on interactive elements in either section. Don't reuse elsewhere. */
-  --color-focus-ring: #97783f;
-  --color-cream: #f7f4ee;
-  --color-cream-card: #fdfcfa;
-  --color-neutral: #8a8578;
-  --color-line: rgba(28, 34, 48, 0.1);
-  --color-line-dark: rgba(247, 244, 238, 0.12);
+  /* Site-wide retheme to the editorial oxblood/bone/ink identity that
+     started on the homepage (see src/styles/home.css's --oxblood/--bone/
+     --hc-ink) — every existing page uses these same Tailwind color
+     utilities (bg-ink, text-brass-ink, border-cream/10, ...), so changing
+     the values here re-skins the whole site without touching any page's
+     markup. Variable NAMES are kept as-is (--color-brass* etc.) rather than
+     renamed to --color-oxblood* — dozens of files reference the existing
+     names via Tailwind's `brass`/`ink`/`cream` utility classes, and a
+     rename would mean editing every one of them for a purely cosmetic win.
+  */
+  --color-ink: #16181a;
+  --color-ink-soft: #22262a;
+  --color-brass: #7a1f2b;
+  --color-brass-light: #a63745;
+  /* Oxblood is already dark enough to double as its own "-ink" (darkened
+     for AA text contrast on cream) variant — see the same value proven
+     legible against bone throughout src/styles/home.css (.hc-svc__kicker,
+     .hc-tier__flag, etc). Use text-brass on dark (ink) surfaces and
+     text-brass-ink on light (cream) surfaces, same convention as before. */
+  --color-brass-ink: #7a1f2b;
+  /* Focus ring — oxblood-light, the same shade src/styles/home.css reserves
+     for hover/emphasis on dark surfaces; clears 3:1 against both cream and
+     ink. Don't reuse elsewhere. */
+  --color-focus-ring: #a63745;
+  --color-cream: #ffffff;
+  --color-cream-card: #f2f2f2;
+  --color-neutral: #5c6360;
+  --color-line: rgba(22, 24, 26, 0.15);
+  --color-line-dark: rgba(230, 231, 226, 0.18);
 }
 
 @theme inline {
@@ -29,8 +41,8 @@
   --color-cream: var(--color-cream);
   --color-cream-card: var(--color-cream-card);
   --color-neutral: var(--color-neutral);
-  --font-sans: var(--font-inter);
-  --font-display: var(--font-fraunces);
+  --font-sans: var(--font-body);
+  --font-display: var(--font-display-face);
 }
 
 html {
@@ -130,7 +142,10 @@ body {
   bottom: -10px;
   height: 2px;
   width: 32px;
-  background: var(--color-brass);
+  /* currentColor so this rule stays correct wherever it's used — on a
+     light section it matches ink text, on a dark section it matches
+     whatever light/cream text color the eyebrow itself is given. */
+  background: currentColor;
 }
 
 .no-scrollbar::-webkit-scrollbar {

@@ -15,17 +15,20 @@ const CATEGORY_ICON: Record<AuditCategoryResult["key"], keyof typeof iconMap> = 
   conversion: "mouse-pointer-click",
 };
 
+/* No red/gold/green tone-coding — severity reads through ink weight
+   instead of hue. Poor scores stay full-strength (need attention); good
+   ones fade toward the background (already fine). */
 const TONE_CLASSES: Record<ReturnType<typeof scoreTone>, { bar: string; text: string }> = {
-  good: { bar: "bg-emerald-600", text: "text-emerald-700" },
-  fair: { bar: "bg-brass", text: "text-brass-ink" },
-  poor: { bar: "bg-red-500", text: "text-red-600" },
+  good: { bar: "bg-ink/35", text: "text-ink/45" },
+  fair: { bar: "bg-ink/65", text: "text-ink/75" },
+  poor: { bar: "bg-ink", text: "text-ink" },
 };
 
 const PRIORITY_CLASSES: Record<AuditCategoryResult["priority"], string> = {
-  Critical: "border-red-300 bg-red-100 text-red-800",
-  High: "border-red-200 bg-red-50 text-red-700",
-  Medium: "border-brass/25 bg-brass/10 text-brass-ink",
-  Low: "border-emerald-200 bg-emerald-50 text-emerald-700",
+  Critical: "border-ink bg-ink text-cream",
+  High: "border-ink bg-ink/10 text-ink",
+  Medium: "border-ink/40 bg-ink/5 text-ink/70",
+  Low: "border-ink/20 bg-transparent text-ink/45",
 };
 
 export function CategoryCard({ category, unscored = false }: { category: AuditCategoryResult; unscored?: boolean }) {
@@ -36,8 +39,8 @@ export function CategoryCard({ category, unscored = false }: { category: AuditCa
     <div className="rounded-2xl border border-ink/8 bg-cream-card p-7 sm:p-8">
       <div className="flex items-start justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-brass/10">
-            <Icon className="h-5 w-5 text-brass-ink" strokeWidth={1.75} />
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-ink/8">
+            <Icon className="h-5 w-5 text-ink" strokeWidth={1.75} />
           </span>
           <h3 className="font-display text-lg font-medium text-ink">{category.label}</h3>
         </div>
@@ -60,7 +63,7 @@ export function CategoryCard({ category, unscored = false }: { category: AuditCa
           <ul className="mt-2.5 space-y-2">
             {category.strengths.map((item) => (
               <li key={item} className="flex items-start gap-2 text-sm leading-relaxed text-ink/70">
-                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-emerald-600" strokeWidth={1.75} />
+                <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-ink/45" strokeWidth={1.75} />
                 <span>{item}</span>
               </li>
             ))}
@@ -81,7 +84,7 @@ export function CategoryCard({ category, unscored = false }: { category: AuditCa
           <ul className="mt-3 space-y-4">
             {category.problems.map((problem) => (
               <li key={problem.id} className="flex items-start gap-2.5">
-                <ArrowUpCircle className="mt-0.5 h-4 w-4 shrink-0 text-brass-ink" strokeWidth={1.75} />
+                <ArrowUpCircle className="mt-0.5 h-4 w-4 shrink-0 text-ink/70" strokeWidth={1.75} />
                 <div className="min-w-0">
                   <p className="text-sm font-medium leading-relaxed text-ink/85">{problem.issue}</p>
                   <p className="mt-1 text-sm leading-relaxed text-ink/65">{problem.recommendedFix}</p>

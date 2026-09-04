@@ -9,8 +9,7 @@ import { cn } from "@/lib/utils";
 type Status = "idle" | "submitting" | "error";
 type FieldName = "name" | "email" | "message";
 
-const inputClasses =
-  "w-full rounded-xl border border-ink/12 bg-cream px-4 py-3 text-sm text-ink placeholder:text-ink/35 transition-colors focus:border-brass-ink focus:outline-none";
+const inputClasses = "hc-input";
 
 export function ContactForm() {
   const router = useRouter();
@@ -88,21 +87,16 @@ export function ContactForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} noValidate className="rounded-2xl border border-ink/8 bg-cream-card p-8 sm:p-10">
+    <form onSubmit={handleSubmit} noValidate>
       {status === "error" && errorMessage && (
-        <div
-          role="alert"
-          className="mb-6 flex items-start gap-3 rounded-xl border border-red-600/25 bg-red-600/5 p-4 text-sm text-red-700"
-        >
+        <div role="alert" className="hc-form-banner">
           <AlertTriangle className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={1.75} />
           <span>{errorMessage}</span>
         </div>
       )}
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <div>
-          <label htmlFor="name" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Name
-          </label>
+      <div className="hc-form-grid">
+        <div className="hc-field">
+          <label htmlFor="name">Name</label>
           <input
             ref={(el) => {
               fieldRefs.current.name = el;
@@ -115,12 +109,10 @@ export function ContactForm() {
             aria-invalid={Boolean(errors.name)}
             aria-required="true"
           />
-          {errors.name && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.name}</p>}
+          {errors.name && <p role="alert" className="hc-form-error">{errors.name}</p>}
         </div>
-        <div>
-          <label htmlFor="email" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Email
-          </label>
+        <div className="hc-field">
+          <label htmlFor="email">Email</label>
           <input
             ref={(el) => {
               fieldRefs.current.email = el;
@@ -133,26 +125,22 @@ export function ContactForm() {
             aria-invalid={Boolean(errors.email)}
             aria-required="true"
           />
-          {errors.email && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.email}</p>}
+          {errors.email && <p role="alert" className="hc-form-error">{errors.email}</p>}
         </div>
-        <div>
-          <label htmlFor="phone" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Phone <span className="normal-case text-ink/35">(optional)</span>
+        <div className="hc-field">
+          <label htmlFor="phone">
+            Phone <em>(optional)</em>
           </label>
           <input id="phone" name="phone" type="tel" autoComplete="tel" className={inputClasses} />
         </div>
-        <div>
-          <label htmlFor="business" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-            Business name
-          </label>
+        <div className="hc-field">
+          <label htmlFor="business">Business name</label>
           <input id="business" name="business" type="text" autoComplete="organization" className={inputClasses} />
         </div>
       </div>
 
-      <div className="mt-5">
-        <label htmlFor="message" className="mb-1.5 block text-xs font-semibold uppercase tracking-wide text-ink/50">
-          Tell us about your project
-        </label>
+      <div className="hc-field" style={{ marginTop: 20 }}>
+        <label htmlFor="message">Tell us about your project</label>
         <textarea
           ref={(el) => {
             fieldRefs.current.message = el;
@@ -164,27 +152,21 @@ export function ContactForm() {
           aria-invalid={Boolean(errors.message)}
           aria-required="true"
         />
-        {errors.message && <p role="alert" className="mt-1.5 text-xs text-red-600">{errors.message}</p>}
+        {errors.message && <p role="alert" className="hc-form-error">{errors.message}</p>}
       </div>
 
-      <Button
-        type="submit"
-        variant="ink"
-        size="lg"
-        className="mt-7 w-full sm:w-auto"
-        disabled={status === "submitting"}
-      >
-        {status === "submitting" ? (
-          <>
-            <Loader2 className="h-4 w-4 animate-spin" /> Sending
-          </>
-        ) : (
-          "Send Message"
-        )}
-      </Button>
-      <p className="mt-3 text-xs text-ink/40">
-        We reply within one business day. No spam, no auto-dialers.
-      </p>
+      <div style={{ marginTop: 28 }}>
+        <Button type="submit" variant="ink" size="lg" className="w-full sm:w-auto" disabled={status === "submitting"}>
+          {status === "submitting" ? (
+            <>
+              <Loader2 className="h-4 w-4 animate-spin" /> Sending
+            </>
+          ) : (
+            "Send Message"
+          )}
+        </Button>
+        <p className="hc-form-note">We reply within one business day. No spam, no auto-dialers.</p>
+      </div>
     </form>
   );
 }

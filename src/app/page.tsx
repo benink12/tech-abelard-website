@@ -1,17 +1,15 @@
 import type { Metadata } from "next";
-import { Hero } from "@/components/sections/Hero";
-import { IndustriesMarquee } from "@/components/sections/IndustriesMarquee";
-import { ServicesOverview } from "@/components/sections/ServicesOverview";
-import { AIReceptionistPromo } from "@/components/sections/AIReceptionistPromo";
-import { WhyTechAbelard } from "@/components/sections/WhyTechAbelard";
-import { PortfolioPreview } from "@/components/sections/PortfolioPreview";
-import { FreeAuditPromo } from "@/components/sections/FreeAuditPromo";
-import { ProcessPreview } from "@/components/sections/ProcessPreview";
-import { SEOPreview } from "@/components/sections/SEOPreview";
-import { PricingPreview } from "@/components/sections/PricingPreview";
-import { FAQPreview } from "@/components/sections/FAQPreview";
-import { HomeLeadForm } from "@/components/sections/HomeLeadForm";
-import { FinalCTA } from "@/components/sections/FinalCTA";
+import "@/styles/home.css";
+import { homeFontClassName } from "@/lib/fonts/home";
+import { HomeHero } from "@/components/home/HomeHero";
+import { HomeProblem } from "@/components/home/HomeProblem";
+import { HomeServices } from "@/components/home/HomeServices";
+import { HomeWork } from "@/components/home/HomeWork";
+import { HomeWhy } from "@/components/home/HomeWhy";
+import { HomeSystems } from "@/components/home/HomeSystems";
+import { HomePricing } from "@/components/home/HomePricing";
+import { HomeAudit } from "@/components/home/HomeAudit";
+import { HomeFaq } from "@/components/home/HomeFaq";
 
 // Homepage-specific title/description override — `title.absolute` bypasses
 // the root layout's `%s | Tech Abélard` template so the business name can
@@ -24,22 +22,21 @@ export const metadata: Metadata = {
     "Tech Abélard builds high-converting websites, local SEO systems and AI receptionists for service businesses ready to grow.",
 };
 
+// HomeHeader/HomeFooter are no longer rendered here — src/app/layout.tsx
+// renders them site-wide now (see that file's comment for why each gets its
+// own small .home-concept wrapper instead of one wrapping <main>).
 export default function Home() {
   return (
-    <>
-      <Hero />
-      <IndustriesMarquee />
-      <ServicesOverview />
-      <AIReceptionistPromo />
-      <WhyTechAbelard />
-      <PortfolioPreview />
-      <FreeAuditPromo />
-      <ProcessPreview />
-      <SEOPreview />
-      <PricingPreview />
-      <FAQPreview />
-      <HomeLeadForm />
-      <FinalCTA />
-    </>
+    <div className={`home-concept ${homeFontClassName}`}>
+      <HomeHero />
+      <HomeProblem />
+      <HomeServices />
+      <HomeWork />
+      <HomeWhy />
+      <HomeSystems />
+      <HomePricing />
+      <HomeAudit />
+      <HomeFaq />
+    </div>
   );
 }

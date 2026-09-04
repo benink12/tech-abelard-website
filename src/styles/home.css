@@ -1,0 +1,3186 @@
+/* Homepage-only visual system — the "Concept" redesign approved for the
+   homepage (Downloads/index_4.html). Scoped entirely under .home-concept so
+   it never leaks into the rest of the site, which keeps its existing
+   brass/ink/cream Tailwind system (see src/app/globals.css). Shared chrome
+   (Header, Footer, MobileCTABar) is deliberately NOT reskinned here — it's
+   already-finished, site-wide infrastructure reused as-is.
+   Fonts are wired via next/font/google in src/app/page.tsx and land as CSS
+   variables (--font-bricolage / --font-instrument / --font-jetbrains-home)
+   on the .home-concept wrapper, not via a manual <link> tag. */
+
+.home-concept {
+  --bone: #ffffff;
+  --bone-2: #f2f2f2;
+  --hc-ink: #16181a;
+  --ink-soft: #22262a;
+  --oxblood: #7a1f2b;
+  --oxblood-lt: #a63745;
+  --slate: #5c6360;
+  --rule: rgba(22, 24, 26, 0.15);
+  --rule-inv: rgba(255, 255, 255, 0.18);
+  --display: var(--font-bricolage), system-ui, sans-serif;
+  --body: var(--font-instrument), system-ui, sans-serif;
+  --mono: var(--font-jetbrains-home), ui-monospace, monospace;
+  /* Reference (tinywins.com, measured via getBoundingClientRect): their
+     page gutter is a fixed 16-32px, not a percentage of viewport width —
+     content runs much closer to the true edge than a generously-scaling
+     margin allows. Was clamp(20px, 5vw, 64px) (64px max at desktop). */
+  --gutter: clamp(16px, 2vw, 32px);
+  /* Reference (tinywins.com, measured via computed styles): their content
+     containers carry NO max-width at all — fully fluid, bounded only by
+     the small fixed gutter above, at every viewport width checked.
+     Widened substantially from 1240px (which left large dead side margins
+     on any common 1440-1600px laptop/desktop viewport) — kept as a cap
+     rather than removed outright, so body-copy line length stays readable
+     on true ultra-wide monitors. */
+  --maxw: 1680px;
+
+  background: var(--bone);
+  color: var(--hc-ink);
+  font-family: var(--body);
+  font-size: 17px;
+  line-height: 1.55;
+  overflow-x: clip;
+}
+
+.home-concept * {
+  box-sizing: border-box;
+}
+
+/* :where() keeps this reset at zero specificity so it never outranks the
+   more specific .hc-btn/.hc-svc/etc. color rules below (a plain ".home-concept a"
+   selector previously did — (0,1,1) beat .hc-btn--fill's (0,1,0) and made
+   the fill button's text invisible: dark text on its own dark background).
+   Wrapped in Tailwind's own `base` layer (declared by its `@import
+   "tailwindcss"` in globals.css as theme, base, components, utilities) —
+   an unlayered rule here would otherwise beat EVERY Tailwind utility
+   class regardless of specificity, silently killing any `text-*` /
+   `hover:text-*` color utility applied directly to an <a>. */
+@layer base {
+  .home-concept :where(a) {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+.home-concept img {
+  max-width: 100%;
+  display: block;
+}
+
+.hc-wrap {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding-left: var(--gutter);
+  padding-right: var(--gutter);
+}
+
+.hc-eyebrow {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+/* Base section rhythm — deliberately tighter than a generic "big airy
+   padding everywhere" default. Neighboring sections that both keep this
+   default (see per-section paddingTop/Bottom overrides in each Home*.tsx)
+   would otherwise stack two of these into a near-half-viewport gap; the
+   value here is sized assuming exactly ONE side of most transitions
+   carries it, not both. */
+.hc-section {
+  padding: clamp(48px, 6vw, 96px) 0;
+  position: relative;
+}
+
+.hc-section--dark {
+  background: var(--hc-ink);
+  color: var(--bone);
+}
+
+.hc-section--dark .hc-eyebrow {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.hc-h1 {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(34px, 5.2vw, 100px);
+  line-height: 0.94;
+  letter-spacing: -0.035em;
+  margin: 0;
+}
+
+/* Homepage hero only — large but genuinely regular weight, not bold.
+   Impact comes from size/movement/composition/whitespace (see the
+   scroll-scrubbed word choreography below), not from boldness. Scoped to
+   .hc-hero so the shared .hc-h1 rule above (also used by /audit's page
+   heading) stays untouched. Uppercase kept from the prior exploration of
+   this headline (tinywins.com's own hero is uppercase) — orthogonal to
+   weight, so it stays. */
+.hc-hero .hc-h1 {
+  font-weight: 400;
+  line-height: 0.9;
+  letter-spacing: -0.03em;
+  text-transform: uppercase;
+}
+
+.hc-h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(32px, 5.2vw, 72px);
+  line-height: 1.0;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.hc-lede {
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.5;
+  color: var(--slate);
+  max-width: 58ch;
+}
+
+.hc-section--dark .hc-lede {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* ---------- hero ---------- */
+.hc-hero {
+  /* Reference composition: the headline starts almost immediately below
+     the nav — a small gap, not a large air buffer. */
+  padding: clamp(18px, 3vh, 44px) 0 0;
+  position: relative;
+}
+
+/* Reference composition: the headline block spans close to the full
+   viewport width (left/right column flush near the true edges), not a
+   1240px contained container centered with large empty side margins on
+   wide screens — so the hero's own wrap drops --maxw and uses the same
+   tight inset as the header pill above it. */
+.hc-hero > .hc-wrap {
+  max-width: none;
+  padding-left: clamp(10px, 2vw, 22px);
+  padding-right: clamp(10px, 2vw, 22px);
+}
+
+@keyframes hc-riseIn {
+  to {
+    transform: translateY(0);
+  }
+}
+
+/* MaskReveal (src/components/ui/MaskReveal.tsx) — same masked slide-up as
+   .hc-line-mask above, IntersectionObserver-triggered for headlines below
+   the fold rather than page-load-triggered. Default state is fully visible
+   (content must never depend on JS running); only once JS has mounted and
+   is actively managing the reveal (.is-pending) does the inner content
+   move behind the mask, immediately before the observer flips it back. */
+.hc-mask-reveal {
+  display: block;
+  overflow: hidden;
+}
+
+.hc-mask-reveal__inner {
+  display: block;
+}
+
+.hc-mask-reveal.is-pending .hc-mask-reveal__inner {
+  transform: translateY(105%);
+}
+
+.hc-mask-reveal__inner.is-visible {
+  animation: hc-riseIn 0.85s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-mask-reveal.is-pending .hc-mask-reveal__inner {
+    transform: none;
+  }
+  .hc-mask-reveal__inner.is-visible {
+    animation: none;
+  }
+}
+
+/* Automatic (non-scroll) two-state word-FLIP hero (HeroWordMorph.tsx). Two
+   compositions of the same three phrase-tokens; each token is a persistent
+   element whose x/y is measured per composition (real DOM layout, not
+   guessed) and transform-animated between them on a fixed hold/transition
+   timer loop — not scroll progress. See the component file for the full
+   timing rationale.
+
+   No scroll "track"/sticky "pin" split anymore (this isn't scroll-scrubbed)
+   — .hc-hero__morph-canvas is just a normal positioned box, explicit-height
+   only once JS has measured real pixel heights, so there's never a moment
+   with absolutely-positioned children but no real height to contain them. */
+.hc-hero__morph-canvas {
+  position: relative;
+  width: 100%;
+}
+
+.hc-hero__morph-fallback--hidden {
+  display: none;
+}
+
+.hc-hero__morph-line {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.32em;
+}
+
+.hc-hero__morph-line + .hc-hero__morph-line {
+  margin-top: clamp(2px, 0.8vw, 10px);
+}
+
+.hc-hero__morph-line--left {
+  justify-content: flex-start;
+}
+
+.hc-hero__morph-line--center {
+  justify-content: center;
+}
+
+.hc-hero__morph-line--right {
+  justify-content: flex-end;
+}
+
+/* Dedicated mobile arrangement (not a scaled-down desktop layout): below
+   640px, the "secondary" line's right-alignment collapses to left so both
+   lines read as a simple, safe left-aligned stack — real measured token
+   positions still drive the animation, this just changes what those
+   positions naturally are at narrow widths. */
+@media (max-width: 640px) {
+  .hc-hero__morph-line--right {
+    justify-content: flex-start;
+  }
+}
+
+/* Off-screen measurement copies — real flex/block layout so each word's
+   rendered position is read via getBoundingClientRect(), never computed by
+   hand. Never painted (visibility: hidden keeps them out of the render
+   tree's paint pass while still fully participating in layout, which
+   opacity:0 would not guarantee identically for measurement purposes). */
+.hc-hero__morph-probes {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.hc-hero__morph-probe {
+  position: absolute;
+  inset: 0;
+}
+
+/* The live, interactive word layer. Starts invisible and swaps in only
+   once the first real measurement is in and every word already has its
+   correct composition-1 transform applied — so the fallback-to-live
+   handoff is a same-pixel swap, not a visible change. This opacity step is
+   a one-time hydration seam, not how composition changes themselves work;
+   those are 100% transform-driven per word (see applyProgress in the
+   component), never opacity. */
+.hc-hero__morph-live {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+}
+
+.hc-hero__morph-live--visible {
+  opacity: 1;
+}
+
+.hc-hero__word {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+}
+
+.hc-hero__morph-canvas em {
+  font-style: normal;
+  /* No permanent accent color — emphasis reads through a bold black
+     underline instead of hue, so the resting state stays monochrome. */
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.06em;
+}
+
+.hc-hero__ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 26px;
+}
+
+.hc-btn {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 15px 24px;
+  border-radius: 999px;
+  border: 1px solid var(--hc-ink);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.3s;
+}
+
+.hc-btn--fill {
+  background: var(--hc-ink);
+  color: var(--bone);
+}
+
+.hc-btn--fill:hover {
+  background: var(--oxblood);
+  border-color: var(--oxblood);
+  transform: translateY(-2px);
+}
+
+.hc-btn--ghost:hover {
+  background: var(--hc-ink);
+  color: var(--bone);
+  transform: translateY(-2px);
+}
+
+.hc-section--dark .hc-btn {
+  border-color: var(--bone);
+}
+
+.hc-section--dark .hc-btn--fill {
+  background: var(--bone);
+  color: var(--hc-ink);
+}
+
+.hc-section--dark .hc-btn--fill:hover {
+  background: var(--oxblood-lt);
+  border-color: var(--oxblood-lt);
+  color: var(--bone);
+}
+
+.hc-section--dark .hc-btn--ghost:hover {
+  background: var(--bone);
+  color: var(--hc-ink);
+}
+
+.hc-btn__arrow {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hc-btn:hover .hc-btn__arrow {
+  transform: translateX(4px);
+}
+
+/* signal band */
+.hc-signal {
+  margin-top: clamp(48px, 7vw, 96px);
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 20px 0;
+}
+
+.hc-signal__in {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 3.4vw, 40px);
+}
+
+.hc-signal__words {
+  display: flex;
+  gap: clamp(8px, 1.6vw, 18px);
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slate);
+  flex: none;
+}
+
+.hc-signal__words b {
+  color: var(--hc-ink);
+  font-weight: 500;
+}
+
+.hc-wave {
+  flex: 1;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  overflow: hidden;
+}
+
+.hc-wave i {
+  display: block;
+  flex: 1;
+  min-width: 2px;
+  max-width: 5px;
+  background: var(--hc-ink);
+  opacity: 0.32;
+  border-radius: 2px;
+  animation: hc-bob 1.9s ease-in-out infinite;
+}
+
+@keyframes hc-bob {
+  0%,
+  100% {
+    height: 12%;
+  }
+  50% {
+    height: 88%;
+  }
+}
+
+.hc-signal__loc {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+  flex: none;
+}
+
+.hc-signal__loc a:hover {
+  color: var(--oxblood);
+}
+
+@media (max-width: 900px) {
+  .hc-signal__loc {
+    display: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .hc-wave {
+    display: none;
+  }
+  .hc-signal__words {
+    flex-wrap: wrap;
+  }
+}
+
+/* ---------- call log ---------- */
+.hc-split {
+  display: grid;
+  grid-template-columns: 0.95fr 1.05fr;
+  gap: clamp(32px, 6vw, 88px);
+  align-items: start;
+}
+
+@media (max-width: 900px) {
+  .hc-split {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-log {
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.42);
+  overflow: hidden;
+}
+
+.hc-log__head {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.hc-log__row {
+  display: grid;
+  grid-template-columns: 62px 1fr auto;
+  gap: 12px;
+  align-items: center;
+  padding: 13px 16px;
+  border-bottom: 1px solid var(--rule);
+  font-family: var(--mono);
+  font-size: 12.5px;
+}
+
+.hc-log__row:last-child {
+  border-bottom: 0;
+}
+
+.hc-log__t {
+  color: var(--slate);
+}
+
+.hc-log__who {
+  font-family: var(--body);
+  font-size: 14.5px;
+  line-height: 1.3;
+}
+
+.hc-log__st {
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  /* No permanent status color (was oxblood/green) — hierarchy now reads
+     through weight/shade instead of hue: unresolved rows stay full-strength
+     ink, resolved ones fade to slate. */
+  color: var(--hc-ink);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hc-log__row--ok .hc-log__st {
+  color: var(--slate);
+  font-weight: 500;
+}
+
+.hc-log__note {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-top: 12px;
+}
+
+@media (max-width: 480px) {
+  .hc-log__row {
+    grid-template-columns: 54px 1fr;
+    row-gap: 4px;
+  }
+  .hc-log__st {
+    grid-column: 2;
+  }
+}
+
+/* ---------- industries ticker ---------- */
+.hc-inds {
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  padding: 14px 0;
+  overflow: hidden;
+  margin-top: clamp(34px, 5vw, 56px);
+}
+
+.hc-inds__track {
+  display: flex;
+  gap: 30px;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--slate);
+  width: max-content;
+}
+
+.hc-inds__track span {
+  flex: none;
+}
+
+/* ---------- services ---------- */
+.hc-svc {
+  border-top: 1px solid var(--rule);
+  display: block;
+  position: relative;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hc-svc:last-of-type {
+  border-bottom: 1px solid var(--rule);
+}
+
+.hc-svc__in {
+  display: grid;
+  grid-template-columns: 150px 1fr 1fr auto;
+  gap: clamp(16px, 3vw, 40px);
+  align-items: start;
+  padding: clamp(28px, 4vw, 46px) 0;
+  transition: padding-left 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hc-svc:hover .hc-svc__in {
+  padding-left: 22px;
+}
+
+.hc-svc::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--hc-ink);
+  transform: scaleY(0);
+  transform-origin: bottom;
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: -1;
+}
+
+.hc-svc:hover::before {
+  transform: scaleY(1);
+  transform-origin: top;
+}
+
+.hc-svc:hover {
+  color: var(--bone);
+}
+
+.hc-svc:hover .hc-svc__desc,
+.hc-svc:hover .hc-svc__list li {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.hc-svc:hover .hc-svc__kicker {
+  color: var(--oxblood-lt);
+}
+
+.hc-svc__kicker {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  /* Gray at rest, matching every other mono kicker/eyebrow on the site —
+     the oxblood-lt shift on row hover (above) is the only place this
+     label ever carries color. */
+  color: var(--slate);
+  transition: color 0.4s;
+}
+
+.hc-svc__title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(26px, 3.4vw, 44px);
+  line-height: 1.02;
+  letter-spacing: -0.025em;
+  margin: 6px 0 0;
+}
+
+.hc-svc__desc {
+  color: var(--slate);
+  font-size: 16px;
+  max-width: 44ch;
+  transition: color 0.4s;
+  margin: 0;
+}
+
+.hc-svc__list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.06em;
+  color: var(--slate);
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  transition: color 0.4s;
+}
+
+.hc-svc__go {
+  font-size: 22px;
+  align-self: center;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hc-svc:hover .hc-svc__go {
+  transform: translate(6px, -6px);
+}
+
+@media (max-width: 1000px) {
+  .hc-svc__in {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding-left: 0 !important;
+  }
+  .hc-svc__go {
+    display: none;
+  }
+  .hc-svc__list {
+    flex-flow: row wrap;
+    gap: 6px 16px;
+  }
+}
+
+.hc-also {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 26px;
+  margin-top: clamp(26px, 3.4vw, 40px);
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.hc-also b {
+  color: var(--hc-ink);
+  font-weight: 500;
+}
+
+.hc-also a:hover {
+  color: var(--oxblood);
+}
+
+/* ---------- work: scroll-driven perspective sequence ---------- */
+.hc-pseq {
+  position: relative;
+}
+
+.hc-ptrack {
+  position: relative;
+}
+
+.hc-pstage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.hc-pitem {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform-origin: 0 50%;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.hc-pmedia {
+  display: block;
+  position: relative;
+  aspect-ratio: 3 / 4;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--bone-2);
+  border: 1px solid var(--rule);
+}
+
+.hc-pmedia img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+  /* Real portfolio photography — always shown in its true, original
+     color. No grayscale/desaturation/filter treatment of any kind. */
+  transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) {
+  .hc-pmedia:hover img {
+    transform: scale(1.045);
+  }
+}
+
+.hc-plabel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  padding-top: 20px;
+  transform-origin: 0 0;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  will-change: transform, opacity;
+}
+
+.hc-plabel b {
+  font-weight: 500;
+  color: var(--hc-ink);
+}
+
+.hc-plabel span {
+  color: var(--slate);
+  margin-left: 11px;
+}
+
+.hc-plabel a {
+  border-bottom: 1px solid transparent;
+  padding-bottom: 3px;
+  transition: border-color 0.3s;
+}
+
+.hc-plabel a:hover {
+  border-bottom-color: var(--oxblood);
+}
+
+.hc-pticks {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: clamp(26px, 6vh, 60px);
+  display: flex;
+  align-items: flex-end;
+  gap: 9px;
+  height: 36px;
+  z-index: 600;
+  pointer-events: none;
+}
+
+.hc-pticks i {
+  display: block;
+  width: 1.5px;
+  height: 5px;
+  background: rgba(22, 24, 26, 0.26);
+  transition: height 0.55s cubic-bezier(0.16, 1, 0.3, 1), background 0.55s ease;
+}
+
+.hc-pticks i.on {
+  background: var(--oxblood);
+}
+
+@media (max-width: 900px) {
+  .hc-plabel {
+    font-size: 11px;
+    padding-top: 14px;
+  }
+  .hc-pticks {
+    height: 26px;
+    gap: 7px;
+  }
+}
+
+/* static fallback: reduced motion / no JS */
+.hc-pseq.is-static .hc-ptrack {
+  height: auto !important;
+}
+
+.hc-pseq.is-static .hc-pstage {
+  position: static;
+  height: auto;
+  overflow: visible;
+}
+
+.hc-pseq.is-static .hc-pitem {
+  position: relative;
+  top: auto;
+  width: 100% !important;
+  max-width: 420px;
+  transform: none !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  margin: 0 0 clamp(56px, 8vw, 90px);
+}
+
+.hc-pseq.is-static .hc-plabel {
+  position: static;
+  transform: none !important;
+  opacity: 1 !important;
+  padding-top: 16px;
+}
+
+.hc-pseq.is-static .hc-pticks {
+  display: none;
+}
+
+/* Desktop continuous sequence hides below the breakpoint — .hc-pgal-m
+   (below) takes over there. Keep this pixel value in sync with
+   MOBILE_BREAKPOINT in HomeWork.tsx; media queries can't read a JS
+   constant, so the two are duplicated deliberately. */
+@media (max-width: 860px) {
+  .hc-pseq {
+    display: none;
+  }
+}
+
+/* ---------- work: mobile gallery (dedicated implementation) ---------- */
+/* Hidden by default; shown only under the same 860px cutoff .hc-pseq hides
+   at, so exactly one of the two is ever visible. Deliberately plain, normal
+   document flow — no sticky stage, no synthetic scroll track. Every project
+   is a real, always-mounted card, one after another; JS (HomeWorkMobile)
+   layers continuous scale/opacity on top as a pure function of each card's
+   own distance from the viewport's vertical center. Default state here
+   (scale 1, opacity 1, no transform) IS the reduced-motion/no-JS fallback —
+   JS only ever narrows toward the far end of that range, never widens it. */
+.hc-pgal-m {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .hc-pgal-m {
+    display: block;
+    padding: clamp(24px, 5vw, 40px) 0 clamp(8px, 2vw, 16px);
+  }
+}
+
+.hc-pgal-m__card {
+  display: block;
+  margin: 0 auto clamp(40px, 9vw, 64px);
+  opacity: 1;
+  will-change: opacity;
+}
+
+.hc-pgal-m__card:last-child {
+  margin-bottom: 0;
+}
+
+.hc-pgal-m__media {
+  display: block;
+  width: 88vw;
+  max-width: 420px;
+  margin: 0 auto;
+  transform: scale(1);
+  transform-origin: center;
+  will-change: transform;
+}
+
+.hc-pgal-m__label {
+  margin-top: 16px;
+  text-align: center;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.hc-pgal-m__label b {
+  display: block;
+  font-weight: 500;
+  color: var(--hc-ink);
+}
+
+.hc-pgal-m__label span {
+  display: block;
+  margin-top: 4px;
+  color: var(--slate);
+}
+
+.hc-worknote {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-top: clamp(26px, 3vw, 38px);
+}
+
+/* Shared inline text-link treatment for prose/footnote links across the
+   SEO landing pages (e.g. ".hc-lede a", ".hc-worknote a") — same ink/
+   oxblood hover pairing used everywhere else (.hc-footer__nav a, etc.),
+   so a link inside a paragraph reads consistently with the rest of the
+   site rather than each page inventing its own underline color. */
+.hc-inline-link {
+  color: var(--hc-ink);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.hc-inline-link:hover {
+  color: var(--oxblood);
+}
+
+.hc-art {
+  position: absolute;
+  inset: 0;
+}
+
+.hc-art::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 44%;
+}
+
+/* Load-time placeholder art beneath each portfolio photo (see
+   HomeWork.tsx) — a dark tonal/pattern tile shown only until the real,
+   full-color photo has loaded in above it. */
+.hc-art-1 {
+  background: radial-gradient(120% 90% at 22% 8%, #2f2f2f 0%, transparent 62%), linear-gradient(160deg, #201f1f 0%, #121212 100%);
+}
+.hc-art-1::after {
+  background: repeating-linear-gradient(92deg, rgba(200, 200, 200, 0.22) 0 2px, transparent 2px 12px);
+}
+.hc-art-2 {
+  background: radial-gradient(120% 90% at 78% 12%, #2c2c2c 0%, transparent 60%), linear-gradient(200deg, #1e1e1e 0%, #101010 100%);
+}
+.hc-art-2::after {
+  background: repeating-linear-gradient(0deg, rgba(190, 190, 190, 0.18) 0 1px, transparent 1px 14px);
+}
+.hc-art-3 {
+  background: radial-gradient(110% 80% at 30% 82%, #313131 0%, transparent 62%), linear-gradient(150deg, #1f1f1f 0%, #111111 100%);
+}
+.hc-art-3::after {
+  background: repeating-linear-gradient(92deg, rgba(180, 180, 180, 0.22) 0 2px, transparent 2px 11px);
+}
+.hc-art-4 {
+  background: radial-gradient(120% 90% at 50% 0%, #2b2b2b 0%, transparent 58%), linear-gradient(180deg, #1d1d1d 0%, #0e0e0e 100%);
+}
+.hc-art-4::after {
+  background: repeating-linear-gradient(45deg, rgba(180, 180, 180, 0.16) 0 2px, transparent 2px 13px);
+}
+.hc-art-5 {
+  background: radial-gradient(120% 90% at 18% 14%, #2e2e2e 0%, transparent 60%), linear-gradient(170deg, #1f1f1f 0%, #121212 100%);
+}
+.hc-art-5::after {
+  background: repeating-linear-gradient(112deg, rgba(195, 195, 195, 0.2) 0 2px, transparent 2px 10px);
+}
+.hc-art-6 {
+  background: radial-gradient(120% 90% at 70% 86%, #2d2d2d 0%, transparent 60%), linear-gradient(190deg, #1e1e1e 0%, #101010 100%);
+}
+.hc-art-6::after {
+  background: repeating-linear-gradient(76deg, rgba(185, 185, 185, 0.16) 0 1px, transparent 1px 9px);
+}
+
+/* ---------- why ---------- */
+.hc-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(24px, 5vw, 64px);
+  margin: 0 0 clamp(30px, 4vw, 48px);
+}
+
+.hc-stat b {
+  display: block;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(34px, 4.4vw, 54px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.hc-stat span {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-top: 8px;
+}
+
+.hc-claim {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(28px, 4.4vw, 58px);
+  line-height: 1.04;
+  letter-spacing: -0.028em;
+  max-width: 20ch;
+  margin: 0;
+}
+
+.hc-claim em {
+  font-style: normal;
+  text-decoration: underline;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.06em;
+}
+
+.hc-pts {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(22px, 3.4vw, 44px);
+  margin-top: clamp(40px, 5vw, 68px);
+}
+
+@media (max-width: 760px) {
+  .hc-pts {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-pt {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+}
+
+.hc-pt h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.015em;
+  margin: 8px 0 6px;
+}
+
+.hc-pt p {
+  margin: 0;
+  color: var(--slate);
+  font-size: 15.5px;
+  max-width: 40ch;
+}
+
+/* ---------- process ---------- */
+.hc-steps {
+  margin-top: clamp(40px, 5vw, 64px);
+  border-top: 1px solid var(--rule);
+}
+
+.hc-step {
+  display: grid;
+  grid-template-columns: 80px 1fr 1.2fr;
+  gap: clamp(14px, 3vw, 40px);
+  padding: clamp(22px, 3vw, 34px) 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: baseline;
+}
+
+.hc-step__n {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  color: var(--slate);
+}
+
+.hc-step__t {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(20px, 2.4vw, 28px);
+  letter-spacing: -0.02em;
+}
+
+.hc-step__wk {
+  display: block;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-top: 7px;
+}
+
+.hc-step__d {
+  color: var(--slate);
+  font-size: 15.5px;
+  margin: 0;
+}
+
+@media (max-width: 760px) {
+  .hc-step {
+    grid-template-columns: 52px 1fr;
+    row-gap: 8px;
+  }
+  .hc-step__d {
+    grid-column: 2;
+  }
+}
+
+/* ---------- systems (HomeSystems.tsx) ----------
+   Replaces the old "Six stages" process section. Default state (below) is
+   the plain stacked reading order — content must never depend on JS
+   running, same principle as RevealOnScroll/MaskReveal elsewhere on this
+   page. .hc-triad.is-animated is added only once JS confirms motion is
+   allowed (see HomeSystems.tsx); only THAT state gets the absolute
+   positioning, opacity-0 defaults and sticky track the scroll-scrubbed
+   composition needs. No cards, no gradients, no decorative icons —
+   typography, position and a single hairline rule are the only elements. */
+.hc-triad-section {
+  padding-top: 0;
+}
+
+.hc-triad__track {
+  position: relative;
+}
+
+.hc-triad__stage {
+  padding: clamp(56px, 9vw, 108px) 0;
+}
+
+/* Height must match PIN_VH in HomeSystems.tsx (currently 0.85 → 85vh). A
+   position:sticky element structurally needs scroll equal to its OWN
+   height to fully clear the viewport once it releases — at 100vh, with
+   this composition's content sitting around the vertical middle of the
+   box, that produced a huge blank gap between "Website → Discovery →
+   Conversation" finishing and the Pricing section appearing. Shortened so
+   the pin clears in ~3/5 of a viewport instead of a full one; the scrub
+   distance itself (SCRUB_VH, the actual intro → systems → journey
+   animation) is untouched, so timing/positions/pacing during the sequence
+   are unaffected — only the empty tail after it resolves is shorter. */
+.hc-triad.is-animated .hc-triad__stage {
+  position: sticky;
+  top: 0;
+  height: 85vh;
+  height: 85svh;
+  overflow: hidden;
+  padding: 0;
+}
+
+.hc-triad__intro {
+  position: relative;
+  /* vw, not ch — .hc-triad__intro itself never carries the large display
+     font-size (only its .hc-triad__introline children do), so a ch value
+     here resolves against the small inherited body size instead and
+     produces a box a fraction of the intended width. */
+  max-width: 60vw;
+}
+
+.hc-triad.is-animated .hc-triad__intro {
+  position: absolute;
+  top: clamp(48px, 9vh, 96px);
+  left: var(--gutter);
+  max-width: 46vw;
+  will-change: transform;
+}
+
+.hc-triad__introline {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(32px, 6.4vw, 84px);
+  line-height: 0.98;
+  letter-spacing: -0.03em;
+  margin: 0;
+}
+
+.hc-triad__payoff {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(20px, 2.6vw, 32px);
+  letter-spacing: -0.02em;
+  color: var(--slate);
+  margin: clamp(10px, 1.6vw, 18px) 0 0;
+}
+
+.hc-triad.is-animated .hc-triad__payoff {
+  opacity: 0;
+}
+
+.hc-triad__line {
+  display: none;
+}
+
+.hc-triad.is-animated .hc-triad__line {
+  display: block;
+  position: absolute;
+  top: 44%;
+  left: var(--gutter);
+  right: var(--gutter);
+  height: 1px;
+  background: var(--rule);
+  transform: scaleX(0);
+  transform-origin: left center;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.hc-triad__system {
+  position: relative;
+  max-width: 52ch;
+  margin: clamp(48px, 8vw, 72px) 0 0;
+  padding-top: clamp(20px, 3vw, 28px);
+  border-top: 1px solid var(--rule);
+}
+
+.hc-triad__stage > .hc-triad__system:first-of-type {
+  margin-top: clamp(72px, 12vw, 140px);
+}
+
+.hc-triad.is-animated .hc-triad__system {
+  position: absolute;
+  max-width: min(480px, 42vw);
+  margin: 0;
+  padding-top: 0;
+  border-top: none;
+  opacity: 0;
+  will-change: transform, top, left, opacity;
+}
+
+.hc-triad__tag {
+  position: relative;
+  display: block;
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--hc-ink);
+  margin: 0;
+  min-height: 1.4em;
+}
+
+.hc-triad__tag-a,
+.hc-triad__tag-b {
+  display: block;
+}
+
+.hc-triad.is-animated .hc-triad__tag-a,
+.hc-triad.is-animated .hc-triad__tag-b {
+  position: absolute;
+  top: 0;
+  left: 0;
+  white-space: nowrap;
+  will-change: opacity;
+}
+
+.hc-triad.is-animated .hc-triad__tag-b {
+  opacity: 0;
+}
+
+/* Static fallback shows only the descriptive tag (e.g. "01 — Web Design")
+   — the journey-word variant only makes sense as a crossfade payoff at
+   the end of the animated sequence, not stacked in a plain reading flow. */
+.hc-triad:not(.is-animated) .hc-triad__tag-b {
+  display: none;
+}
+
+.hc-triad__idea {
+  margin-top: clamp(10px, 1.6vw, 16px);
+}
+
+.hc-triad.is-animated .hc-triad__idea {
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.hc-triad__ideatext {
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: clamp(24px, 3.4vw, 42px);
+  line-height: 1.05;
+  letter-spacing: -0.025em;
+  margin: 0;
+}
+
+.hc-triad__copy {
+  color: var(--slate);
+  font-size: clamp(15px, 1.4vw, 17px);
+  line-height: 1.55;
+  max-width: 38ch;
+  margin: clamp(8px, 1.2vw, 12px) 0 0;
+}
+
+/* Static fallback (reduced motion / no JS) never adds .is-animated, so all
+   of the rules above simply don't apply — this is just the base state,
+   already correct without an override block. Only the journey/payoff
+   copy, which IS meant to stay hidden until the animated sequence resolves
+   on capable browsers, needs an explicit "show it anyway" here — a reader
+   who can't see the motion should still get the section's punchline. */
+.hc-triad:not(.is-animated) .hc-triad__payoff {
+  opacity: 1;
+}
+
+/* CSS-level backstop for the JS reduced-motion check in HomeSystems.tsx —
+   if .is-animated somehow ended up applied anyway, this still forces
+   everything back to fully visible/untransformed rather than relying on
+   JS alone. */
+@media (prefers-reduced-motion: reduce) {
+  .hc-triad.is-animated .hc-triad__stage {
+    position: static;
+    height: auto;
+    overflow: visible;
+    padding: clamp(56px, 9vw, 108px) 0;
+  }
+  .hc-triad.is-animated .hc-triad__intro,
+  .hc-triad.is-animated .hc-triad__system {
+    position: relative;
+    max-width: 20ch;
+    top: auto !important;
+    left: auto !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+  .hc-triad.is-animated .hc-triad__system {
+    max-width: 52ch;
+    margin: clamp(48px, 8vw, 72px) 0 0;
+    padding-top: clamp(20px, 3vw, 28px);
+    border-top: 1px solid var(--rule);
+  }
+  .hc-triad.is-animated .hc-triad__idea,
+  .hc-triad.is-animated .hc-triad__payoff {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  .hc-triad.is-animated .hc-triad__tag-b,
+  .hc-triad.is-animated .hc-triad__line {
+    display: none;
+  }
+}
+
+@media (max-width: 860px) {
+  .hc-triad-section .hc-triad {
+    display: none;
+  }
+}
+
+/* ---------- systems: mobile (dedicated implementation) ---------- */
+.hc-triad-m {
+  display: none;
+}
+
+@media (max-width: 860px) {
+  .hc-triad-m {
+    display: block;
+    position: relative;
+  }
+}
+
+.hc-triad-m__track {
+  position: relative;
+}
+
+.hc-triad-m__stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 var(--gutter);
+}
+
+.hc-triad-m__slide {
+  width: 100%;
+  max-width: 480px;
+  animation: hc-triad-m-in 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-triad-m__slide {
+    animation: none;
+  }
+}
+
+@keyframes hc-triad-m-in {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hc-triad-m__slide--intro .hc-triad__introline {
+  font-size: clamp(40px, 13vw, 64px);
+}
+
+.hc-triad-m__tag {
+  font-family: var(--mono);
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin: 0 0 clamp(10px, 3vw, 16px);
+}
+
+.hc-triad-m__slide .hc-triad__ideatext {
+  font-size: clamp(28px, 8vw, 40px);
+}
+
+.hc-triad-m__slide--final {
+  text-align: left;
+}
+
+.hc-triad-m__journey {
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin: 0 0 clamp(20px, 5vw, 32px);
+}
+
+.hc-triad-m__arrow {
+  color: var(--rule);
+}
+
+.hc-triad-m__slide--final .hc-triad__payoff {
+  margin-top: clamp(14px, 3vw, 20px);
+}
+
+.hc-triad-m__ticks {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: clamp(20px, 5vh, 40px);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.hc-triad-m__ticks i {
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(22, 24, 26, 0.22);
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.hc-triad-m__ticks i.on {
+  background: var(--hc-ink);
+  transform: scale(1.3);
+}
+
+/* ---------- pricing ---------- */
+.hc-tiers {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(20px, 3vw, 44px);
+  margin-top: clamp(38px, 5vw, 62px);
+}
+
+@media (max-width: 900px) {
+  .hc-tiers {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-tier {
+  border-top: 2px solid var(--hc-ink);
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.hc-tier--pop {
+  /* "Featured" reads through border weight, not color — 3px vs the 2px
+     every other tier gets, both solid ink. */
+  border-top-width: 3px;
+  border-top-color: var(--hc-ink);
+}
+
+.hc-tier__flag {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--hc-ink);
+  min-height: 16px;
+}
+
+.hc-tier__name {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 26px;
+  letter-spacing: -0.02em;
+  margin: 6px 0 8px;
+}
+
+.hc-tier__for {
+  color: var(--slate);
+  font-size: 15px;
+  margin: 0 0 22px;
+  max-width: 34ch;
+}
+
+.hc-tier__was {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--slate);
+  text-decoration: line-through;
+}
+
+.hc-tier__price {
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: clamp(38px, 4.4vw, 52px);
+  letter-spacing: -0.035em;
+  line-height: 1;
+  margin: 6px 0 0;
+}
+
+.hc-tier__price small {
+  font-family: var(--mono);
+  font-weight: 400;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+  margin-left: 9px;
+}
+
+.hc-tier__list {
+  list-style: none;
+  margin: 24px 0 26px;
+  padding: 0;
+  font-size: 14.5px;
+  color: var(--slate);
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  border-top: 1px solid var(--rule);
+  padding-top: 20px;
+}
+
+.hc-tier__list li::before {
+  content: "— ";
+  color: var(--slate);
+}
+
+.hc-tier .hc-btn,
+.hc-tier .hc-btnbase {
+  align-self: flex-start;
+  margin-top: auto;
+}
+
+.hc-bundles {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: clamp(18px, 2.6vw, 34px);
+  margin-top: clamp(40px, 5vw, 64px);
+}
+
+@media (max-width: 900px) {
+  .hc-bundles {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-bundle {
+  border-top: 1px solid var(--rule);
+  padding-top: 16px;
+}
+
+.hc-bundle h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 19px;
+  letter-spacing: -0.015em;
+  margin: 8px 0 6px;
+}
+
+.hc-bundle p {
+  margin: 0 0 12px;
+  color: var(--slate);
+  font-size: 14.5px;
+  max-width: 32ch;
+}
+
+.hc-bundle__price {
+  font-family: var(--mono);
+  font-size: 14px;
+}
+
+.hc-bundle__price s {
+  color: var(--slate);
+  opacity: 0.7;
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.hc-bundle__save {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--hc-ink);
+  margin-top: 6px;
+}
+
+.hc-bundle ul {
+  list-style: none;
+  margin: 12px 0 0;
+  padding: 0;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--slate);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hc-gbp {
+  display: flex;
+  flex-wrap: wrap;
+  gap: clamp(20px, 4vw, 54px);
+  align-items: baseline;
+  margin-top: clamp(40px, 5vw, 60px);
+  border-top: 1px solid var(--rule);
+  padding-top: 22px;
+}
+
+.hc-gbp__k {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  flex: none;
+}
+
+.hc-gbp__v {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: var(--slate);
+}
+
+.hc-gbp__v b {
+  color: var(--hc-ink);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.hc-fineprint {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  color: var(--slate);
+  margin-top: 22px;
+  max-width: 70ch;
+  line-height: 1.7;
+}
+
+.hc-fineprint a {
+  border-bottom: 1px solid var(--rule);
+}
+
+/* ---------- audit ---------- */
+.hc-audit {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: clamp(28px, 5vw, 72px);
+  align-items: start;
+}
+
+@media (max-width: 860px) {
+  .hc-audit {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-audit__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.hc-audit__list li {
+  border-top: 1px solid var(--rule-inv);
+  padding: 15px 0;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.72);
+}
+
+.hc-audit__list li:last-child {
+  border-bottom: 1px solid var(--rule-inv);
+}
+
+/* ---------- faq accordion (FAQAccordion.tsx) ----------
+   Shared by the homepage FAQ section, /faq, and every service/SEO-landing
+   page's FAQ block. Deliberately minimal: hairline dividers only, no
+   cards/boxes/shadows — the "editorial, not app" interaction lives entirely
+   in these transitions, not in any added chrome. Timing/easing match the
+   brief exactly: cubic-bezier(0.22, 1, 0.36, 1), ~300-320ms. */
+.hc-faqacc-row {
+  border-top: 1px solid var(--rule);
+  transition: background-color 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hc-faqacc-row.is-open {
+  /* Subtle tint on the active question only — not a card, just enough to
+     read as "this one is engaged" against the flat list. */
+  background: rgba(22, 24, 26, 0.025);
+  border-top-color: rgba(22, 24, 26, 0.3);
+}
+
+.hc-faqacc-q {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(16px, 3vw, 32px);
+  text-align: left;
+  padding: 20px 2px;
+  cursor: pointer;
+  /* Same iOS tap-delay/ghost-tap guards used on .hc-burger elsewhere in
+     this file — a question row is tapped far more casually than a button,
+     so the 300ms double-tap-to-zoom disambiguation delay reads as an
+     actual lag here if left unset. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hc-faqacc-row.is-open .hc-faqacc-q {
+  /* "Row moves upward by 1-2px... to feel responsive" — deliberately
+     smaller than a hover lift elsewhere on the site; this is a resting
+     state, not a hover affordance. */
+  transform: translateY(-1px);
+}
+
+.hc-faqacc-q__text {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(16px, 1.9vw, 18px);
+  letter-spacing: -0.012em;
+  line-height: 1.35;
+  /* "Becomes a little darker/bolder" on open — weight is already fixed at
+     600 (animating font-weight is unreliable across browsers), so the
+     "bolder" read comes from the color step below instead: 82% ink at
+     rest, full ink when open. Real, smooth, animatable. */
+  color: rgba(22, 24, 26, 0.82);
+  transition: color 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hc-faqacc-row.is-open .hc-faqacc-q__text {
+  color: var(--hc-ink);
+}
+
+@media (hover: hover) {
+  .hc-faqacc-q:hover .hc-faqacc-q__text {
+    color: var(--oxblood);
+  }
+  .hc-faqacc-q:hover .hc-faqacc-q__icon {
+    color: var(--oxblood);
+    transform: scale(1.15);
+  }
+  .hc-faqacc-row.is-open .hc-faqacc-q:hover .hc-faqacc-q__icon {
+    transform: rotate(45deg) scale(1.15);
+  }
+}
+
+/* Tap feedback on touch devices — a brief, subtle press state rather than
+   nothing happening until the row already opened. */
+.hc-faqacc-q:active .hc-faqacc-q__text,
+.hc-faqacc-q:active .hc-faqacc-q__icon {
+  color: var(--oxblood);
+}
+
+.hc-faqacc-q__icon {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  /* Black at rest — color only appears as the hover/active reward above,
+     matching the question text's own color behavior. */
+  color: var(--hc-ink);
+  /* Plus rotated 45deg IS an × — no icon swap, no cross-fade, just this
+     one transform. */
+  transform: rotate(0deg);
+  transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1), color 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hc-faqacc-row.is-open .hc-faqacc-q__icon {
+  transform: rotate(45deg);
+}
+
+.hc-faqacc-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  /* grid-template-rows 0fr->1fr (not height:auto / max-height) is what
+     keeps this jump-free — the row's own layout box animates smoothly
+     instead of snapping, and nothing above/below it in the page has to
+     reflow in a way that reads as a jump. */
+  transition: grid-template-rows 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.hc-faqacc-row.is-open .hc-faqacc-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.hc-faqacc-panel__inner {
+  overflow: hidden;
+}
+
+.hc-faqacc-answer {
+  margin: 0;
+  padding: 0 2px clamp(18px, 3vw, 24px);
+  max-width: 62ch;
+  color: var(--slate);
+  font-size: 15px;
+  line-height: 1.65;
+}
+
+.hc-nog {
+  margin-top: clamp(44px, 5vw, 70px);
+  border-top: 1px solid var(--rule);
+  padding-top: 22px;
+}
+
+.hc-nog h4 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.02em;
+  margin: 0 0 16px;
+}
+
+.hc-nog ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px 34px;
+}
+
+@media (max-width: 820px) {
+  .hc-nog ul {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-nog li {
+  font-size: 14.5px;
+  color: var(--slate);
+  padding-left: 18px;
+  position: relative;
+}
+
+.hc-nog li::before {
+  content: "×";
+  position: absolute;
+  left: 0;
+  color: var(--hc-ink);
+}
+
+/* ---------- header ---------- */
+/* Spacer (HomeHeader.tsx) — .hc-header is position:fixed, so it no longer
+   reserves its own space in flow; this plain in-flow div stands in for it
+   so the hero doesn't jump up underneath it. Height is set inline from a
+   ResizeObserver measuring the real header, so it tracks safe-area-inset
+   and any content reflow automatically. */
+.hc-header-spacer {
+  width: 100%;
+  /* Fallback only — real height comes from the ResizeObserver in
+     HomeHeader.tsx and supersedes this the instant it fires (effectively
+     immediately; this only covers the gap before JS/hydration or a
+     ResizeObserver-less browser). Slightly under the smallest real header
+     height on purpose — a few px of hero peeking through briefly reads far
+     better than the header ever covering content. */
+  min-height: 62px;
+}
+
+.hc-header {
+  /* position:fixed, not sticky. A plain position:sticky test element
+     placed as a direct child of the .home-concept wrapper this component
+     renders into (see layout.tsx) measurably does not stick — it stays at
+     its in-flow position and scrolls away like static content, confirmed
+     with getBoundingClientRect() at multiple scroll depths, while the
+     exact same element one level up, as a direct child of <body>, sticks
+     correctly. Every standard containing-block-breaking property was
+     checked and ruled out on every ancestor up to <html> (transform,
+     filter, perspective, contain, isolation, overflow, zoom) and on
+     <body>'s flex layout — the cause wasn't isolated further, but fixed
+     positioning sidesteps it entirely and is what the brief allows for
+     this exact situation. See HomeHeader.tsx for the spacer this requires. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  width: 100%;
+  border-bottom: 1px solid transparent;
+  background: transparent;
+  /* Premium/restrained per the brief: 250-350ms, cubic-bezier(0.22,1,0.36,1)
+     — a fast, controlled ease-out, not the sharper 0.4,0,0.2,1 used
+     elsewhere on this page for hover states. */
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s cubic-bezier(0.22, 1, 0.36, 1),
+    background 0.3s, border-color 0.3s;
+  transform: translateZ(0);
+  will-change: transform;
+}
+
+.hc-header.is-stuck {
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom-color: var(--rule);
+}
+
+.hc-header.is-hidden {
+  transform: translateY(-120%);
+  opacity: 0;
+  /* Scroll-hidden means nothing inside is reachable by mouse/keyboard —
+     without this, a translated-off-screen-but-still-laid-out header can
+     still eat hover/focus at its old position on some browsers. */
+  pointer-events: none;
+}
+
+.hc-header.is-menu-open {
+  background: var(--bone);
+  border-bottom-color: var(--rule);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-header {
+    transition-duration: 0.01ms;
+  }
+}
+
+.hc-header__in {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  /* Sticky header sits at the true top of the viewport (top:0), so its own
+     content needs the status-bar/notch/Dynamic-Island inset added on top of
+     the normal 20px — otherwise the brand/nav row renders underneath it.
+     Tighter side inset than --gutter — reference composition (see
+     home.css header comment above .hc-navpill) has the nav sitting close
+     to the true viewport edge, not inside a generous contained margin. */
+  padding: calc(14px + env(safe-area-inset-top)) clamp(10px, 2vw, 22px) 14px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* Reference-matched nav container: logo + links share one compact
+   rectangular bar that sits close to the viewport's top-left, rather than
+   floating unbounded on the page background.
+   Gap and left padding tightened from the original wordmark-era values —
+   the header mark (.hc-tamark, ~34px square) is much narrower than the
+   ~140px-wide wordmark crop this pill was originally sized around, so the
+   old spacing left a noticeably empty gap in front of/after it.
+   Frosted-glass pass: was a flat solid #f4f4f4 fill; now translucent +
+   blurred so the page is faintly visible/soft through the bar as it floats
+   over content — restrained on purpose (no saturate() boost, no heavy
+   blur, no border glow). Square-ish 10px corners kept, not the
+   fully-rounded 999px pill this used to be. The 1px border is almost
+   invisible — its only job is a hair of edge separation against busy
+   photography scrolling underneath, not a visible outline. */
+.hc-navpill {
+  display: flex;
+  align-items: center;
+  gap: clamp(14px, 2vw, 26px);
+  background: rgba(244, 244, 244, 0.72);
+  /* -webkit- fallback declared BEFORE the standard property, deliberately
+     — the build's CSS minifier (Lightning CSS) was observed dropping the
+     unprefixed backdrop-filter entirely when it came first, keeping only
+     the -webkit- one. Standard property last = the one that actually wins
+     the cascade in every browser, and survives minification intact. */
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 10px;
+  padding: 8px 10px 8px 14px;
+}
+
+/* backdrop-filter silently no-ops on some older/locked-down browsers,
+   leaving the 0.72-alpha fill looking under-opaque against busy content
+   with nothing to soften it. Falls back to the original solid fill. */
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hc-navpill {
+    background: #f4f4f4;
+  }
+}
+
+.hc-brand {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--display);
+  font-weight: 800;
+  font-size: 17px;
+  letter-spacing: -0.02em;
+  flex: none;
+}
+
+.hc-brand__dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--hc-ink);
+  flex: none;
+  animation: hc-pulse 2.6s ease-in-out infinite;
+}
+
+@keyframes hc-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.72);
+  }
+}
+
+/* Header wordmark — public/images/tech-abelard-wordmark.png. The source
+   canvas (1536x1024) is a transparent PNG where the actual lettering only
+   occupies a ~57%x21% band roughly centered in it; shown at true canvas
+   proportions it would be either illegible at header scale or force the
+   whole header taller than the "compact, doesn't dominate nav" brief. The
+   crop/offset math below is a pure CSS window (position:absolute image
+   inside an overflow:hidden box, both dimensions scaled by the same
+   factor) — it never touches the source file, which stays byte-for-byte
+   the original download. --wm-h drives every other number via calc() so
+   resizing at the mobile breakpoint stays proportional (no distortion).
+   Base numbers were derived from the measured content bounding box
+   (minX:329 maxX:1212 minY:362 maxY:581 of 1536x1024) plus a small margin
+   so the crop doesn't clip the logo's soft edge falloff. */
+.hc-wordmark {
+  --wm-h: 40px;
+  --wm-scale: calc(var(--wm-h) / 40px);
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.hc-wordmark__crop {
+  position: relative;
+  overflow: hidden;
+  width: calc(140px * var(--wm-scale));
+  height: var(--wm-h);
+  display: block;
+}
+
+.hc-wordmark__img {
+  position: absolute;
+  top: calc(-43px * var(--wm-scale));
+  left: calc(-33px * var(--wm-scale));
+  /* !important: outranks the global ".home-concept img { max-width:100% }"
+     reset, whose class+element selector otherwise beats this single-class
+     one and would clamp the image down to the crop box instead of letting
+     it overflow to be clipped by .hc-wordmark__crop as intended. */
+  width: calc(206px * var(--wm-scale)) !important;
+  height: calc(137px * var(--wm-scale)) !important;
+  max-width: none !important;
+}
+
+@media (max-width: 640px) {
+  .hc-wordmark {
+    --wm-h: 28px;
+  }
+}
+
+/* The logo asset is solid near-black — invisible on the mobile nav overlay's
+   dark background. filter:invert flips it to white while leaving the
+   transparent background untouched, matching how this dark section already
+   flips its other chrome (buttons, links) to a light treatment. */
+.hc-section--dark .hc-wordmark__img {
+  filter: invert(1);
+}
+
+/* Compact header mark (TaMark.tsx) — the actual favicon reused at header
+   scale, NOT the full stacked wordmark above (that stays reserved for the
+   footer's closing signature; this rule set is intentionally separate so
+   nothing here can ever affect it). Square, so there's no crop/offset math
+   to keep in sync the way .hc-wordmark needs — just a size token. */
+.hc-tamark {
+  --tm-size: 34px;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.hc-tamark__img {
+  display: block;
+  width: var(--tm-size) !important;
+  height: var(--tm-size) !important;
+}
+
+@media (max-width: 640px) {
+  .hc-tamark {
+    --tm-size: 28px;
+  }
+}
+
+/* Same reasoning as .hc-section--dark .hc-wordmark__img above — the mark is
+   solid near-black and needs to flip to white on the mobile nav's dark
+   panel. */
+.hc-section--dark .hc-tamark__img {
+  filter: invert(1);
+}
+
+.hc-header__links {
+  display: none;
+  align-items: center;
+  gap: clamp(16px, 1.8vw, 28px);
+  font-family: var(--body);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+}
+
+@media (min-width: 1100px) {
+  .hc-header__links {
+    display: flex;
+  }
+}
+
+.hc-header__links a {
+  position: relative;
+  padding: 4px 0;
+}
+
+.hc-header__links a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hc-header__links a:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* Reference (Screenshot 2026-09-01): the right-side pill ("Latest Wins")
+   is styled identically to the nav pill itself — same flat light-gray
+   fill, same regular-weight sentence-case text, same rounded-full shape —
+   not a bold filled primary-CTA button. Typography matches
+   .hc-header__links exactly so both pills read as one quiet system. */
+.hc-header__cta {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  font-family: var(--body);
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: -0.005em;
+  color: var(--hc-ink);
+  background: var(--bone-2);
+  border-radius: 999px;
+  padding: 12px 22px;
+  transition: background 0.25s ease;
+}
+
+.hc-header__cta:hover {
+  background: var(--rule);
+}
+
+.hc-burger {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  /* 44px is Apple's documented minimum hit-target size (Human Interface
+     Guidelines) — the 40px box previously here was under that floor. */
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--hc-ink);
+  cursor: pointer;
+  /* iOS Safari can hold the first tap on an interactive element for a beat
+     while it disambiguates a possible double-tap-to-zoom, even with a
+     width=device-width viewport meta — this removes that ambiguity so the
+     tap→click fires immediately. */
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+@media (min-width: 1100px) {
+  .hc-burger {
+    display: none;
+  }
+}
+
+/* Page-load header entrance — Phase 1/2 of the homepage open/reload
+   choreography (Phase 3 is the hero's own .hc-line-mask reveal, see
+   HomeHero.tsx). Reference
+   (tinywins.com, reloaded repeatedly + inspected via computed styles):
+   their header content mounts essentially instantly with no elaborate
+   chrome animation of its own — the "reveal" budget there is spent
+   entirely on the hero's word-by-word mask rise. Same principle here:
+   the header gets a brief, subtle settle (not a slide-in production),
+   just enough that it doesn't feel like a static hard-cut against the
+   hero's own reveal starting a beat later.
+   Scoped to .hc-navpill's own mark (not the bare .hc-tamark selector,
+   which is reused verbatim inside the mobile nav portal — animating that
+   copy too would replay this fade every time the menu opens). The header
+   itself lives in the root layout and is never unmounted by client-side
+   navigation, so — unlike the hero below — this plays exactly once per
+   real page load, never on internal link clicks between pages. */
+@keyframes hc-headerIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hc-navpill .hc-tamark {
+  animation: hc-headerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.hc-header__links,
+.hc-header__cta,
+.hc-burger {
+  animation: hc-headerIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.06s both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-navpill .hc-tamark,
+  .hc-header__links,
+  .hc-header__cta,
+  .hc-burger {
+    animation: none;
+  }
+}
+
+.hc-burger__lines {
+  position: relative;
+  width: 20px;
+  height: 14px;
+}
+
+.hc-burger__lines span {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1.5px;
+  background: currentColor;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s;
+}
+
+.hc-burger__lines span:first-child {
+  top: 0;
+}
+
+.hc-burger__lines span:last-child {
+  bottom: 0;
+}
+
+.hc-burger.is-open .hc-burger__lines span:first-child {
+  transform: translateY(6.25px) rotate(45deg);
+}
+
+.hc-burger.is-open .hc-burger__lines span:last-child {
+  transform: translateY(-6.25px) rotate(-45deg);
+}
+
+/* ---------- mobile nav: blurred-backdrop + top panel ----------
+   Reference interaction (TinyWins-style): a solid, sharp black panel drops
+   from the top, sized to its own content — NOT a full-height takeover. The
+   real page stays mounted and visible underneath, but everything below the
+   panel is heavily blurred via backdrop-filter on a separate full-viewport
+   layer. Three stacked layers, each its own element:
+     1. .hc-mobilenav-backdrop — fixed, full-viewport, blurs the REAL page
+        behind it (no screenshot/duplicate). Sits UNDER the panel; the
+        panel's own opaque background is what makes the top region read as
+        sharp — the backdrop doesn't need to know where the panel ends.
+     2. .hc-mobilenav-panel — fixed to the top, intrinsic/content height
+        (capped so it can never exceed the viewport), fully opaque, no blur
+        applied to itself or its children.
+     Both are mounted together (see panelMounted/panelActive in
+     HomeHeader.tsx) so open/close can animate — CSS alone can't animate a
+     value that goes from "not in the DOM" to "in the DOM". */
+.hc-mobilenav-backdrop {
+  position: fixed;
+  inset: 0;
+  /* Same headroom reasoning as the old .hc-mobilenav z-index (see git
+     history) — must beat the portfolio sequence's JS-driven .hc-pitem (up
+     to ~500) and .hc-pticks (600). The panel goes one above this. */
+  z-index: 9998;
+  background: rgba(8, 9, 11, 0.42);
+  -webkit-backdrop-filter: blur(32px);
+  backdrop-filter: blur(32px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hc-mobilenav-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hc-mobilenav-panel {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  background: var(--hc-ink);
+  color: var(--bone);
+  display: flex;
+  flex-direction: column;
+  padding: calc(20px + env(safe-area-inset-top)) var(--gutter) calc(env(safe-area-inset-bottom) + 44px);
+  /* Deliberately taller than its content strictly needs (reference:
+     IMG_2362 — a real TinyWins mobile-menu screenshot) — roughly the top
+     half of the screen, with real breathing room above the links and
+     between the links and the contact line, not a tight content-hugging
+     box. Still capped so it can never exceed the viewport on short/
+     landscape phones, at which point it scrolls internally instead of
+     overflowing off-screen. dvh (not vh) specifically so iOS Safari's
+     collapsing address bar can't leave a gap or clip the panel — the vh
+     line is a pre-dvh-support fallback, kept because it's harmless where
+     dvh is supported (the later declaration wins). */
+  min-height: min(54svh, 480px);
+  max-height: calc(100vh - 24px);
+  max-height: calc(100dvh - 24px);
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  /* Soft dissolve into the blurred backdrop below instead of a hard
+     box-shadow cutoff — the reference's black panel doesn't end on a
+     crisp line, its last ~15% fades into the blur. */
+  mask-image: linear-gradient(to bottom, black 0%, black 93%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to bottom, black 0%, black 93%, transparent 100%);
+  opacity: 0;
+  transform: translateY(-14px);
+  transition: opacity 0.26s ease, transform 0.32s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.hc-mobilenav-panel.is-open {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* The panel/backdrop mount into the DOM already bearing .is-open (React
+   sets panelMounted and menuOpen together in the same click handler, see
+   HomeHeader.tsx) — a plain CSS transition can't animate that, because
+   there's no earlier painted frame to transition FROM. @starting-style
+   supplies that frame: the very first time .is-open matches on a
+   newly-inserted node, the browser starts here and transitions to the
+   .is-open rule above instead of snapping straight to it. Exit still works
+   with an ordinary transition (no @starting-style needed) — closing just
+   removes .is-open from an element that's already on screen, which is the
+   normal case transitions have always handled. Unsupported browsers just
+   skip the entrance animation and render .is-open's end state immediately
+   — never a functional break, only a lost transition. */
+@starting-style {
+  .hc-mobilenav-backdrop.is-open {
+    opacity: 0;
+  }
+
+  .hc-mobilenav-panel.is-open {
+    opacity: 0;
+    transform: translateY(-14px);
+  }
+}
+
+.hc-mobilenav__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  /* Large gap before the first link — the reference panel doesn't pack
+     content immediately under the close button, it lets it breathe. Sized
+     down from the reference's own proportion since we have 7 links to its
+     5 — keeps everything clear of the mask-fade zone at the bottom. */
+  margin-bottom: clamp(32px, 7vh, 60px);
+}
+
+.hc-mobilenav__close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--rule-inv);
+  border-radius: 50%;
+  background: none;
+  color: var(--bone);
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Plain stacked links, no numbering, no divider rules — matches the
+   reference (IMG_2362): "Work / Approach / About / Careers / News" is
+   just left-aligned text with generous line spacing, no chrome between
+   items. */
+.hc-mobilenav__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: clamp(10px, 2.4vh, 16px);
+}
+
+.hc-mobilenav__item {
+  display: flex;
+  align-items: baseline;
+}
+
+.hc-mobilenav__label {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(22px, 7vw, 30px);
+  letter-spacing: -0.02em;
+}
+
+/* Dim label + bold contact line, same hierarchy device as the reference's
+   "Let's win, together / hello@..." — pinned toward the panel's bottom by
+   the top row's large margin-bottom above, not by flex space-between
+   (which would fight the mask-fade zone at the very bottom edge). */
+.hc-mobilenav__foot {
+  margin-top: clamp(24px, 6vh, 48px);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.hc-mobilenav__foot-label {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.hc-mobilenav__foot-cta {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(18px, 5vw, 22px);
+  letter-spacing: -0.01em;
+  color: var(--bone);
+  width: fit-content;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-mobilenav-backdrop,
+  .hc-mobilenav-panel {
+    transition: opacity 0.01ms !important;
+    transform: none !important;
+  }
+}
+
+/* ---------- footer ---------- */
+/* Light footer — matches the site's default bone/ink palette rather than
+   the dark treatment every other .hc-section--dark block uses (the footer
+   deliberately does NOT carry that class; see HomeFooter.tsx).
+   ---------------------------------------------------------------------
+   Reference: live tinywins.com, measured directly (not guessed):
+     - <footer> is `position: sticky; bottom: 0`, 723.68px tall in a
+       737px viewport (98%) — the last element in the document, so once
+       you scroll to the end it pins flush to the bottom and stays: a
+       full final scene, not a strip.
+     - Their closing wordmark is a genuine <img> sized 1438x357 in a
+       1470px viewport — 97.8% of viewport width, ~16px side padding.
+       Confirms an image-based mark belongs near-full-bleed, NOT inside
+       the same contained/max-width column as the text content above it
+       — hence .hc-footer itself carries no horizontal padding; only
+       .hc-footer__content (the text) is width-constrained, while
+       .hc-footer__mark gets its own much smaller padding.
+   Order per brief: gray label → large black email → minimal nav, all in
+   normal block flow (no flex row needed now — everything stacks by
+   default, contact first). The wordmark is pushed to the true bottom of
+   the sticky panel via margin-top:auto on itself, so it's the last thing
+   on screen with no leftover space beneath it.
+   min-height was 100vh/100svh — with only a label, an email and four nav
+   links above it, margin-top:auto on the wordmark dumped ALL the leftover
+   space (~380px on a 812px-tall viewport) into one dead gap between "About"
+   and the mark. 82vh/82svh keeps this a genuinely oversized closing scene
+   (still far taller than a normal footer strip, still ends on the huge
+   wordmark) while cutting that dead gap roughly in half. */
+.hc-footer {
+  background: var(--bone);
+  color: var(--hc-ink);
+  border-top: 1px solid var(--rule);
+  position: sticky;
+  bottom: 0;
+  z-index: 0;
+  min-height: 82vh;
+  min-height: 82svh;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(clamp(28px, 5vw, 56px) + env(safe-area-inset-top));
+  overflow: hidden;
+}
+
+.hc-footer__content {
+  max-width: var(--maxw);
+  margin: 0 auto;
+  padding: 0 var(--gutter);
+  width: 100%;
+}
+
+.hc-footer__label {
+  margin: 0;
+  font-size: 14px;
+  color: var(--slate);
+}
+
+/* The main event — large, black, clickable, no button needed. Wraps onto
+   a second line on narrow phones rather than overflowing (an email has
+   no spaces to break at, so overflow-wrap:anywhere is load-bearing here,
+   not decorative). */
+.hc-footer__email {
+  display: block;
+  margin: 8px 0 0;
+  font-family: var(--display);
+  font-weight: 700;
+  /* Reference (Screenshot 2026-08-28): the closing email line measures
+     ~23% of viewport width, not a dominant, near-full-width statement —
+     that role belongs to the wordmark below. Our email string is longer
+     (27 chars vs. their 19), so the proportional target is ~33%, not 23%
+     literally — verified against a rendered screenshot, not DOM rects
+     (this is a block-level element, so getBoundingClientRect() reports
+     the container box, not the glyph width). */
+  font-size: clamp(16px, 2.4vw, 38px);
+  line-height: 1.04;
+  letter-spacing: -0.02em;
+  color: var(--hc-ink);
+  overflow-wrap: anywhere;
+}
+
+.hc-footer__email:hover {
+  color: var(--oxblood);
+}
+
+.hc-footer__nav {
+  margin-top: clamp(28px, 5vw, 48px);
+}
+
+.hc-footer__nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  font-size: 14.5px;
+}
+
+.hc-footer__nav a {
+  color: var(--hc-ink);
+}
+
+.hc-footer__nav a:hover {
+  color: var(--oxblood);
+}
+
+/* margin-top:auto consumes all of the flex container's remaining free
+   space, pushing this to the very bottom of the sticky full-height panel
+   — the gap above it is exactly "whatever room is left" and scales with
+   the viewport on its own, rather than a guessed fixed/clamped value that
+   would leave dead space on tall screens or feel cramped on short ones. */
+.hc-footer__mark {
+  display: block;
+  margin-top: auto;
+  padding: 0 clamp(12px, 2.5vw, 28px) calc(8px + env(safe-area-inset-bottom));
+  line-height: 0;
+}
+
+/* ---------- shared button (Button.tsx renders these classes site-wide) ---------- */
+.hc-btnbase {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 15px 24px;
+  border-radius: 999px;
+  border: 1px solid var(--hc-ink);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  white-space: nowrap;
+  transition: background 0.3s, color 0.3s, border-color 0.3s, transform 0.3s;
+}
+
+.hc-btnbase:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.hc-btnbase--sm {
+  padding: 12px 20px;
+  font-size: 11px;
+}
+
+.hc-btnbase--ink {
+  background: var(--hc-ink);
+  color: var(--bone);
+}
+
+.hc-btnbase--ink:hover:not(:disabled) {
+  background: var(--oxblood);
+  border-color: var(--oxblood);
+  transform: translateY(-2px);
+}
+
+.hc-btnbase--cream {
+  background: var(--bone);
+  color: var(--hc-ink);
+  border-color: var(--bone);
+}
+
+.hc-btnbase--cream:hover:not(:disabled) {
+  background: var(--oxblood-lt);
+  border-color: var(--oxblood-lt);
+  color: var(--bone);
+  transform: translateY(-2px);
+}
+
+.hc-btnbase--outline {
+  background: transparent;
+  color: var(--hc-ink);
+}
+
+.hc-btnbase--outline:hover:not(:disabled) {
+  background: var(--hc-ink);
+  color: var(--bone);
+  transform: translateY(-2px);
+}
+
+.hc-btnbase--outline-cream {
+  background: transparent;
+  color: var(--bone);
+  border-color: var(--rule-inv);
+}
+
+.hc-btnbase--outline-cream:hover:not(:disabled) {
+  background: var(--bone);
+  color: var(--hc-ink);
+  transform: translateY(-2px);
+}
+
+.hc-btnbase--ghost {
+  border-color: transparent;
+  padding-left: 0;
+  padding-right: 0;
+  color: var(--hc-ink);
+}
+
+.hc-btnbase--ghost:hover:not(:disabled) {
+  color: var(--oxblood);
+  transform: translateX(2px);
+}
+
+.hc-btnbase__arrow {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hc-btnbase:hover .hc-btnbase__arrow {
+  transform: translate(3px, -3px);
+}
+
+/* ---------- badge (Badge.tsx renders these classes site-wide) ---------- */
+.hc-badge {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--rule);
+  color: var(--slate);
+  display: inline-flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.hc-badge--ink {
+  border-color: var(--hc-ink);
+  color: var(--hc-ink);
+}
+
+.hc-badge--accent {
+  border-color: var(--hc-ink);
+  color: var(--hc-ink);
+}
+
+.hc-section--dark .hc-badge,
+.hc-badge--cream {
+  border-color: var(--rule-inv);
+  color: rgba(255, 255, 255, 0.75);
+}
+
+/* ---------- inner-page hero (PageHero.tsx) ---------- */
+.hc-pagehero {
+  padding: clamp(140px, 20vh, 200px) 0 clamp(56px, 8vw, 96px);
+  border-bottom: 1px solid var(--rule);
+}
+
+.hc-pagehero__eyebrow {
+  margin-bottom: clamp(18px, 3vw, 28px);
+}
+
+.hc-pagehero__title {
+  font-family: var(--display);
+  font-weight: 700;
+  font-size: clamp(32px, 5.6vw, 68px);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  margin: 0;
+  max-width: 18ch;
+}
+
+.hc-pagehero__desc {
+  font-size: clamp(16px, 1.5vw, 20px);
+  line-height: 1.5;
+  color: var(--slate);
+  max-width: 56ch;
+  margin: 20px 0 0;
+}
+
+/* ---------- 404 (not-found.tsx) ---------- */
+/* Minimal, memorable, editorial — same white/black/motion language as the
+   homepage hero (reuses .hc-line-mask for the title reveal), deliberately
+   with almost no other content: a small code label, one huge headline, one
+   quiet link back home. No card, no illustration, no secondary CTA. */
+.hc-notfound {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(24px, 6vh, 64px) clamp(20px, 5vw, 64px);
+}
+
+.hc-notfound__code {
+  margin: 0 0 clamp(12px, 2vw, 20px);
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.14em;
+  color: var(--slate);
+}
+
+.hc-notfound__title {
+  margin: 0;
+}
+
+.hc-notfound__line {
+  display: block;
+  overflow: hidden;
+}
+
+.hc-notfound__line > span {
+  display: block;
+  transform: translateY(105%);
+  animation: hc-riseIn 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.hc-notfound__line--2 > span {
+  animation-delay: 0.09s;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hc-notfound__line > span {
+    transform: none;
+    animation: none;
+  }
+}
+
+.hc-notfound__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: clamp(28px, 5vw, 48px);
+  font-family: var(--mono);
+  font-size: 13px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--hc-ink);
+}
+
+.hc-notfound__link .hc-btn__arrow {
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hc-notfound__link:hover .hc-btn__arrow {
+  transform: translateX(4px);
+}
+
+/* ---------- final CTA (FinalCTA.tsx) ---------- */
+.hc-finalcta {
+  text-align: center;
+}
+
+.hc-finalcta .hc-claim {
+  max-width: none;
+  margin: 0 auto;
+}
+
+.hc-finalcta__wrap {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.hc-finalcta .hc-lede {
+  margin: 20px auto 0;
+  max-width: 52ch;
+}
+
+.hc-finalcta .hc-hero__ctas {
+  justify-content: center;
+  margin-top: 32px;
+}
+
+/* ---------- flat "card" replacement (no radius, no shadow-lift) ---------- */
+.hc-flatcard {
+  border-top: 1px solid var(--rule);
+  padding-top: clamp(18px, 2.4vw, 26px);
+}
+
+.hc-flatcard__kicker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.hc-flatcard h3 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 20px;
+  letter-spacing: -0.015em;
+  margin: 10px 0 8px;
+}
+
+.hc-flatcard p {
+  color: var(--slate);
+  font-size: 14.5px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---------- form fields (ContactForm / RequestAccessForm) ---------- */
+.hc-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.hc-field label {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--slate);
+}
+
+.hc-field label em {
+  font-style: normal;
+  text-transform: none;
+  letter-spacing: 0;
+  opacity: 0.7;
+}
+
+.hc-input {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--rule);
+  padding: 10px 2px;
+  font-family: var(--body);
+  font-size: 15px;
+  color: var(--hc-ink);
+  transition: border-color 0.3s;
+}
+
+.hc-input:focus {
+  outline: none;
+  border-bottom-color: var(--oxblood);
+}
+
+.hc-input::placeholder {
+  color: rgba(22, 24, 26, 0.32);
+}
+
+textarea.hc-input {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.hc-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(18px, 2.6vw, 28px);
+}
+
+@media (max-width: 640px) {
+  .hc-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.hc-form-error {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--oxblood);
+}
+
+.hc-form-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  border: 1px solid rgba(122, 31, 43, 0.35);
+  padding: 14px 16px;
+  font-size: 13.5px;
+  color: var(--oxblood);
+  margin-bottom: clamp(20px, 3vw, 28px);
+}
+
+.hc-form-success {
+  border-top: 1px solid var(--rule);
+  padding: clamp(40px, 6vw, 64px) 0;
+  text-align: center;
+}
+
+.hc-form-note {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  color: var(--slate);
+  margin-top: 16px;
+}
+
+.hc-section--dark .hc-input {
+  color: var(--bone);
+  border-bottom-color: var(--rule-inv);
+}
+
+.hc-section--dark .hc-input::placeholder {
+  color: rgba(255, 255, 255, 0.32);
+}
+
+.hc-section--dark .hc-input:focus {
+  border-bottom-color: var(--oxblood-lt);
+}
+
+.hc-section--dark .hc-field label {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.hc-section--dark .hc-checkline {
+  color: rgba(255, 255, 255, 0.62);
+}
+
+.hc-section--dark .hc-form-note {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.hc-section--dark .hc-form-success {
+  border-top-color: var(--rule-inv);
+}
+
+.hc-input option {
+  color: var(--hc-ink);
+}
+
+.hc-checkline {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--slate);
+}
+
+.hc-checkline input {
+  margin-top: 3px;
+  accent-color: var(--oxblood);
+  flex: none;
+}
+
+/* ---------- prose (legal pages) ---------- */
+.hc-prose {
+  max-width: 74ch;
+}
+
+.hc-prose h2 {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(20px, 2.4vw, 26px);
+  letter-spacing: -0.02em;
+  margin: clamp(36px, 5vw, 52px) 0 14px;
+}
+
+.hc-prose h2:first-child {
+  margin-top: 0;
+}
+
+.hc-prose p {
+  color: var(--slate);
+  font-size: 15.5px;
+  line-height: 1.75;
+  margin: 0 0 16px;
+}
+
+.hc-prose ul {
+  margin: 0 0 16px;
+  padding-left: 20px;
+  color: var(--slate);
+  font-size: 15.5px;
+  line-height: 1.75;
+}
+
+.hc-prose li {
+  margin-bottom: 6px;
+}
+
+.hc-prose strong {
+  color: var(--hc-ink);
+  font-weight: 600;
+}
+
+.hc-prose a {
+  color: var(--hc-ink);
+  border-bottom: 1px solid var(--rule);
+}
+
+.hc-prose a:hover {
+  border-bottom-color: var(--oxblood);
+}
+
+/* ---------- SectionHeading.tsx ---------- */
+.hc-heading {
+  max-width: 42em;
+}
+
+.hc-heading--center {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.hc-heading__eyebrow {
+  margin-bottom: 14px;
+}
+
+.hc-heading__title {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: clamp(26px, 3.6vw, 42px);
+  line-height: 1.06;
+  letter-spacing: -0.025em;
+  margin: 0;
+  color: var(--hc-ink);
+}
+
+.hc-heading__desc {
+  margin: 16px 0 0;
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--slate);
+}
+
+.hc-heading--onDark .hc-heading__title {
+  color: var(--bone);
+}
+
+.hc-heading--onDark .hc-heading__desc {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.hc-heading--onDark .hc-eyebrow {
+  color: rgba(255, 255, 255, 0.55);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-concept .hc-line-mask > span {
+    transform: none;
+    animation: none;
+  }
+
+  .hc-header,
+  .hc-burger__lines span {
+    transition: none;
+  }
+}

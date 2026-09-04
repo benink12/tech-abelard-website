@@ -84,7 +84,7 @@ export const portfolioProjects: PortfolioProject[] = [
       "11 treatments across 4 categories",
       "Editorial luxury design system",
     ],
-    accent: "#2a2620",
+    accent: "#262626",
     icon: "sparkles",
     screenshots: {
       desktop: [
@@ -138,7 +138,7 @@ export const portfolioProjects: PortfolioProject[] = [
       "Resident portal with lease + payments",
       "Multi-step maintenance request flow",
     ],
-    accent: "#12151c",
+    accent: "#151515",
     icon: "building",
     preview: { desktopPosition: "top left", mobilePosition: "top left" },
     screenshots: {
@@ -209,7 +209,7 @@ export const portfolioProjects: PortfolioProject[] = [
       "9 services across 3 categories",
       "Concept Pet Portal dashboard",
     ],
-    accent: "#123328",
+    accent: "#2b2b2b",
     icon: "paw-print",
     screenshots: {
       desktop: [
@@ -271,7 +271,7 @@ export const portfolioProjects: PortfolioProject[] = [
     description:
       "A premium, conversion-focused roofing concept with a dark architectural design, strong mobile experience, emergency-service messaging, insurance-claims support, and full SEO/schema foundations.",
     highlights: ["Full service + gallery architecture", "Insurance claims assistance section", "Before/after project gallery", "Storm-season urgency messaging"],
-    accent: "#4A3728",
+    accent: "#3a3a3a",
     icon: "home",
     screenshots: {
       desktop: [{ src: "/portfolio/northpeak-roofing/desktop-home.jpg", alt: "NorthPeak Roofing desktop homepage hero", caption: "Homepage" }],
@@ -309,7 +309,7 @@ export const portfolioProjects: PortfolioProject[] = [
     description:
       "A heating/cooling concept built around a real local-weather widget and emergency no-heat/no-cooling messaging, with financing, reviews, and full service-area coverage.",
     highlights: ["Real-time weather-driven CTA", "Financing calculator", "Before/after comparison slider", "Emergency service banner"],
-    accent: "#0B0D10",
+    accent: "#0d0d0d",
     icon: "flame",
     screenshots: {
       desktop: [{ src: "/portfolio/northclimate-hvac/desktop-home.jpg", alt: "NorthClimate HVAC desktop homepage hero with live weather widget", caption: "Homepage" }],
@@ -348,7 +348,7 @@ export const portfolioProjects: PortfolioProject[] = [
     description:
       "A mobile-first plumbing concept designed to make emergency calls and quote requests easier — trust-forward design, same-day availability messaging, and a straightforward booking path.",
     highlights: ["Clear emergency call action", "Fast mobile navigation", "Local SEO structure", "Conversion-focused layout"],
-    accent: "#2C4A5E",
+    accent: "#454545",
     icon: "droplet",
     screenshots: {
       desktop: [{ src: "/portfolio/northline-plumbing/desktop-home.jpg", alt: "NorthLine Plumbing & Drain desktop homepage hero", caption: "Homepage" }],

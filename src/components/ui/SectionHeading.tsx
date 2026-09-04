@@ -18,35 +18,17 @@ export function SectionHeading({
   titleAs?: "h1" | "h2" | "h3";
 }) {
   return (
-    <div className={cn("max-w-2xl", align === "center" && "mx-auto text-center", className)}>
-      {eyebrow && (
-        <p
-          className={cn(
-            "brass-line mb-5 inline-block font-sans text-xs font-semibold uppercase tracking-[0.18em]",
-            tone === "ink" ? "text-brass-ink" : "text-brass-light"
-          )}
-        >
-          {eyebrow}
-        </p>
+    <div
+      className={cn(
+        "hc-heading",
+        align === "center" && "hc-heading--center",
+        tone === "cream" && "hc-heading--onDark",
+        className
       )}
-      <TitleTag
-        className={cn(
-          "text-balance font-display text-3xl font-medium tracking-tight sm:text-4xl lg:text-[2.75rem]",
-          tone === "ink" ? "text-ink" : "text-cream"
-        )}
-      >
-        {title}
-      </TitleTag>
-      {description && (
-        <p
-          className={cn(
-            "mt-5 text-base leading-relaxed sm:text-lg",
-            tone === "ink" ? "text-ink/65" : "text-cream/70"
-          )}
-        >
-          {description}
-        </p>
-      )}
+    >
+      {eyebrow && <p className="hc-eyebrow hc-heading__eyebrow">{eyebrow}</p>}
+      <TitleTag className="hc-heading__title">{title}</TitleTag>
+      {description && <p className="hc-heading__desc">{description}</p>}
     </div>
   );
 }
