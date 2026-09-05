@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { site } from "@/data/site";
 import { homeFontClassName } from "@/lib/fonts/home";
 import { PortfolioShowcase } from "@/components/sections/PortfolioShowcase";
 import { PageHero } from "@/components/sections/PageHero";
@@ -14,8 +15,19 @@ export const metadata: Metadata = {
 };
 
 export default function PortfolioPage() {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+      { "@type": "ListItem", position: 2, name: "Portfolio", item: `${site.url}/portfolio` },
+    ],
+  };
+
   return (
     <div className={`home-concept ${homeFontClassName}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+
       <PageHero
         eyebrow="Portfolio"
         title="Six industries. One design standard."

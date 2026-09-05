@@ -24,7 +24,7 @@ import { FinalCTA } from "@/components/sections/FinalCTA";
 const PAGE_PATH = "/ai-receptionist-for-small-business";
 const PAGE_TITLE = "AI Receptionist for Small Business";
 const PAGE_DESCRIPTION =
-  "An AI phone receptionist for small businesses — answers calls, qualifies leads, and handles common questions day or night. Call the live demo: (581) 499-0011.";
+  "An AI phone receptionist for small businesses across Canada — answers calls, qualifies leads, and handles common questions day or night. Call the live demo: (581) 499-0011.";
 
 export const metadata: Metadata = {
   title: PAGE_TITLE,
@@ -197,7 +197,7 @@ export default function AIReceptionistForSmallBusinessPage() {
           <SectionHeading
             eyebrow="Who This Is For"
             title="Any small business where a missed call is a missed customer."
-            description="Plumbers and electricians on a job site, a medspa or clinic with one person at the front desk, a property manager fielding calls between showings, a vet practice mid-appointment — small teams that can't have someone glued to the phone all day."
+            description="Plumbers and electricians on a job site, a medspa or clinic with one person at the front desk, a property manager fielding calls between showings, a vet practice mid-appointment — small teams across Canada that can't have someone glued to the phone all day."
           />
         </div>
       </section>

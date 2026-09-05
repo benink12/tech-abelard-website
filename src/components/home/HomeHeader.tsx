@@ -242,8 +242,11 @@ export function HomeHeader() {
             </button>
           </div>
 
-          <Link href="/contact" className="hc-header__cta" data-cta="home-header-book-call">
-            {site.cta.primary}
+          {/* Top-right header pill only — intentionally hardcoded, not
+              site.cta.primary ("Book a Discovery Call"), which every other
+              CTA on the site still uses and must keep using unchanged. */}
+          <Link href="/updates" className="hc-header__cta" data-cta="home-header-latest-updates">
+            Latest Updates
           </Link>
         </div>
 

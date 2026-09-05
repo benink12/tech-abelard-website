@@ -35,10 +35,33 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // disallowed in robots.ts.
   const caseStudyRoutes = portfolioProjects.map((project) => `/portfolio/${project.slug}`);
 
+  // Priority is only a crawl-budget hint, not a ranking factor — but a flat
+  // 0.7 on every non-home route put /terms and /privacy-policy at the same
+  // priority as the pages actually meant to rank and convert. Highest tier
+  // (0.9) is the four keyword-targeted landing pages and the three core
+  // service hubs; legal pages drop to 0.3; everything else lands at 0.6.
+  const TOP_PRIORITY = new Set<string>([
+    "/web-design-ottawa",
+    "/local-seo-for-contractors",
+    "/plumber-website-design",
+    "/ai-receptionist-for-small-business",
+    "/services/web-design",
+    "/services/local-seo",
+    "/services/ai-receptionist",
+  ]);
+  const LOW_PRIORITY = new Set<string>(["/privacy-policy", "/terms"]);
+
+  function priorityFor(route: string): number {
+    if (route === "") return 1;
+    if (TOP_PRIORITY.has(route)) return 0.9;
+    if (LOW_PRIORITY.has(route)) return 0.3;
+    return 0.6;
+  }
+
   return [...routes, ...serviceRoutes, ...caseStudyRoutes].map((route) => ({
     url: `${site.url}${route}`,
     lastModified: new Date(),
     changeFrequency: "monthly" as const,
-    priority: route === "" ? 1 : 0.7,
+    priority: priorityFor(route),
   }));
 }

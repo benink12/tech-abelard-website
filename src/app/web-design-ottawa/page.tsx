@@ -23,7 +23,7 @@ const H1_TITLE = "Web Design Ottawa";
 // "Web Design Ottawa | Websites for Local Businesses | Tech Abélard".
 const SEO_TITLE = "Web Design Ottawa | Websites for Local Businesses";
 const PAGE_DESCRIPTION =
-  "Web design for Ottawa businesses that turns visitors into leads — mobile-friendly, fast, and built for local SEO from day one. Serving contractors and local service businesses across Ottawa.";
+  "Web design for Ottawa businesses that turns visitors into leads — mobile-friendly, fast, and built for local SEO from day one. Serving contractors and local service businesses across Ottawa and Gatineau.";
 
 export const metadata: Metadata = {
   title: SEO_TITLE,
@@ -141,7 +141,10 @@ export default async function WebDesignOttawaPage() {
       telephone: site.phone.display,
       email: site.email,
     },
-    areaServed: { "@type": "City", name: "Ottawa", containedInPlace: { "@type": "State", name: "Ontario" } },
+    areaServed: [
+      { "@type": "City", name: "Ottawa", containedInPlace: { "@type": "State", name: "Ontario" } },
+      { "@type": "City", name: "Gatineau", containedInPlace: { "@type": "State", name: "Quebec" } },
+    ],
   };
 
   const faqJsonLd = {
@@ -180,7 +183,7 @@ export default async function WebDesignOttawaPage() {
           <SectionHeading
             eyebrow="Who This Is For"
             title="Built for Ottawa's local businesses and contractors."
-            description={`${copy.aboutWhoWeServeDescription} If you serve Ottawa and the surrounding communities, and you're competing against other local businesses for the same searches, this is the work we do.`}
+            description={`${copy.aboutWhoWeServeDescription} If you serve Ottawa, Gatineau, or the surrounding communities, and you're competing against other local businesses for the same searches, this is the work we do.`}
           />
         </div>
       </section>
@@ -269,7 +272,11 @@ export default async function WebDesignOttawaPage() {
             <Link href="/plumber-website-design" className="hc-inline-link">
               plumber website design
             </Link>{" "}
-            page.
+            page. And if a missed call is as costly as a missed website visit, see our{" "}
+            <Link href="/ai-receptionist-for-small-business" className="hc-inline-link">
+              AI receptionist for small business
+            </Link>
+            .
           </p>
         </div>
       </section>

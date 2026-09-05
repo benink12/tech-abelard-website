@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ShieldAlert } from "lucide-react";
+import { site } from "@/data/site";
 import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
@@ -59,13 +60,56 @@ const faqItems = [
   },
 ];
 
+const PAGE_PATH = "/services/local-seo";
+const PAGE_TITLE = "Local SEO Services";
+
 export default function LocalSEOPage() {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+      { "@type": "ListItem", position: 2, name: "Services", item: `${site.url}/services` },
+      { "@type": "ListItem", position: 3, name: PAGE_TITLE, item: `${site.url}${PAGE_PATH}` },
+    ],
+  };
+
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Local SEO",
+    name: PAGE_TITLE,
+    description: metadata.description,
+    provider: {
+      "@type": "ProfessionalService",
+      name: site.name,
+      url: site.url,
+      telephone: site.phone.display,
+      email: site.email,
+    },
+    areaServed: { "@type": "Country", name: "Canada" },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+
   return (
     <div className={`home-concept ${homeFontClassName}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+
       <PageHero
         eyebrow="Local SEO"
         title="Local SEO for service businesses."
-        description="Local SEO is compounding proof to Google that you're the real, active, trustworthy answer to “best [service] near me.” We run monthly retainers built around technical fixes, content, citations, and review generation — not a one-time audit and a promise."
+        description="Local SEO is compounding proof to Google that you're the real, active, trustworthy answer to “best [service] near me.” We run monthly retainers built around technical fixes, content, citations, and review generation — not a one-time audit and a promise. Based in the Ottawa–Gatineau region, working with service businesses across Canada."
       >
         <div className="hc-hero__ctas">
           <Button href="/audit" variant="cream" size="lg" data-cta="local-seo-hero-free-audit" showArrow>

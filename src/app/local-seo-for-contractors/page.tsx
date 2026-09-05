@@ -193,7 +193,7 @@ export default function LocalSEOForContractorsPage() {
           <SectionHeading
             eyebrow="Who This Is For"
             title="Service-area businesses competing for “near me” searches."
-            description="Plumbing, HVAC, roofing, electrical, landscaping, construction, and the trades around them — businesses that live or die by local and service-area search, not national brand awareness."
+            description="Plumbing, HVAC, roofing, electrical, landscaping, construction, and the trades around them — businesses that live or die by local and service-area search, not national brand awareness. Based in the Ottawa–Gatineau region and working with contractors across Canada."
           />
         </div>
       </section>

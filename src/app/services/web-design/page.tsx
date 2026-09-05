@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { LayoutTemplate, MousePointerClick, Smartphone, Gauge, SearchCheck, ListChecks } from "lucide-react";
+import { site } from "@/data/site";
 import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
@@ -85,13 +86,56 @@ const faqItems = [
   },
 ];
 
+const PAGE_PATH = "/services/web-design";
+const PAGE_TITLE = "Web Design for Service Businesses";
+
 export default function WebDesignPage() {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+      { "@type": "ListItem", position: 2, name: "Services", item: `${site.url}/services` },
+      { "@type": "ListItem", position: 3, name: PAGE_TITLE, item: `${site.url}${PAGE_PATH}` },
+    ],
+  };
+
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "Web Design",
+    name: PAGE_TITLE,
+    description: metadata.description,
+    provider: {
+      "@type": "ProfessionalService",
+      name: site.name,
+      url: site.url,
+      telephone: site.phone.display,
+      email: site.email,
+    },
+    areaServed: { "@type": "Country", name: "Canada" },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+
   return (
     <div className={`home-concept ${homeFontClassName}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+
       <PageHero
         eyebrow="Web Design"
         title="Custom sites built to convert, not just exist."
-        description="A fully custom site for your business — not a template with your logo dropped in. Every page is designed around one job: turning a visitor who found you on their phone into a call, a form fill, or a booked estimate."
+        description="A fully custom site for your business — not a template with your logo dropped in. Every page is designed around one job: turning a visitor who found you on their phone into a call, a form fill, or a booked estimate. Based in Canada, with dedicated experience building for Ottawa contractors."
       >
         <div className="hc-hero__ctas">
           <Button href="/contact" variant="cream" size="lg" data-cta="web-design-hero-discovery-call" showArrow>

@@ -16,6 +16,12 @@
   --oxblood: #7a1f2b;
   --oxblood-lt: #a63745;
   --slate: #5c6360;
+  /* Call-status colors — a deliberate, scoped exception to the site's
+     black/white system (see .hc-log__st below): these two words are the
+     only place hue is used to communicate real information (call outcome),
+     not decoration. Muted/professional, not neon. */
+  --status-red: #c62828;
+  --status-green: #218739;
   --rule: rgba(22, 24, 26, 0.15);
   --rule-inv: rgba(255, 255, 255, 0.18);
   --display: var(--font-bricolage), system-ui, sans-serif;
@@ -528,16 +534,17 @@
   font-size: 10.5px;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  /* No permanent status color (was oxblood/green) — hierarchy now reads
-     through weight/shade instead of hue: unresolved rows stay full-strength
-     ink, resolved ones fade to slate. */
-  color: var(--hc-ink);
+  /* Status color is back, deliberately: unresolved outcomes (voicemail,
+     hung up, missed) read in red, answered reads in green — see
+     --status-red/--status-green above. Scoped to just this word; the row
+     itself, background, and every other part of the log stay unstyled. */
+  color: var(--status-red);
   font-weight: 600;
   white-space: nowrap;
 }
 
 .hc-log__row--ok .hc-log__st {
-  color: var(--slate);
+  color: var(--status-green);
   font-weight: 500;
 }
 
@@ -2048,7 +2055,7 @@
   display: flex;
   align-items: center;
   gap: clamp(14px, 2vw, 26px);
-  background: rgba(244, 244, 244, 0.72);
+  background: rgba(244, 244, 244, 0.65);
   /* -webkit- fallback declared BEFORE the standard property, deliberately
      — the build's CSS minifier (Lightning CSS) was observed dropping the
      unprefixed backdrop-filter entirely when it came first, keeping only
@@ -2057,7 +2064,7 @@
   -webkit-backdrop-filter: blur(14px);
   backdrop-filter: blur(14px);
   border: 1px solid rgba(255, 255, 255, 0.4);
-  border-radius: 10px;
+  border-radius: 6px;
   padding: 8px 10px 8px 14px;
 }
 
@@ -2228,11 +2235,12 @@
   transform-origin: left;
 }
 
-/* Reference (Screenshot 2026-09-01): the right-side pill ("Latest Wins")
-   is styled identically to the nav pill itself — same flat light-gray
-   fill, same regular-weight sentence-case text, same rounded-full shape —
-   not a bold filled primary-CTA button. Typography matches
-   .hc-header__links exactly so both pills read as one quiet system. */
+/* Frosted-glass pass: matches .hc-navpill's own treatment (translucent
+   fill + blur, square-ish corners, hairline border) so both read as one
+   header system, rather than the old flat-fill rounded-full pill.
+   Typography still matches .hc-header__links exactly. -webkit- prefix
+   declared BEFORE the standard property for the same Lightning CSS
+   minifier reason documented on .hc-navpill above. */
 .hc-header__cta {
   margin-left: auto;
   display: inline-flex;
@@ -2243,14 +2251,23 @@
   font-weight: 500;
   letter-spacing: -0.005em;
   color: var(--hc-ink);
-  background: var(--bone-2);
-  border-radius: 999px;
+  background: rgba(244, 244, 244, 0.65);
+  -webkit-backdrop-filter: blur(14px);
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 6px;
   padding: 12px 22px;
   transition: background 0.25s ease;
 }
 
 .hc-header__cta:hover {
-  background: var(--rule);
+  background: rgba(244, 244, 244, 0.85);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .hc-header__cta {
+    background: #f4f4f4;
+  }
 }
 
 .hc-burger {

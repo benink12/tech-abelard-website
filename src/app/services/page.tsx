@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { services } from "@/data/services";
+import { site } from "@/data/site";
 import { regionCopy } from "@/data/localization";
 import { getRegion } from "@/lib/region";
 import { homeFontClassName } from "@/lib/fonts/home";
@@ -19,8 +20,19 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function ServicesPage() {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+      { "@type": "ListItem", position: 2, name: "Services", item: `${site.url}/services` },
+    ],
+  };
+
   return (
     <div className={`home-concept ${homeFontClassName}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+
       <PageHero
         eyebrow="Services"
         title="Seven disciplines. One growth engine."
@@ -63,6 +75,10 @@ export default function ServicesPage() {
         <p className="hc-worknote" style={{ marginTop: 10 }}>
           Never miss another call? Read more about our{" "}
           <Link href="/ai-receptionist-for-small-business">AI receptionist for service businesses</Link>.
+        </p>
+        <p className="hc-worknote" style={{ marginTop: 10 }}>
+          Running SEO specifically for the trades? See{" "}
+          <Link href="/local-seo-for-contractors">local SEO for contractors</Link>.
         </p>
       </div>
 

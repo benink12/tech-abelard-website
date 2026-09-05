@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 import { CheckCircle2, Smartphone, ShieldCheck } from "lucide-react";
 import { portfolioProjects, nicheInProse } from "@/data/portfolio";
+import { site } from "@/data/site";
 import { homeFontClassName } from "@/lib/fonts/home";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Badge } from "@/components/ui/Badge";
@@ -50,8 +51,20 @@ export default async function PortfolioCaseStudyPage({ params }: { params: Promi
   const project = portfolioProjects.find((p) => p.slug === slug);
   if (!project) notFound();
 
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+      { "@type": "ListItem", position: 2, name: "Portfolio", item: `${site.url}/portfolio` },
+      { "@type": "ListItem", position: 3, name: project.name, item: `${site.url}/portfolio/${project.slug}` },
+    ],
+  };
+
   return (
     <div className={`home-concept ${homeFontClassName}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+
       <PageHero eyebrow={project.niche} title={project.name} description={project.tagline}>
         <div className="mt-6 flex flex-wrap gap-2">
           {project.servicesDemonstrated.map((service) => (

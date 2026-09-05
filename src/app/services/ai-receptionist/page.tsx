@@ -120,13 +120,56 @@ const faqItems = [
   },
 ];
 
+const PAGE_PATH = "/services/ai-receptionist";
+const PAGE_TITLE = "AI Receptionist for Service Businesses";
+
 export default function AIReceptionistPage() {
+  const breadcrumbJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: site.url },
+      { "@type": "ListItem", position: 2, name: "Services", item: `${site.url}/services` },
+      { "@type": "ListItem", position: 3, name: PAGE_TITLE, item: `${site.url}${PAGE_PATH}` },
+    ],
+  };
+
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    serviceType: "AI Receptionist",
+    name: PAGE_TITLE,
+    description: metadata.description,
+    provider: {
+      "@type": "ProfessionalService",
+      name: site.name,
+      url: site.url,
+      telephone: site.phone.display,
+      email: site.email,
+    },
+    areaServed: { "@type": "Country", name: "Canada" },
+  };
+
+  const faqJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: { "@type": "Answer", text: item.answer },
+    })),
+  };
+
   return (
     <div className={`home-concept ${homeFontClassName}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
+
       <PageHero
         eyebrow="AI Receptionist"
         title="Your business can answer every call — even when you can't."
-        description="An AI receptionist that answers calls, qualifies leads, answers common questions, and helps book appointments — built to make sure a busy day or an after-hours call never means a missed customer."
+        description="An AI receptionist that answers calls, qualifies leads, answers common questions, and helps book appointments — built to make sure a busy day or an after-hours call never means a missed customer. Available for service businesses across Canada."
       >
         <div className="hc-flatcard" style={{ maxWidth: 480, marginTop: 40, borderTopColor: "var(--rule)" }}>
           <p className="hc-eyebrow">Hear it for yourself</p>
